@@ -71,265 +71,855 @@ from datetime import datetime, timedelta
 #     - Ea_mold_J       : activation energy para crescimento de bolor
 # =============================================================================
 
-PRESETS = {
-    # -------------------------------------------------------------------------
-    # KIWI
-    # -------------------------------------------------------------------------
+PRESETS_ACADEMIC = {
     "kiwi_hayward": {
-        "Tref_C": 0.0, "Ea_J": 40000, "k_firm_ref": 0.015, "beta_RH": 1.2, "RH_ref": 90,
-        "firmness_min": 2.0, "firmness_0_default": 65,
-        "brix_min": 6.0, "brix_max": 15.0, "brix_g": 0.35, "brix_0_default": 6.5,
-        "qual_firmness_threshold": 8.0, "qual_brix_target": 14.0, "acidity_0_default": 1.2, "acidity_min": 0.5,
-        "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 1.0, "SL_ref": 120,
-        # Etileno endógeno (climatérico moderado)
-        "E0_int": 0.02, "Eref_prod": 0.15, "E_t0": 9, "E_g": 0.9, "E_auto": 0.4,
-        "E_decay": 0.7, "Ea_E_J": 52000, "E_ext_shift": 2.0, "alpha_E": 2.0,
+        "label": "Kiwi (Hayward)",
+        "Tref_C": 5.0,
+        "Ea_J": 60000,
+        "k_firm_ref": 0.06,
+        "alpha_E": 1.8,
+        "beta_RH": 1.2,
+        "RH_ref": 90,
+        "brix_min": 11,
+        "brix_max": 17,
+        "brix_g": 0.35,
+        "brix_0_default": 11.0,
+        "qual_brix_target": 15,
+        "E0_int": 0.02,
+        "Eref_prod": 0.12,
+        "E_t0": 10,
+        "E_g": 0.9,
+        "E_auto": 0.35,
+        "E_decay": 0.7,
+        "Ea_E_J": 52000,
+        "E_ext_shift": 2.0,
+        "firmness_min": 3,
+        "firmness_0_default": 45,
+        "qual_firmness_threshold": 8,
     },
     "kiwi_baby": {
-        "Tref_C": 4.0, "Ea_J": 58000, "k_firm_ref": 0.18, "beta_RH": 2.0, "RH_ref": 95,
-        "firmness_min": 1.5, "firmness_0_default": 40,
-        "brix_min": 13.0, "brix_max": 18.0, "brix_g": 0.50, "brix_0_default": 8.0,
-        "qual_firmness_threshold": 6.0, "qual_brix_target": 17.0, "acidity_0_default": 1.1, "acidity_min": 0.5,
-        "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 1.0, "SL_ref": 45,
-        "E0_int": 0.02, "Eref_prod": 0.15, "E_t0": 9, "E_g": 0.9, "E_auto": 0.4,
-        "E_decay": 0.7, "Ea_E_J": 52000, "E_ext_shift": 2.0, "alpha_E": 2.0,
+        "label": "Kiwi (Baby / Kiwi Berry)",
+        "Tref_C": 4.0,
+        "Ea_J": 58000,
+        "k_firm_ref": 0.14,
+        "alpha_E": 3.2,
+        "beta_RH": 2.0,
+        "RH_ref": 95,
+        "brix_min": 13,
+        "brix_max": 20,
+        "brix_g": 0.5,
+        "brix_0_default": 14.5,
+        "qual_brix_target": 17,
+        "E0_int": 0.03,
+        "Eref_prod": 0.22,
+        "E_t0": 5,
+        "E_g": 1.2,
+        "E_auto": 0.55,
+        "E_decay": 0.75,
+        "Ea_E_J": 52000,
+        "E_ext_shift": 2.6,
+        "firmness_min": 2,
+        "firmness_0_default": 28,
+        "qual_firmness_threshold": 6,
     },
-    "kiwi_gold": {
-        "Tref_C": 0.5, "Ea_J": 42000, "k_firm_ref": 0.028, "beta_RH": 1.3, "RH_ref": 92,
-        "firmness_min": 2.0, "firmness_0_default": 50,
-        "brix_min": 8.0, "brix_max": 16.0, "brix_g": 0.30, "brix_0_default": 8.5,
-        "qual_firmness_threshold": 6.0, "qual_brix_target": 15.0, "acidity_0_default": 1.0, "acidity_min": 0.4,
-        "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.9, "SL_ref": 90,
-        "E0_int": 0.02, "Eref_prod": 0.15, "E_t0": 9, "E_g": 0.9, "E_auto": 0.4,
-        "E_decay": 0.7, "Ea_E_J": 52000, "E_ext_shift": 2.0, "alpha_E": 2.0,
+    "maca_golden": {
+        "label": "Maçã (Golden)",
+        "Tref_C": 5.0,
+        "Ea_J": 50000,
+        "k_firm_ref": 0.025,
+        "alpha_E": 0.8,
+        "beta_RH": 0.8,
+        "RH_ref": 90,
+        "brix_min": 11.5,
+        "brix_max": 15.5,
+        "brix_g": 0.18,
+        "brix_0_default": 12.0,
+        "qual_brix_target": 13.5,
+        "E0_int": 0.01,
+        "Eref_prod": 0.1,
+        "E_t0": 18,
+        "E_g": 0.6,
+        "E_auto": 0.35,
+        "E_decay": 0.55,
+        "Ea_E_J": 52000,
+        "E_ext_shift": 1.8,
+        "firmness_min": 12,
+        "firmness_0_default": 72,
+        "qual_firmness_threshold": 35,
     },
-    # -------------------------------------------------------------------------
-    # APPLE
-    # -------------------------------------------------------------------------
-    "apple_fuji": {
-        "Tref_C": 5.0, "Ea_J": 47000, "k_firm_ref": 0.018, "beta_RH": 0.7, "RH_ref": 95,
-        "firmness_min": 15.0, "firmness_0_default": 85,
-        "brix_min": 13.0, "brix_max": 17.0, "brix_g": 0.15, "brix_0_default": 13.0,
-        "qual_firmness_threshold": 50.0, "qual_brix_target": 17.0, "acidity_0_default": 0.4, "acidity_min": 0.5,
-        "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 1.5, "SL_ref": 180,
-        "E0_int": 0.01, "Eref_prod": 0.15, "E_t0": 12, "E_g": 0.8, "E_auto": 0.4,
-        "E_decay": 0.8, "Ea_E_J": 52000, "E_ext_shift": 2.0, "alpha_E": 0.8,
+    "maca_reineta": {
+        "label": "Maçã (Reineta)",
+        "Tref_C": 5.0,
+        "Ea_J": 52000,
+        "k_firm_ref": 0.035,
+        "alpha_E": 1.1,
+        "beta_RH": 1.0,
+        "RH_ref": 90,
+        "brix_min": 11.0,
+        "brix_max": 14.0,
+        "brix_g": 0.16,
+        "brix_0_default": 11.5,
+        "qual_brix_target": 12.5,
+        "E0_int": 0.01,
+        "Eref_prod": 0.13,
+        "E_t0": 14,
+        "E_g": 0.7,
+        "E_auto": 0.4,
+        "E_decay": 0.6,
+        "Ea_E_J": 52000,
+        "E_ext_shift": 2.0,
+        "firmness_min": 10,
+        "firmness_0_default": 65,
+        "qual_firmness_threshold": 30,
     },
-    "apple_golden": {
-        "Tref_C": 1.5, "Ea_J": 44000, "k_firm_ref": 0.005, "beta_RH": 0.8, "RH_ref": 95,
-        "firmness_min": 20.0, "firmness_0_default": 70,
-        "brix_min": 10.0, "brix_max": 14.5, "brix_g": 0.18, "brix_0_default": 11.0,
-        "qual_firmness_threshold": 50.0, "qual_brix_target": 13.5, "acidity_0_default": 0.5, "acidity_min": 0.5,
-        "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 1.0, "SL_ref": 150,
-        "E0_int": 0.01, "Eref_prod": 0.15, "E_t0": 12, "E_g": 0.8, "E_auto": 0.4,
-        "E_decay": 0.8, "Ea_E_J": 52000, "E_ext_shift": 2.0, "alpha_E": 0.8,
+    "maca_gala": {
+        "label": "Maçã (Gala)",
+        "Tref_C": 5.0,
+        "Ea_J": 48000,
+        "k_firm_ref": 0.04,
+        "alpha_E": 1.3,
+        "beta_RH": 0.9,
+        "RH_ref": 90,
+        "brix_min": 12.5,
+        "brix_max": 17.0,
+        "brix_g": 0.25,
+        "brix_0_default": 13.0,
+        "qual_brix_target": 14.5,
+        "E0_int": 0.015,
+        "Eref_prod": 0.18,
+        "E_t0": 10,
+        "E_g": 0.9,
+        "E_auto": 0.5,
+        "E_decay": 0.65,
+        "Ea_E_J": 52000,
+        "E_ext_shift": 2.2,
+        "firmness_min": 9,
+        "firmness_0_default": 60,
+        "qual_firmness_threshold": 28,
     },
-    "apple_gala": {
-        "Tref_C": 1.0, "Ea_J": 24000, "k_firm_ref": 0.002, "beta_RH": 0.9, "RH_ref": 95,
-        "firmness_min": 16.0, "firmness_0_default": 70,
-        "brix_min": 12.0, "brix_max": 15.0, "brix_g": 0.10, "brix_0_default": 12.0,
-        "qual_firmness_threshold": 30.0, "qual_brix_target": 14.5, "acidity_0_default": 0.5, "acidity_min": 0.2,
-        "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 1.0, "SL_ref": 57,
-        "E0_int": 0.01, "Eref_prod": 0.15, "E_t0": 12, "E_g": 0.8, "E_auto": 0.4,
-        "E_decay": 0.8, "Ea_E_J": 52000, "E_ext_shift": 2.0, "alpha_E": 0.8,
+    "maca_fuji": {
+        "label": "Maçã (Fuji)",
+        "Tref_C": 5.0,
+        "Ea_J": 47000,
+        "k_firm_ref": 0.018,
+        "alpha_E": 0.6,
+        "beta_RH": 0.7,
+        "RH_ref": 90,
+        "brix_min": 13.0,
+        "brix_max": 19.0,
+        "brix_g": 0.15,
+        "brix_0_default": 14.0,
+        "qual_brix_target": 16.0,
+        "E0_int": 0.008,
+        "Eref_prod": 0.06,
+        "E_t0": 25,
+        "E_g": 0.5,
+        "E_auto": 0.25,
+        "E_decay": 0.45,
+        "Ea_E_J": 52000,
+        "E_ext_shift": 1.4,
+        "firmness_min": 15,
+        "firmness_0_default": 80,
+        "qual_firmness_threshold": 40,
     },
-    "apple_reineta": {
-        "Tref_C": 5.0, "Ea_J": 52000, "k_firm_ref": 0.035, "beta_RH": 1.0, "RH_ref": 90,
-        "firmness_min": 18.0, "firmness_0_default": 65,
-        "brix_min": 10.5, "brix_max": 13.5, "brix_g": 0.16, "brix_0_default": 10.5,
-        "qual_firmness_threshold": 35.0, "qual_brix_target": 12.5, "acidity_0_default": 0.8, "acidity_min": 0.5,
-        "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 1.0, "SL_ref": 90,
-        "E0_int": 0.01, "Eref_prod": 0.15, "E_t0": 12, "E_g": 0.8, "E_auto": 0.4,
-        "E_decay": 0.8, "Ea_E_J": 52000, "E_ext_shift": 2.0, "alpha_E": 0.8,
+    "laranja": {
+        "label": "Laranja",
+        "Tref_C": 5.0,
+        "Ea_J": 42000,
+        "k_firm_ref": 0.01,
+        "alpha_E": 0.15,
+        "beta_RH": 0.35,
+        "RH_ref": 90,
+        "brix_min": 10.5,
+        "brix_max": 13.5,
+        "brix_g": 0.1,
+        "brix_0_default": 11.5,
+        "qual_brix_target": 12.2,
+        "E0_int": 0.002,
+        "Eref_prod": 0.01,
+        "E_t0": 999,
+        "E_g": 0.2,
+        "E_auto": 0.0,
+        "E_decay": 0.8,
+        "Ea_E_J": 40000,
+        "E_ext_shift": 0.5,
+        "firmness_min": 35,
+        "firmness_0_default": 55,
+        "qual_firmness_threshold": 42,
     },
-    "apple_granny_smith": {
-        "Tref_C": 0.5, "Ea_J": 40000, "k_firm_ref": 0.006, "beta_RH": 0.6, "RH_ref": 95,
-        "firmness_min": 25.0, "firmness_0_default": 90,
-        "brix_min": 10.0, "brix_max": 13.0, "brix_g": 0.10, "brix_0_default": 11.5,
-        "qual_firmness_threshold": 55.0, "qual_brix_target": 12.5, "acidity_0_default": 0.75, "acidity_min": 0.6,
-        "k_acidity_ref": 0.015, "Ea_acidity_J": 50000, "qual_acidity_target": 1.8, "SL_ref": 210,
-        "E0_int": 0.01, "Eref_prod": 0.15, "E_t0": 12, "E_g": 0.8, "E_auto": 0.4,
-        "E_decay": 0.8, "Ea_E_J": 52000, "E_ext_shift": 2.0, "alpha_E": 0.8,
-    },
-    "apple_red_delicious": {
-        "Tref_C": 0.5, "Ea_J": 44000, "k_firm_ref": 0.014, "beta_RH": 0.8, "RH_ref": 95,
-        "firmness_min": 12.0, "firmness_0_default": 75,
-        "brix_min": 11.0, "brix_max": 14.0, "brix_g": 0.14, "brix_0_default": 12.0,
-        "qual_firmness_threshold": 40.0, "qual_brix_target": 13.0, "acidity_0_default": 0.3, "acidity_min": 0.15,
-        "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.35, "SL_ref": 150,
-        "E0_int": 0.01, "Eref_prod": 0.15, "E_t0": 12, "E_g": 0.8, "E_auto": 0.4,
-        "E_decay": 0.8, "Ea_E_J": 52000, "E_ext_shift": 2.0, "alpha_E": 0.8,
-    },
-    "apple_bravo_esmolfe": {
-        "Tref_C": 3.0, "Ea_J": 50000, "k_firm_ref": 0.030, "beta_RH": 1.1, "RH_ref": 90,
-        "firmness_min": 12.0, "firmness_0_default": 55,
-        "brix_min": 12.0, "brix_max": 15.0, "brix_g": 0.15, "brix_0_default": 12.5,
-        "qual_firmness_threshold": 25.0, "qual_brix_target": 14.0, "acidity_0_default": 0.6, "acidity_min": 0.4,
-        "k_acidity_ref": 0.02, "Ea_acidity_J": 52000, "qual_acidity_target": 1.0, "SL_ref": 75,
-        "E0_int": 0.01, "Eref_prod": 0.15, "E_t0": 12, "E_g": 0.8, "E_auto": 0.4,
-        "E_decay": 0.8, "Ea_E_J": 52000, "E_ext_shift": 2.0, "alpha_E": 0.8,
-    },
-    "apple_royal_gold": {
-        "Tref_C": 1.5, "Ea_J": 45000, "k_firm_ref": 0.006, "beta_RH": 0.75, "RH_ref": 95,
-        "firmness_min": 20.0, "firmness_0_default": 72,
-        "brix_min": 11.0, "brix_max": 15.0, "brix_g": 0.17, "brix_0_default": 11.5,
-        "qual_firmness_threshold": 48.0, "qual_brix_target": 14.0, "acidity_0_default": 0.45, "acidity_min": 0.3,
-        "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.9, "SL_ref": 150,
-        "E0_int": 0.01, "Eref_prod": 0.15, "E_t0": 12, "E_g": 0.8, "E_auto": 0.4,
-        "E_decay": 0.8, "Ea_E_J": 52000, "E_ext_shift": 2.0, "alpha_E": 0.8,
-    },
-    "apple_pink_lady": {
-        "Tref_C": 0.5, "Ea_J": 38000, "k_firm_ref": 0.005, "beta_RH": 0.65, "RH_ref": 95,
-        "firmness_min": 22.0, "firmness_0_default": 88,
-        "brix_min": 13.0, "brix_max": 16.0, "brix_g": 0.12, "brix_0_default": 13.5,
-        "qual_firmness_threshold": 55.0, "qual_brix_target": 15.0, "acidity_0_default": 0.55, "acidity_min": 0.4,
-        "k_acidity_ref": 0.015, "Ea_acidity_J": 50000, "qual_acidity_target": 1.0, "SL_ref": 240,
-        "E0_int": 0.01, "Eref_prod": 0.15, "E_t0": 12, "E_g": 0.8, "E_auto": 0.4,
-        "E_decay": 0.8, "Ea_E_J": 52000, "E_ext_shift": 2.0, "alpha_E": 0.8,
-    },
-    "apple_jonagold": {
-        "Tref_C": 1.0, "Ea_J": 46000, "k_firm_ref": 0.016, "beta_RH": 0.85, "RH_ref": 95,
-        "firmness_min": 14.0, "firmness_0_default": 72,
-        "brix_min": 12.0, "brix_max": 15.5, "brix_g": 0.16, "brix_0_default": 12.5,
-        "qual_firmness_threshold": 38.0, "qual_brix_target": 14.5, "acidity_0_default": 0.5, "acidity_min": 0.35,
-        "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.9, "SL_ref": 130,
-        "E0_int": 0.01, "Eref_prod": 0.15, "E_t0": 12, "E_g": 0.8, "E_auto": 0.4,
-        "E_decay": 0.8, "Ea_E_J": 52000, "E_ext_shift": 2.0, "alpha_E": 0.8,
-    },
-    "apple_alcobaca": {
-        "Tref_C": 2.0, "Ea_J": 48000, "k_firm_ref": 0.020, "beta_RH": 0.9, "RH_ref": 92,
-        "firmness_min": 18.0, "firmness_0_default": 68,
-        "brix_min": 11.0, "brix_max": 14.0, "brix_g": 0.15, "brix_0_default": 11.5,
-        "qual_firmness_threshold": 38.0, "qual_brix_target": 13.0, "acidity_0_default": 0.55, "acidity_min": 0.4,
-        "k_acidity_ref": 0.02, "Ea_acidity_J": 53000, "qual_acidity_target": 1.0, "SL_ref": 120,
-        "E0_int": 0.01, "Eref_prod": 0.15, "E_t0": 12, "E_g": 0.8, "E_auto": 0.4,
-        "E_decay": 0.8, "Ea_E_J": 52000, "E_ext_shift": 2.0, "alpha_E": 0.8,
-    },
-
-    # -------------------------------------------------------------------------
-    # BERRIES
-    # -------------------------------------------------------------------------
-    "strawberry": {
-        "Tref_C": 2.0, "Ea_J": 52000, "k_firm_ref": 0.0012, "beta_RH": 2.4, "RH_ref": 90,
-        "firmness_min": 1.0, "firmness_0_default": 5,
-        "brix_min": 5.0, "brix_max": 9.0, "brix_g": 0.3, "brix_0_default": 7.5,
-        "qual_firmness_threshold": 2.0, "qual_brix_target": 9.0, "acidity_0_default": 0.8, "acidity_min": 0.2,
-        "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 1.0, "SL_ref": 7,
-        "E0_int": 0.002, "Eref_prod": 0.01, "E_t0": 999, "E_g": 0.2, "E_auto": 0.0,
-        "E_decay": 0.8, "Ea_E_J": 50000, "E_ext_shift": 0.0, "alpha_E": 0.1,
-    },
-    "raspberry": {
-        "Tref_C": 2.0, "Ea_J": 56000, "k_firm_ref": 0.060, "beta_RH": 2.2, "RH_ref": 95,
-        "firmness_min": 1.5, "firmness_0_default": 6,
-        "brix_min": 9.5, "brix_max": 10.0, "brix_g": 0.01, "brix_0_default": 9.5,
-        "qual_firmness_threshold": 2.5, "qual_brix_target": 9.5, "acidity_0_default": 1.2, "acidity_min": 0.5,
-        "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 1.0, "SL_ref": 7,
-        "E0_int": 0.002, "Eref_prod": 0.01, "E_t0": 999, "E_g": 0.2, "E_auto": 0.0,
-        "E_decay": 0.8, "Ea_E_J": 50000, "E_ext_shift": 0.0, "alpha_E": 0.1,
-    },
-    "blueberry": {
-        "Tref_C": 1.0, "Ea_J": 42000, "k_firm_ref": 0.030, "beta_RH": 1.6, "RH_ref": 90,
-        "firmness_min": 3.0, "firmness_0_default": 10,
-        "brix_min": 11.5, "brix_max": 14.0, "brix_g": 0.02, "brix_0_default": 11.5,
-        "qual_firmness_threshold": 4.0, "qual_brix_target": 11.5, "acidity_0_default": 0.6, "acidity_min": 0.5,
-        "k_acidity_ref": 0.009, "Ea_acidity_J": 30000, "qual_acidity_target": 1.0, "SL_ref": 21,
-        "E0_int": 0.002, "Eref_prod": 0.01, "E_t0": 999, "E_g": 0.2, "E_auto": 0.0,
-        "E_decay": 0.8, "Ea_E_J": 50000, "E_ext_shift": 0.0, "alpha_E": 0.1,
-    },
-
-    # -------------------------------------------------------------------------
-    # POME / DRUPACEOUS (Cereja, Pêssego, Ameixa)
-    # -------------------------------------------------------------------------
-    "cherry": {
-        "Tref_C": 2.0, "Ea_J": 48000, "k_firm_ref": 0.045, "beta_RH": 1.6, "RH_ref": 95,
-        "firmness_min": 8.0, "firmness_0_default": 15,
-        "brix_min": 16.0, "brix_max": 16.5, "brix_g": 0.01, "brix_0_default": 16.0,
-        "qual_firmness_threshold": 10.0, "qual_brix_target": 16.0, "acidity_0_default": 0.5, "acidity_min": 0.5,
-        "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 1.0, "SL_ref": 21,
-        "E0_int": 0.01, "Eref_prod": 0.18, "E_t0": 8, "E_g": 1.0, "E_auto": 0.5,
-        "E_decay": 0.75, "Ea_E_J": 50000, "E_ext_shift": 2.0, "alpha_E": 1.0,
-    },
-    "peach": {
-        "Tref_C": 2.0, "Ea_J": 56000, "k_firm_ref": 0.080, "beta_RH": 1.1, "RH_ref": 92,
-        "firmness_min": 4.0, "firmness_0_default": 40,
-        "brix_min": 10.0, "brix_max": 14.0, "brix_g": 0.20, "brix_0_default": 10.0,
-        "qual_firmness_threshold": 8.0, "qual_brix_target": 13.0, "acidity_0_default": 0.6, "acidity_min": 0.5,
-        "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 1.0, "SL_ref": 14,
-        "E0_int": 0.01, "Eref_prod": 0.18, "E_t0": 8, "E_g": 1.0, "E_auto": 0.5,
-        "E_decay": 0.75, "Ea_E_J": 50000, "E_ext_shift": 2.0, "alpha_E": 1.0,
-    },
-    "plum": {
-        "Tref_C": 2.0, "Ea_J": 52000, "k_firm_ref": 0.1, "beta_RH": 1.0, "RH_ref": 92,
-        "firmness_min": 0.0, "firmness_0_default": 35,
-        "brix_min": 10.0, "brix_max": 16.0, "brix_g": 0.25, "brix_0_default": 10.0,
-        "qual_firmness_threshold": 10.0, "qual_brix_target": 15.0, "acidity_0_default": 0.8, "acidity_min": 0.5,
-        "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 1.175, "SL_ref": 21,
-        "E0_int": 0.01, "Eref_prod": 0.18, "E_t0": 8, "E_g": 1.0, "E_auto": 0.5,
-        "E_decay": 0.75, "Ea_E_J": 50000, "E_ext_shift": 2.0, "alpha_E": 1.0,
-    },
-
-    # -------------------------------------------------------------------------
-    # CITRUS
-    # -------------------------------------------------------------------------
-    "orange": {
-        "Tref_C": 5.0, "Ea_J": 42000, "k_firm_ref": 0.010, "beta_RH": 0.35, "RH_ref": 90,
-        "firmness_min": 20.0, "firmness_0_default": 50,
-        "brix_min": 11.0, "brix_max": 14, "brix_g": 0.01, "brix_0_default": 11.0,
-        "qual_firmness_threshold": 35.0, "qual_brix_target": 13.0, "acidity_0_default": 1.0, "acidity_min": 0.5,
-        "k_acidity_ref": 0.005, "Ea_acidity_J": 55000, "qual_acidity_target": 1.0, "SL_ref": 60,
-    # Etileno externo antecipa o gatilho climatérico (mais E_ext -> t0 menor)
-        "E0_int": 0.005, "Eref_prod": 0.02, "E_t0": 999, "E_g": 0.2, "E_auto": 0.0,
-        "E_decay": 0.7, "Ea_E_J": 45000, "E_ext_shift": 0.0, "alpha_E": 0.15,
-    },
-
-    # -------------------------------------------------------------------------
-    # OTHERS
-    # -------------------------------------------------------------------------
     "banana": {
-        "Tref_C": 5.0, "Ea_J": 42000, "k_firm_ref": 0.010, "beta_RH": 0.35, "RH_ref": 90,
-        "firmness_min": 20.0, "firmness_0_default": 50,
-        "brix_min": 11.0, "brix_max": 14, "brix_g": 0.01, "brix_0_default": 11.0,
-        "qual_firmness_threshold": 35.0, "qual_brix_target": 12.0, "acidity_0_default": 1.0, "acidity_min": 0.5,
-        "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 1.0, "SL_ref": 90,
-        "E0_int": 0.03, "Eref_prod": 0.3, "E_t0": 6, "E_g": 1.2, "E_auto": 0.6,
-        "E_decay": 0.85, "Ea_E_J": 55000, "E_ext_shift": 2.5, "alpha_E": 1.2,
+        "label": "Banana",
+        "Tref_C": 14.0,
+        "Ea_J": 65000,
+        "k_firm_ref": 0.09,
+        "alpha_E": 2.2,
+        "beta_RH": 1.0,
+        "RH_ref": 90,
+        "brix_min": 12.0,
+        "brix_max": 22.0,
+        "brix_g": 0.45,
+        "brix_0_default": 12.5,
+        "qual_brix_target": 19,
+        "E0_int": 0.02,
+        "Eref_prod": 0.35,
+        "E_t0": 4,
+        "E_g": 1.4,
+        "E_auto": 0.7,
+        "E_decay": 0.9,
+        "Ea_E_J": 60000,
+        "E_ext_shift": 3.0,
+        "firmness_min": 5,
+        "firmness_0_default": 80,
+        "qual_firmness_threshold": 15,
     },
-    "pear": {
-        "Tref_C": 2.0, "Ea_J": 54000, "k_firm_ref": 0.050, "beta_RH": 1.2, "RH_ref": 92,
-        "firmness_min": 6.0, "firmness_0_default": 50,
-        "brix_min": 11.0, "brix_max": 15.0, "brix_g": 0.25, "brix_0_default": 11.0,
-        "qual_firmness_threshold": 12.0, "qual_brix_target": 14.0, "acidity_0_default": 0.3, "acidity_min": 0.5,
-        "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 1.0, "SL_ref": 90,
-        "E0_int": 0.01, "Eref_prod": 0.18, "E_t0": 8, "E_g": 1.0, "E_auto": 0.5,
-        "E_decay": 0.75, "Ea_E_J": 50000, "E_ext_shift": 2.0, "alpha_E": 1.0,
+    "mirtilo": {
+        "label": "Mirtilo",
+        "Tref_C": 2.0,
+        "Ea_J": 52000,
+        "k_firm_ref": 0.03,
+        "alpha_E": 0.1,
+        "beta_RH": 1.6,
+        "RH_ref": 95,
+        "brix_min": 10.0,
+        "brix_max": 14.0,
+        "brix_g": 0.2,
+        "brix_0_default": 11.5,
+        "qual_brix_target": 12.5,
+        "E0_int": 0.002,
+        "Eref_prod": 0.01,
+        "E_t0": 999,
+        "E_g": 0.2,
+        "E_auto": 0.0,
+        "E_decay": 0.9,
+        "Ea_E_J": 42000,
+        "E_ext_shift": 0.4,
+        "firmness_min": 6,
+        "firmness_0_default": 30,
+        "qual_firmness_threshold": 12,
     },
-    "grape": {
-        "Tref_C": 1, "Ea_J": 45000, "k_firm_ref": 0.020, "beta_RH": 1.8, "RH_ref": 90.0,
-        "firmness_min": 5.0, "firmness_0_default": 15,
-        "brix_min": 16.0, "brix_max": 16.5, "brix_g": 0.01, "brix_0_default": 16.0,
-        "qual_firmness_threshold": 8.0, "qual_brix_target": 16.0, "acidity_0_default": 0.6, "acidity_min": 0.5,
-        "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 1.0, "SL_ref": 25,
-        "E0_int": 0.002, "Eref_prod": 0.01, "E_t0": 999, "E_g": 0.2, "E_auto": 0.0,
-        "E_decay": 0.8, "Ea_E_J": 50000, "E_ext_shift": 0.0, "alpha_E": 0.1,
+    "framboesa": {
+        "label": "Framboesa",
+        "Tref_C": 2.0,
+        "Ea_J": 56000,
+        "k_firm_ref": 0.06,
+        "alpha_E": 0.12,
+        "beta_RH": 2.2,
+        "RH_ref": 95,
+        "brix_min": 7.0,
+        "brix_max": 12.0,
+        "brix_g": 0.22,
+        "brix_0_default": 9.5,
+        "qual_brix_target": 10.0,
+        "E0_int": 0.002,
+        "Eref_prod": 0.01,
+        "E_t0": 999,
+        "E_g": 0.2,
+        "E_auto": 0.0,
+        "E_decay": 0.9,
+        "Ea_E_J": 42000,
+        "E_ext_shift": 0.4,
+        "firmness_min": 2.5,
+        "firmness_0_default": 18,
+        "qual_firmness_threshold": 6,
     },
-    "fig": {
-        "Tref_C": 2.0, "Ea_J": 52000, "k_firm_ref": 0.110, "beta_RH": 1.8, "RH_ref": 95,
-        "firmness_min": 1.0, "firmness_0_default": 8,
-        "brix_min": 16.0, "brix_max": 20.0, "brix_g": 0.15, "brix_0_default": 16.0,
-        "qual_firmness_threshold": 2.0, "qual_brix_target": 19.0, "acidity_0_default": 0.3, "acidity_min": 0.5,
-        "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 1.0, "SL_ref": 7,
-        "E0_int": 0.01, "Eref_prod": 0.18, "E_t0": 8, "E_g": 1.0, "E_auto": 0.5,
-        "E_decay": 0.75, "Ea_E_J": 50000, "E_ext_shift": 2.0, "alpha_E": 1.0,
+    "pera": {
+        "label": "Pera",
+        "Tref_C": 2.0,
+        "Ea_J": 54000,
+        "k_firm_ref": 0.05,
+        "alpha_E": 1.6,
+        "beta_RH": 1.2,
+        "RH_ref": 92,
+        "brix_min": 10.5,
+        "brix_max": 16.5,
+        "brix_g": 0.28,
+        "brix_0_default": 11.5,
+        "qual_brix_target": 14.0,
+        "E0_int": 0.01,
+        "Eref_prod": 0.22,
+        "E_t0": 10,
+        "E_g": 1.0,
+        "E_auto": 0.6,
+        "E_decay": 0.75,
+        "Ea_E_J": 56000,
+        "E_ext_shift": 2.3,
+        "firmness_min": 4,
+        "firmness_0_default": 55,
+        "qual_firmness_threshold": 10,
     },
-    "melon": {
-        "Tref_C": 7.0, "Ea_J": 52000, "k_firm_ref": 0.060, "beta_RH": 0.9, "RH_ref": 90,
-        "firmness_min": 5.0, "firmness_0_default": 20,
-        "brix_min": 10.0, "brix_max": 14.0, "brix_g": 0.22, "brix_0_default": 10.0,
-        "qual_firmness_threshold": 8.0, "qual_brix_target": 13.5, "acidity_0_default": 0.2, "acidity_min": 0.5,
-        "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 1.0, "SL_ref": 21,
-    # Etileno externo antecipa o gatilho climatérico (mais E_ext -> t0 menor)
-        "E0_int": 0.02, "Eref_prod": 0.2, "E_t0": 7, "E_g": 0.9, "E_auto": 0.45,
-        "E_decay": 0.8, "Ea_E_J": 50000, "E_ext_shift": 1.8, "alpha_E": 1.0,
+    "ameixa": {
+        "label": "Ameixa",
+        "Tref_C": 2.0,
+        "Ea_J": 52000,
+        "k_firm_ref": 0.06,
+        "alpha_E": 1.0,
+        "beta_RH": 1.0,
+        "RH_ref": 92,
+        "brix_min": 11.0,
+        "brix_max": 20.0,
+        "brix_g": 0.3,
+        "brix_0_default": 12.5,
+        "qual_brix_target": 16.5,
+        "E0_int": 0.01,
+        "Eref_prod": 0.14,
+        "E_t0": 8,
+        "E_g": 0.8,
+        "E_auto": 0.45,
+        "E_decay": 0.7,
+        "Ea_E_J": 54000,
+        "E_ext_shift": 2.0,
+        "firmness_min": 3,
+        "firmness_0_default": 40,
+        "qual_firmness_threshold": 8,
+    },
+    "pessego": {
+        "label": "Pêssego",
+        "Tref_C": 2.0,
+        "Ea_J": 56000,
+        "k_firm_ref": 0.08,
+        "alpha_E": 1.4,
+        "beta_RH": 1.1,
+        "RH_ref": 92,
+        "brix_min": 9.5,
+        "brix_max": 18.0,
+        "brix_g": 0.35,
+        "brix_0_default": 11.0,
+        "qual_brix_target": 15.0,
+        "E0_int": 0.012,
+        "Eref_prod": 0.22,
+        "E_t0": 6,
+        "E_g": 1.0,
+        "E_auto": 0.55,
+        "E_decay": 0.8,
+        "Ea_E_J": 56000,
+        "E_ext_shift": 2.4,
+        "firmness_min": 2,
+        "firmness_0_default": 35,
+        "qual_firmness_threshold": 6,
+    },
+    "cereja": {
+        "label": "Cereja",
+        "Tref_C": 2.0,
+        "Ea_J": 48000,
+        "k_firm_ref": 0.045,
+        "alpha_E": 0.05,
+        "beta_RH": 1.6,
+        "RH_ref": 95,
+        "brix_min": 14.0,
+        "brix_max": 20.0,
+        "brix_g": 0.08,
+        "brix_0_default": 16.0,
+        "qual_brix_target": 18.0,
+        "E0_int": 0.002,
+        "Eref_prod": 0.01,
+        "E_t0": 999,
+        "E_g": 0.2,
+        "E_auto": 0.0,
+        "E_decay": 0.9,
+        "Ea_E_J": 42000,
+        "E_ext_shift": 0.4,
+        "firmness_min": 4,
+        "firmness_0_default": 28,
+        "qual_firmness_threshold": 10,
+    },
+    "morango": {
+        "label": "Morango",
+        "Tref_C": 2.0,
+        "Ea_J": 52000,
+        "k_firm_ref": 0.12,
+        "alpha_E": 0.05,
+        "beta_RH": 2.4,
+        "RH_ref": 95,
+        "brix_min": 6.0,
+        "brix_max": 10.5,
+        "brix_g": 0.12,
+        "brix_0_default": 7.5,
+        "qual_brix_target": 9.0,
+        "E0_int": 0.002,
+        "Eref_prod": 0.01,
+        "E_t0": 999,
+        "E_g": 0.2,
+        "E_auto": 0.0,
+        "E_decay": 0.9,
+        "Ea_E_J": 42000,
+        "E_ext_shift": 0.4,
+        "firmness_min": 1.5,
+        "firmness_0_default": 12,
+        "qual_firmness_threshold": 4.5,
+    },
+    "uva": {
+        "label": "Uva",
+        "Tref_C": 2.0,
+        "Ea_J": 45000,
+        "k_firm_ref": 0.02,
+        "alpha_E": 0.05,
+        "beta_RH": 1.8,
+        "RH_ref": 92,
+        "brix_min": 14.0,
+        "brix_max": 22.0,
+        "brix_g": 0.05,
+        "brix_0_default": 16.0,
+        "qual_brix_target": 18.0,
+        "E0_int": 0.002,
+        "Eref_prod": 0.01,
+        "E_t0": 999,
+        "E_g": 0.2,
+        "E_auto": 0.0,
+        "E_decay": 0.9,
+        "Ea_E_J": 42000,
+        "E_ext_shift": 0.4,
+        "firmness_min": 3,
+        "firmness_0_default": 20,
+        "qual_firmness_threshold": 7,
+    },
+    "figo": {
+        "label": "Figo",
+        "Tref_C": 2.0,
+        "Ea_J": 52000,
+        "k_firm_ref": 0.11,
+        "alpha_E": 0.2,
+        "beta_RH": 1.8,
+        "RH_ref": 95,
+        "brix_min": 14.0,
+        "brix_max": 26.0,
+        "brix_g": 0.18,
+        "brix_0_default": 16.0,
+        "qual_brix_target": 20.0,
+        "E0_int": 0.005,
+        "Eref_prod": 0.05,
+        "E_t0": 12,
+        "E_g": 0.5,
+        "E_auto": 0.15,
+        "E_decay": 0.7,
+        "Ea_E_J": 52000,
+        "E_ext_shift": 1.0,
+        "firmness_min": 1.2,
+        "firmness_0_default": 10,
+        "qual_firmness_threshold": 3.5,
+    },
+    "melao": {
+        "label": "Melão",
+        "Tref_C": 7.0,
+        "Ea_J": 52000,
+        "k_firm_ref": 0.06,
+        "alpha_E": 0.9,
+        "beta_RH": 0.9,
+        "RH_ref": 90,
+        "brix_min": 9.0,
+        "brix_max": 16.0,
+        "brix_g": 0.22,
+        "brix_0_default": 10.5,
+        "qual_brix_target": 13.5,
+        "E0_int": 0.01,
+        "Eref_prod": 0.1,
+        "E_t0": 10,
+        "E_g": 0.7,
+        "E_auto": 0.35,
+        "E_decay": 0.7,
+        "Ea_E_J": 52000,
+        "E_ext_shift": 1.8,
+        "firmness_min": 2.0,
+        "firmness_0_default": 25,
+        "qual_firmness_threshold": 6.0,
+    },
+}
+
+PRESETS_SOFIA = {
+    "kiwi_hayward": {
+        "label": "Kiwi (Hayward)",
+        "Tref_C": 5.0,
+        "Ea_J": 60000,
+        "k_firm_ref": 0.06,
+        "beta_RH": 1.2,
+        "RH_ref": 90,
+        "brix_min": 11,
+        "brix_max": 17,
+        "brix_g": 0.35,
+        "brix_0_default": 11.0,
+        "qual_brix_target": 15,
+        "SL_ref": 30,
+        "firmness_min": 2,
+        "firmness_0_default": 18,
+        "qual_firmness_threshold": 5,
+        "acidity_0_default": 1.5,
+        "acidity_min": 0.5,
+        "k_acidity_ref": 0.02,
+        "Ea_acidity_J": 55000,
+        "qual_acidity_target": 1.0,
+    },
+    "kiwi_baby": {
+        "label": "Kiwi (Baby/Berry)",
+        "Tref_C": 4.0,
+        "Ea_J": 58000,
+        "k_firm_ref": 0.14,
+        "beta_RH": 2.0,
+        "RH_ref": 95,
+        "brix_min": 8.0,
+        "brix_max": 18.0,
+        "brix_g": 0.5,
+        "brix_0_default": 8.0,
+        "qual_brix_target": 17.0,
+        "SL_ref": 45,
+        "firmness_min": 1.5,
+        "firmness_0_default": 40,
+        "qual_firmness_threshold": 6.0,
+        "acidity_0_default": 1.1,
+        "acidity_min": 0.5,
+        "k_acidity_ref": 0.02,
+        "Ea_acidity_J": 55000,
+        "qual_acidity_target": 1.0,
+    },
+    "maca_fuji": {
+        "label": "Maçã (Fuji)",
+        "Tref_C": 5.0,
+        "Ea_J": 47000,
+        "k_firm_ref": 0.018,
+        "beta_RH": 0.7,
+        "RH_ref": 90,
+        "brix_min": 13.0,
+        "brix_max": 17.0,
+        "brix_g": 0.15,
+        "brix_0_default": 13.0,
+        "qual_brix_target": 16.0,
+        "SL_ref": 180,
+        "firmness_min": 25.0,
+        "firmness_0_default": 85,
+        "qual_firmness_threshold": 45.0,
+        "acidity_0_default": 0.4,
+        "acidity_min": 0.5,
+        "k_acidity_ref": 0.02,
+        "Ea_acidity_J": 55000,
+        "qual_acidity_target": 1.0,
+    },
+    "maca_golden": {
+        "label": "Maçã (Golden)",
+        "Tref_C": 5.0,
+        "Ea_J": 50000,
+        "k_firm_ref": 0.025,
+        "beta_RH": 0.8,
+        "RH_ref": 90,
+        "brix_min": 11.0,
+        "brix_max": 14.5,
+        "brix_g": 0.18,
+        "brix_0_default": 11.0,
+        "qual_brix_target": 13.5,
+        "SL_ref": 120,
+        "firmness_min": 20.0,
+        "firmness_0_default": 70,
+        "qual_firmness_threshold": 40.0,
+        "acidity_0_default": 0.5,
+        "acidity_min": 0.5,
+        "k_acidity_ref": 0.02,
+        "Ea_acidity_J": 55000,
+        "qual_acidity_target": 1.0,
+    },
+    "maca_gala": {
+        "label": "Maçã (Gala)",
+        "Tref_C": 5.0,
+        "Ea_J": 48000,
+        "k_firm_ref": 0.04,
+        "beta_RH": 0.9,
+        "RH_ref": 90,
+        "brix_min": 12.0,
+        "brix_max": 15.0,
+        "brix_g": 0.2,
+        "brix_0_default": 12.0,
+        "qual_brix_target": 14.5,
+        "SL_ref": 90,
+        "firmness_min": 16.0,
+        "firmness_0_default": 70,
+        "qual_firmness_threshold": 30.0,
+        "acidity_0_default": 0.4,
+        "acidity_min": 0.5,
+        "k_acidity_ref": 0.02,
+        "Ea_acidity_J": 55000,
+        "qual_acidity_target": 1.0,
+    },
+    "maca_reineta": {
+        "label": "Maçã (Reineta)",
+        "Tref_C": 5.0,
+        "Ea_J": 52000,
+        "k_firm_ref": 0.035,
+        "beta_RH": 1.0,
+        "RH_ref": 90,
+        "brix_min": 10.5,
+        "brix_max": 13.5,
+        "brix_g": 0.16,
+        "brix_0_default": 10.5,
+        "qual_brix_target": 12.5,
+        "SL_ref": 90,
+        "firmness_min": 18.0,
+        "firmness_0_default": 65,
+        "qual_firmness_threshold": 35.0,
+        "acidity_0_default": 0.8,
+        "acidity_min": 0.5,
+        "k_acidity_ref": 0.02,
+        "Ea_acidity_J": 55000,
+        "qual_acidity_target": 1.0,
+    },
+    "morango": {
+        "label": "Morango",
+        "Tref_C": 2.0,
+        "Ea_J": 52000,
+        "k_firm_ref": 0.12,
+        "beta_RH": 2.4,
+        "RH_ref": 95,
+        "brix_min": 7.5,
+        "brix_max": 8.0,
+        "brix_g": 0.01,
+        "brix_0_default": 7.5,
+        "qual_brix_target": 7.5,
+        "SL_ref": 7,
+        "firmness_min": 1.0,
+        "firmness_0_default": 5,
+        "qual_firmness_threshold": 2.0,
+        "acidity_0_default": 0.8,
+        "acidity_min": 0.5,
+        "k_acidity_ref": 0.02,
+        "Ea_acidity_J": 55000,
+        "qual_acidity_target": 1.0,
+    },
+    "framboesa": {
+        "label": "Framboesa",
+        "Tref_C": 2.0,
+        "Ea_J": 56000,
+        "k_firm_ref": 0.06,
+        "beta_RH": 2.2,
+        "RH_ref": 95,
+        "brix_min": 9.5,
+        "brix_max": 10.0,
+        "brix_g": 0.01,
+        "brix_0_default": 9.5,
+        "qual_brix_target": 9.5,
+        "SL_ref": 7,
+        "firmness_min": 1.5,
+        "firmness_0_default": 6,
+        "qual_firmness_threshold": 2.5,
+        "acidity_0_default": 1.2,
+        "acidity_min": 0.5,
+        "k_acidity_ref": 0.02,
+        "Ea_acidity_J": 55000,
+        "qual_acidity_target": 1.0,
+    },
+    "mirtilo": {
+        "label": "Mirtilo",
+        "Tref_C": 2.0,
+        "Ea_J": 52000,
+        "k_firm_ref": 0.03,
+        "beta_RH": 1.6,
+        "RH_ref": 95,
+        "brix_min": 11.5,
+        "brix_max": 12.0,
+        "brix_g": 0.01,
+        "brix_0_default": 11.5,
+        "qual_brix_target": 11.5,
+        "SL_ref": 21,
+        "firmness_min": 3.0,
+        "firmness_0_default": 10,
+        "qual_firmness_threshold": 4.0,
+        "acidity_0_default": 0.6,
+        "acidity_min": 0.5,
+        "k_acidity_ref": 0.02,
+        "Ea_acidity_J": 55000,
+        "qual_acidity_target": 1.0,
+    },
+    "cereja": {
+        "label": "Cereja",
+        "Tref_C": 2.0,
+        "Ea_J": 48000,
+        "k_firm_ref": 0.045,
+        "beta_RH": 1.6,
+        "RH_ref": 95,
+        "brix_min": 16.0,
+        "brix_max": 16.5,
+        "brix_g": 0.01,
+        "brix_0_default": 16.0,
+        "qual_brix_target": 16.0,
+        "SL_ref": 21,
+        "firmness_min": 8.0,
+        "firmness_0_default": 15,
+        "qual_firmness_threshold": 10.0,
+        "acidity_0_default": 0.5,
+        "acidity_min": 0.5,
+        "k_acidity_ref": 0.02,
+        "Ea_acidity_J": 55000,
+        "qual_acidity_target": 1.0,
+    },
+    "pessego": {
+        "label": "Pêssego",
+        "Tref_C": 2.0,
+        "Ea_J": 56000,
+        "k_firm_ref": 0.08,
+        "beta_RH": 1.1,
+        "RH_ref": 92,
+        "brix_min": 10.0,
+        "brix_max": 14.0,
+        "brix_g": 0.2,
+        "brix_0_default": 10.0,
+        "qual_brix_target": 13.0,
+        "SL_ref": 14,
+        "firmness_min": 4.0,
+        "firmness_0_default": 40,
+        "qual_firmness_threshold": 8.0,
+        "acidity_0_default": 0.6,
+        "acidity_min": 0.5,
+        "k_acidity_ref": 0.02,
+        "Ea_acidity_J": 55000,
+        "qual_acidity_target": 1.0,
+    },
+    "ameixa": {
+        "label": "Ameixa",
+        "Tref_C": 2.0,
+        "Ea_J": 52000,
+        "k_firm_ref": 0.06,
+        "beta_RH": 1.0,
+        "RH_ref": 92,
+        "brix_min": 10.0,
+        "brix_max": 16.0,
+        "brix_g": 0.25,
+        "brix_0_default": 10.0,
+        "qual_brix_target": 15.0,
+        "SL_ref": 21,
+        "firmness_min": 5.0,
+        "firmness_0_default": 35,
+        "qual_firmness_threshold": 10.0,
+        "acidity_0_default": 0.8,
+        "acidity_min": 0.5,
+        "k_acidity_ref": 0.02,
+        "Ea_acidity_J": 55000,
+        "qual_acidity_target": 1.0,
+    },
+    "laranja": {
+        "label": "Laranja",
+        "Tref_C": 5.0,
+        "Ea_J": 42000,
+        "k_firm_ref": 0.01,
+        "beta_RH": 0.35,
+        "RH_ref": 90,
+        "brix_min": 11.0,
+        "brix_max": 11.5,
+        "brix_g": 0.01,
+        "brix_0_default": 11.0,
+        "qual_brix_target": 11.0,
+        "SL_ref": 90,
+        "firmness_min": 20.0,
+        "firmness_0_default": 50,
+        "qual_firmness_threshold": 35.0,
+        "acidity_0_default": 1.0,
+        "acidity_min": 0.5,
+        "k_acidity_ref": 0.02,
+        "Ea_acidity_J": 55000,
+        "qual_acidity_target": 1.0,
+    },
+    "banana": {
+        "label": "Banana",
+        "Tref_C": 14.0,
+        "Ea_J": 65000,
+        "k_firm_ref": 0.09,
+        "beta_RH": 1.0,
+        "RH_ref": 90,
+        "brix_min": 5.0,
+        "brix_max": 20.0,
+        "brix_g": 0.5,
+        "brix_0_default": 5.0,
+        "qual_brix_target": 19.0,
+        "SL_ref": 21,
+        "firmness_min": 5.0,
+        "firmness_0_default": 80,
+        "qual_firmness_threshold": 15.0,
+        "acidity_0_default": 0.4,
+        "acidity_min": 0.5,
+        "k_acidity_ref": 0.02,
+        "Ea_acidity_J": 55000,
+        "qual_acidity_target": 1.0,
+    },
+    "pera": {
+        "label": "Pera",
+        "Tref_C": 2.0,
+        "Ea_J": 54000,
+        "k_firm_ref": 0.05,
+        "beta_RH": 1.2,
+        "RH_ref": 92,
+        "brix_min": 11.0,
+        "brix_max": 15.0,
+        "brix_g": 0.25,
+        "brix_0_default": 11.0,
+        "qual_brix_target": 14.0,
+        "SL_ref": 90,
+        "firmness_min": 6.0,
+        "firmness_0_default": 50,
+        "qual_firmness_threshold": 12.0,
+        "acidity_0_default": 0.3,
+        "acidity_min": 0.5,
+        "k_acidity_ref": 0.02,
+        "Ea_acidity_J": 55000,
+        "qual_acidity_target": 1.0,
+    },
+    "uva": {
+        "label": "Uva",
+        "Tref_C": 2.0,
+        "Ea_J": 45000,
+        "k_firm_ref": 0.02,
+        "beta_RH": 1.8,
+        "RH_ref": 92,
+        "brix_min": 16.0,
+        "brix_max": 16.5,
+        "brix_g": 0.01,
+        "brix_0_default": 16.0,
+        "qual_brix_target": 16.0,
+        "SL_ref": 45,
+        "firmness_min": 5.0,
+        "firmness_0_default": 15,
+        "qual_firmness_threshold": 8.0,
+        "acidity_0_default": 0.6,
+        "acidity_min": 0.5,
+        "k_acidity_ref": 0.02,
+        "Ea_acidity_J": 55000,
+        "qual_acidity_target": 1.0,
+    },
+    "figo": {
+        "label": "Figo",
+        "Tref_C": 2.0,
+        "Ea_J": 52000,
+        "k_firm_ref": 0.11,
+        "beta_RH": 1.8,
+        "RH_ref": 95,
+        "brix_min": 16.0,
+        "brix_max": 20.0,
+        "brix_g": 0.15,
+        "brix_0_default": 16.0,
+        "qual_brix_target": 19.0,
+        "SL_ref": 7,
+        "firmness_min": 1.0,
+        "firmness_0_default": 8,
+        "qual_firmness_threshold": 2.0,
+        "acidity_0_default": 0.3,
+        "acidity_min": 0.5,
+        "k_acidity_ref": 0.02,
+        "Ea_acidity_J": 55000,
+        "qual_acidity_target": 1.0,
+    },
+    "melao": {
+        "label": "Melão",
+        "Tref_C": 7.0,
+        "Ea_J": 52000,
+        "k_firm_ref": 0.06,
+        "beta_RH": 0.9,
+        "RH_ref": 90,
+        "brix_min": 10.0,
+        "brix_max": 14.0,
+        "brix_g": 0.22,
+        "brix_0_default": 10.0,
+        "qual_brix_target": 13.5,
+        "SL_ref": 21,
+        "firmness_min": 5.0,
+        "firmness_0_default": 20,
+        "qual_firmness_threshold": 8.0,
+        "acidity_0_default": 0.2,
+        "acidity_min": 0.5,
+        "k_acidity_ref": 0.02,
+        "Ea_acidity_J": 55000,
+        "qual_acidity_target": 1.0,
     },
 }
 
@@ -376,7 +966,6 @@ MOLD_BY_FRUIT = {
 
     # Low (citrinos)
     "orange": {"RH_mold_thr": 96.0, "mold_rate_ref": 0.03, "mold_sens_RH": 8.0, "mold_max_penalty": 0.50, "Ea_mold_J": 42000.0},
-    # Etileno externo antecipa o gatilho climatérico (mais E_ext -> t0 menor)
 }
 
 PACKAGING_FACTORS = {
@@ -386,12 +975,27 @@ PACKAGING_FACTORS = {
    "MAP (Atmosfera Modificada) / Plástico Selado": 0.10
 }
 
-# Aplica defaults e depois overrides por fruta
-for k in PRESETS:
+
+for k in PRESETS_ACADEMIC:
     for kk, vv in MOLD_DEFAULTS.items():
-        PRESETS[k].setdefault(kk, vv)
+        PRESETS_ACADEMIC[k].setdefault(kk, vv)
     if k in MOLD_BY_FRUIT:
-        PRESETS[k].update(MOLD_BY_FRUIT[k])
+        PRESETS_ACADEMIC[k].update(MOLD_BY_FRUIT[k])
+
+for k in PRESETS_SOFIA:
+    for kk, vv in MOLD_DEFAULTS.items():
+        PRESETS_SOFIA[k].setdefault(kk, vv)
+    if k in MOLD_BY_FRUIT:
+        PRESETS_SOFIA[k].update(MOLD_BY_FRUIT[k])
+
+
+# Helper to get the correct preset
+def get_preset(fruit_key):
+    if fruit_key in PRESETS_ACADEMIC:
+        return PRESETS_ACADEMIC[fruit_key]
+    if fruit_key in PRESETS_SOFIA:
+        return PRESETS_SOFIA[fruit_key]
+    raise KeyError(f"Preset {fruit_key} not found.")
 
 # Temperature / RH Warehouse Deduction
 # =============================================================================
@@ -516,14 +1120,13 @@ def fill_nulls_with_constant(data_array, replacement_value):
     """
     return [replacement_value if x is None else x for x in data_array]
 
-
 def fill_nulls_with_warehouse_sim(temp_array, rh_array, region_codes, alphas, start_date):
     # Generate external climate data
     T_ext_series = []
     HR_ext_series = []
     
     for i in range(len(temp_array)):
-        current_date = start_date + datetime.timedelta(days=i)
+        current_date = start_date + timedelta(days=i)
         temp, hum = get_region_weather(region_codes[i], current_date)
         T_ext_series.append(temp)
         HR_ext_series.append(hum)
@@ -605,7 +1208,7 @@ def run_simulation_prof_luis_paulo(fruit_key, T_c, E_ext_ppm, RH_pct, days, firm
         for kk, vv in MOLD_DEFAULTS.items():
             p.setdefault(kk, vv)
     else:
-        p = PRESETS[fruit_key]
+        p = PRESETS_ACADEMIC[fruit_key]
     max_sim_days = max(days + 200, 365)
     t = np.arange(0, max_sim_days, dt)
     
@@ -649,15 +1252,15 @@ def run_simulation_prof_luis_paulo(fruit_key, T_c, E_ext_ppm, RH_pct, days, firm
     #   dE/dt = prod(t)*(1 + E_auto*E) - E_decay*E
     # prod(t) tem rampa sigmóide (climatérica) e aumenta com T.
     E_int = np.zeros_like(t)
-    E_int[0] = float(p.get("E0_int", 0.01))
+    E_int[0] = float(p["E0_int"])
 
-    Ea_E_J = float(p.get("Ea_E_J", 52000))
-    Eref_prod = float(p.get("Eref_prod", 0.08))     # produção máxima (ppm/dia)
-    E_decay = float(p.get("E_decay", 0.7))          # remoção (1/dia)
-    E_t0 = float(p.get("E_t0", 15.0))               # gatilho sem E_ext (dias)
-    E_g = float(p.get("E_g", 0.8))                  # inclinação do gatilho
-    E_auto = float(p.get("E_auto", 0.35))           # autocatálise
-    E_ext_shift = float(p.get("E_ext_shift", 2.0))  # E_ext antecipa o gatilho
+    Ea_E_J = float(p["Ea_E_J"])
+    Eref_prod = float(p["Eref_prod"])            # produção máxima (ppm/dia)
+    E_decay = float(p["E_decay"])                 # remoção (1/dia)
+    E_t0 = float(p["E_t0"])                       # gatilho sem E_ext (dias)
+    E_g = float(p["E_g"])                          # inclinação do gatilho
+    E_auto = float(p["E_auto"])                   # autocatálise
+    E_ext_shift = float(p["E_ext_shift"])          # E_ext antecipa o gatilho
 
     # Etileno externo antecipa o gatilho climatérico (mais E_ext -> t0 menor)
     t0_eff = E_t0 - E_ext_shift * np.log1p(np.maximum(0.0, E_ext_ppm))
@@ -769,7 +1372,13 @@ def run_simulation_prof_luis_paulo(fruit_key, T_c, E_ext_ppm, RH_pct, days, firm
     else:
         remaining_SL = float(max_sim_days - days)
         
-    arrays_dict = {"quality": quality.tolist(), "firmness": firmness.tolist(), "brix": brix.tolist()}
+    idx_end = idx_days + 1
+    arrays_dict = {
+        "quality": quality[:idx_end].tolist(),
+        "firmness": firmness[:idx_end].tolist(),
+        "brix": brix[:idx_end].tolist(),
+        "t": t[:idx_end].tolist()
+    }
     return final_quality, remaining_SL, firmness[idx_days], brix[idx_days], arrays_dict
 
 # SIM (Firmness, Brix, Acidity, VPD, Shelf Life & Mold) Sofia Machado
@@ -812,7 +1421,7 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
         for kk, vv in MOLD_DEFAULTS.items():
             p.setdefault(kk, vv)
     else:
-        p = PRESETS[fruit_key]
+        p = PRESETS_SOFIA[fruit_key]
         
     if packaging_methods is None:
         packaging_methods = ["Granel (Sem embalagem)"] * days
@@ -856,7 +1465,7 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
     acidity_min = float(p["acidity_min"])
     acidity[0] = max(acidity_min + 1e-6, float(acidity_0_user))
     kT_acidity = p["k_acidity_ref"] * k_temp_scaling(p["Ea_acidity_J"], T_K, Tref_K)
-    # Remaining Shelf Life
+    
     SL_ref = float(p.get("SL_ref", 30))
     consumed_SL = np.zeros_like(t)
 
@@ -891,17 +1500,11 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
     # Quality
     firm_score = 1 / (1 + np.exp(-0.35 * (firmness - float(p["qual_firmness_threshold"]))))
     brix_score = np.exp(-((brix - float(p["qual_brix_target"]))**2) / 2)
+    
     acidity_score = np.exp(-((acidity - float(p.get("qual_acidity_target", 1.0)))**2) / 0.5)
-
-    # Maturation Index
     maturation_index = brix / acidity
-    # 1. Calcular o Rácio Alvo (ideal) baseado nos presets
     target_ratio = float(p["qual_brix_target"]) / float(p.get("qual_acidity_target", 1.0))
-
-    # 2. Criar um score para o rácio (penaliza desvios do rácio ideal)
-    # O divisor 25.0 controla a "largura" da aceitação. Podes ajustar se quiseres ser mais rigoroso.
     ratio_score = np.exp(-((maturation_index - target_ratio)**2) / 10.0)
-
     quality_base = 100 * (0.40 * firm_score + 0.30 * ratio_score + 0.15 * brix_score + 0.15 * acidity_score)
 
     # Mold
@@ -928,7 +1531,7 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
 
     remaining_SL = np.where(mold_penalty > 0, 0, remaining_SL)
 
-    arrays_dict = {"quality": quality.tolist(), "firmness": firmness.tolist(), "brix": brix.tolist(), "acidity": acidity.tolist()}
+    arrays_dict = {"quality": quality.tolist(), "firmness": firmness.tolist(), "brix": brix.tolist(), "acidity": acidity.tolist(), "t": t.tolist()}
     return quality[len(quality) - 1], remaining_SL[len(remaining_SL) - 1], firmness[len(firmness) - 1], brix[len(brix) - 1], arrays_dict
 
 # FORECAST API ENDPOINT
@@ -1023,19 +1626,19 @@ def forecast(request: LifecycleDataRequest, client_id: str = "dummy_client", sto
     fruit_type = request.lot_identification.fruit_type.lower()
     culture_name = request.lot_identification.culture_name.lower()
     raw_key = f"{fruit_type}_{culture_name}"
-    if raw_key in PRESETS:
+    if (raw_key in PRESETS_SOFIA or raw_key in PRESETS_ACADEMIC):
         fruit_key = raw_key
-    elif fruit_type in PRESETS:
+    elif (fruit_type in PRESETS_SOFIA or fruit_type in PRESETS_ACADEMIC):
         fruit_key = fruit_type
-    elif culture_name in PRESETS:
+    elif (culture_name in PRESETS_SOFIA or culture_name in PRESETS_ACADEMIC):
         fruit_key = culture_name
     else:
         fruit_key = raw_key
 
-    if fruit_key not in PRESETS:
+    if (fruit_key not in PRESETS_SOFIA and fruit_key not in PRESETS_ACADEMIC):
         return JSONResponse(
             status_code=400,
-            content={"detail": f"Unknown fruit key derived from fruit_type and culture_name: {fruit_key}. Valid keys: {list(PRESETS.keys())}"}
+            content={"detail": f"Unknown fruit key derived from fruit_type and culture_name: {fruit_key}. Valid keys: {list(set(list(PRESETS_SOFIA.keys()) + list(PRESETS_ACADEMIC.keys())))}"}
         )
 
     acquired = _inference_lock.acquire(blocking=False)
@@ -1106,24 +1709,24 @@ def forecast(request: LifecycleDataRequest, client_id: str = "dummy_client", sto
             # Impute missing T and RH using IPMA refactored function
             T_c, RH_pct = fill_nulls_with_warehouse_sim(T_c, RH_pct, region_codes, alphas, start_date)
         
-        # Handle ethylene nulls
+        # Orchestrator: academic model requires BOTH ethylene data AND academic preset
         has_ethylene = any(e is not None for e in E_ppm)
-        if has_ethylene:
-            # fill nulls with 0 or forward fill
+        has_academic_preset = fruit_key in PRESETS_ACADEMIC
+        use_academic = has_ethylene and has_academic_preset
+
+        if use_academic:
             E_ppm_filled = [e if e is not None else 0.0 for e in E_ppm]
+            preset = PRESETS_ACADEMIC[fruit_key]
         else:
-            E_ppm_filled = None
-            
-        # Get defaults
-        preset = PRESETS[fruit_key]
-        
+            preset = PRESETS_SOFIA[fruit_key]
+
         b0 = request.lot_identification.initial_metrics.soluble_solids_brix
         if b0 is None:
             b0 = preset["brix_0_default"]
-            
         f0 = preset["firmness_0_default"]
         a0 = preset.get("acidity_0_default", 0.5)
-        if has_ethylene:
+
+        if use_academic:
             algorithm = "ode_academic"
             quality, lifetime, final_f, final_b, arrays_dict = run_simulation_prof_luis_paulo(
                 fruit_key=fruit_key,
@@ -1207,21 +1810,21 @@ class PresetModel(BaseModel):
     brix_0_default: float
     qual_firmness_threshold: float
     qual_brix_target: float
-    acidity_0_default: float
-    acidity_min: float
-    k_acidity_ref: float
-    Ea_acidity_J: float
-    qual_acidity_target: float
-    SL_ref: float
-    E0_int: float
-    Eref_prod: float
-    E_t0: float
-    E_g: float
-    E_auto: float
-    E_decay: float
-    Ea_E_J: float
-    E_ext_shift: float
-    alpha_E: float
+    acidity_0_default: Optional[float] = None
+    acidity_min: Optional[float] = None
+    k_acidity_ref: Optional[float] = None
+    Ea_acidity_J: Optional[float] = None
+    qual_acidity_target: Optional[float] = None
+    SL_ref: Optional[float] = None
+    E0_int: Optional[float] = None
+    Eref_prod: Optional[float] = None
+    E_t0: Optional[float] = None
+    E_g: Optional[float] = None
+    E_auto: Optional[float] = None
+    E_decay: Optional[float] = None
+    Ea_E_J: Optional[float] = None
+    E_ext_shift: Optional[float] = None
+    alpha_E: Optional[float] = None
 
 class MoldPresetModel(BaseModel):
     RH_mold_thr: float
@@ -1237,13 +1840,17 @@ class PresetRequest(BaseModel):
 
 @app.post("/preset")
 def add_preset(request: PresetRequest):
-    PRESETS[request.fruit_key] = request.preset.model_dump()
+    pdump = request.preset.model_dump(exclude_none=True)
+    if "E0_int" in pdump:
+        PRESETS_ACADEMIC[request.fruit_key] = pdump
+    else:
+        PRESETS_SOFIA[request.fruit_key] = pdump
     MOLD_BY_FRUIT[request.fruit_key] = request.mold_preset.model_dump()
     return {"message": "Preset added successfully", "fruit_key": request.fruit_key}
 
 @app.get("/presets")
 def get_presets():
-    return {"fruits": list(PRESETS.keys())}
+    return {"fruits": list(set(list(PRESETS_SOFIA.keys()) + list(PRESETS_ACADEMIC.keys())))}
 
 if __name__ == "__main__":
     def run_server():
