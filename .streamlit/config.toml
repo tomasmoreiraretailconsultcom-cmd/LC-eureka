@@ -1,0 +1,6 @@
+[theme]
+primaryColor = "#FF6B00" # Customize interactive elements (e.g., buttons)
+backgroundColor = "#ffffff" # Set the main background to white
+secondaryBackgroundColor = "rgb(248, 250, 252)" # Light gray for secondary areas like sidebars
+textColor = "#000000" # Black text for readability
+font = "sans serif" # Default font family

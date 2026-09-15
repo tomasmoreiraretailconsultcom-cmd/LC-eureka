@@ -1,0 +1,780 @@
+{
+  "version": "1.0",
+  "export_metadata": {
+    "generated_at": "2026-09-14T10:00:08.435823",
+    "target_service": "Lifecycle Decay Prediction Model Web Service",
+    "days_elapsed_total": 47,
+    "date_interval": {
+      "start_date": "2026-07-29",
+      "end_date": "2026-09-14"
+    }
+  },
+  "lot_identification": {
+    "lot_id": 272,
+    "batch_id": "LOTE-272",
+    "culture_name": "Fuji",
+    "fruit_type": "Apple",
+    "producer": "Pro",
+    "current_owner": "Pro",
+    "harvest_date": "2026-07-29",
+    "initial_quantity_kg": 34.0,
+    "current_stock_kg": 0.0,
+    "delivered_quantity_kg": 0.0,
+    "initial_metrics": {
+      "soluble_solids_brix": null,
+      "caliber_mm": null,
+      "quality_score": 10,
+      "waste_kg": 34.0,
+      "expiration_date": null
+    }
+  },
+  "plantation_origin": {
+    "plantation_id": null,
+    "name": "N/A",
+    "location": "N/A",
+    "production_type": "N/A",
+    "chemical_use": "N/A",
+    "soil_type": "N/A",
+    "water_regime": "N/A",
+    "conduct_system": "N/A",
+    "ph_soil": null,
+    "organic_matter_percent": null
+  },
+  "plantation_agricultural_events": [],
+  "current_warehouse": {
+    "id": 28,
+    "location": "Rua João 2704",
+    "region": "PT-LVT",
+    "region_display": "Lisboa e Vale do Tejo (Mediterrânico moderado)",
+    "control_type": "Non-Controlled",
+    "storage_unit": "PALLETS",
+    "capacity_kg": 32424.0,
+    "latitude": null,
+    "longitude": null,
+    "has_installed_sensors": false
+  },
+  "meteorology_and_imputation_strategy": {
+    "meteo_source": "FIXED",
+    "meteo_source_display": "FIXED",
+    "json_fallback_mode": "FIXED",
+    "json_fallback_display": "FIXED",
+    "fixed_temperature_celsius": 4.0,
+    "fixed_humidity_percent": 90.0,
+    "ipma_region_code": "PT-LVT",
+    "imputation_instructions": "Valores Fixos configurados: Temperatura constante a 4.0°C e Humidade Relativa a 90.0%."
+  },
+  "blockchain_ledger": {
+    "total_blocks_count": 0,
+    "blocks": []
+  },
+  "transport_and_logistics": [
+    {
+      "order_id": 3067,
+      "order_type": "SELL",
+      "requester": "Pro",
+      "fulfilled_by": "RetailStore",
+      "status": "APPROVED",
+      "transport_status": "ACCEPTED",
+      "transporter": null,
+      "vehicle": "Camião TIR (40t) - Scania R450 (AA-11-BB) - 24000.00kg",
+      "pickup_date": null,
+      "delivery_date": null,
+      "origin_warehouse": "Rua Amaral Dias 2765, Lordelo (WH: 26)",
+      "destination_warehouse": "Rua Amaral Dias 2765, Lordelo",
+      "quantity_kg": 34.0,
+      "transport_sensor_data": "No sensor data recorded during transport"
+    }
+  ],
+  "sensor_history_by_warehouse": [
+    {
+      "warehouse_id": 28,
+      "warehouse_location": "Rua João 2704",
+      "region": "PT-LVT",
+      "meteo_source": "FIXED",
+      "total_days_recorded": 48,
+      "daily_readings": [
+        {
+          "date": "2026-07-29",
+          "temperature_celsius": 22.7,
+          "humidity_percent": 66.0,
+          "ethylene_ppm": 0.065,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-07-30",
+          "temperature_celsius": 23.9,
+          "humidity_percent": 62.6,
+          "ethylene_ppm": 0.06,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-07-31",
+          "temperature_celsius": 25.0,
+          "humidity_percent": 63.2,
+          "ethylene_ppm": 0.069,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-01",
+          "temperature_celsius": 23.4,
+          "humidity_percent": 63.4,
+          "ethylene_ppm": 0.062,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-02",
+          "temperature_celsius": 24.0,
+          "humidity_percent": 61.8,
+          "ethylene_ppm": 0.064,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-03",
+          "temperature_celsius": 25.0,
+          "humidity_percent": 62.0,
+          "ethylene_ppm": 0.067,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-04",
+          "temperature_celsius": 24.8,
+          "humidity_percent": 66.5,
+          "ethylene_ppm": 0.079,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-05",
+          "temperature_celsius": 23.8,
+          "humidity_percent": 65.5,
+          "ethylene_ppm": 0.075,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-06",
+          "temperature_celsius": 23.4,
+          "humidity_percent": 65.6,
+          "ethylene_ppm": 0.062,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-07",
+          "temperature_celsius": 23.7,
+          "humidity_percent": 65.0,
+          "ethylene_ppm": 0.073,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-08",
+          "temperature_celsius": 23.7,
+          "humidity_percent": 63.4,
+          "ethylene_ppm": 0.07,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-09",
+          "temperature_celsius": 23.3,
+          "humidity_percent": 65.9,
+          "ethylene_ppm": 0.063,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-10",
+          "temperature_celsius": 23.1,
+          "humidity_percent": 63.5,
+          "ethylene_ppm": 0.076,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-11",
+          "temperature_celsius": 23.9,
+          "humidity_percent": 62.9,
+          "ethylene_ppm": 0.065,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-12",
+          "temperature_celsius": 23.8,
+          "humidity_percent": 63.6,
+          "ethylene_ppm": 0.063,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-13",
+          "temperature_celsius": 23.6,
+          "humidity_percent": 67.1,
+          "ethylene_ppm": 0.061,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-14",
+          "temperature_celsius": 23.8,
+          "humidity_percent": 66.0,
+          "ethylene_ppm": 0.061,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-15",
+          "temperature_celsius": 24.1,
+          "humidity_percent": 65.2,
+          "ethylene_ppm": 0.074,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-16",
+          "temperature_celsius": 22.3,
+          "humidity_percent": 63.5,
+          "ethylene_ppm": 0.064,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-17",
+          "temperature_celsius": 22.5,
+          "humidity_percent": 64.2,
+          "ethylene_ppm": 0.062,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-18",
+          "temperature_celsius": 23.9,
+          "humidity_percent": 64.0,
+          "ethylene_ppm": 0.06,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-19",
+          "temperature_celsius": 24.0,
+          "humidity_percent": 62.8,
+          "ethylene_ppm": 0.062,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-20",
+          "temperature_celsius": 22.2,
+          "humidity_percent": 67.4,
+          "ethylene_ppm": 0.065,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-21",
+          "temperature_celsius": 23.7,
+          "humidity_percent": 63.2,
+          "ethylene_ppm": 0.065,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-22",
+          "temperature_celsius": 22.6,
+          "humidity_percent": 64.7,
+          "ethylene_ppm": 0.062,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-23",
+          "temperature_celsius": 23.8,
+          "humidity_percent": 64.7,
+          "ethylene_ppm": 0.063,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-24",
+          "temperature_celsius": 21.7,
+          "humidity_percent": 66.7,
+          "ethylene_ppm": 0.073,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-25",
+          "temperature_celsius": 23.7,
+          "humidity_percent": 64.9,
+          "ethylene_ppm": 0.065,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-26",
+          "temperature_celsius": 22.4,
+          "humidity_percent": 66.9,
+          "ethylene_ppm": 0.065,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-27",
+          "temperature_celsius": 23.2,
+          "humidity_percent": 67.2,
+          "ethylene_ppm": 0.062,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-28",
+          "temperature_celsius": 22.7,
+          "humidity_percent": 66.2,
+          "ethylene_ppm": 0.074,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-29",
+          "temperature_celsius": 22.8,
+          "humidity_percent": 63.5,
+          "ethylene_ppm": 0.065,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-30",
+          "temperature_celsius": 22.7,
+          "humidity_percent": 65.2,
+          "ethylene_ppm": 0.069,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-31",
+          "temperature_celsius": 21.9,
+          "humidity_percent": 66.6,
+          "ethylene_ppm": 0.057,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-09-01",
+          "temperature_celsius": 22.7,
+          "humidity_percent": 67.9,
+          "ethylene_ppm": 0.063,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-09-02",
+          "temperature_celsius": 22.6,
+          "humidity_percent": 67.9,
+          "ethylene_ppm": 0.072,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-09-03",
+          "temperature_celsius": 23.1,
+          "humidity_percent": 66.4,
+          "ethylene_ppm": 0.062,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-09-04",
+          "temperature_celsius": 21.4,
+          "humidity_percent": 65.3,
+          "ethylene_ppm": 0.074,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-09-05",
+          "temperature_celsius": 21.0,
+          "humidity_percent": 67.9,
+          "ethylene_ppm": 0.056,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-09-06",
+          "temperature_celsius": 22.8,
+          "humidity_percent": 65.3,
+          "ethylene_ppm": 0.057,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-09-07",
+          "temperature_celsius": 21.7,
+          "humidity_percent": 67.6,
+          "ethylene_ppm": 0.054,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-09-08",
+          "temperature_celsius": 21.9,
+          "humidity_percent": 67.6,
+          "ethylene_ppm": 0.056,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-09-09",
+          "temperature_celsius": 21.4,
+          "humidity_percent": 65.4,
+          "ethylene_ppm": 0.072,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-09-10",
+          "temperature_celsius": 20.7,
+          "humidity_percent": 65.8,
+          "ethylene_ppm": 0.07,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-09-11",
+          "temperature_celsius": 21.4,
+          "humidity_percent": 64.8,
+          "ethylene_ppm": 0.06,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-09-12",
+          "temperature_celsius": 20.5,
+          "humidity_percent": 69.1,
+          "ethylene_ppm": 0.058,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-09-13",
+          "temperature_celsius": 21.8,
+          "humidity_percent": 66.8,
+          "ethylene_ppm": 0.069,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-09-14",
+          "temperature_celsius": 21.7,
+          "humidity_percent": 67.0,
+          "ethylene_ppm": 0.071,
+          "source": "FIXED_PRESET"
+        }
+      ]
+    },
+    {
+      "warehouse_id": 26,
+      "warehouse_location": "Rua Amaral Dias 2765, Lordelo",
+      "region": "PT-CL",
+      "meteo_source": "FIXED",
+      "total_days_recorded": 48,
+      "daily_readings": [
+        {
+          "date": "2026-07-29",
+          "temperature_celsius": 3.7,
+          "humidity_percent": 91.7,
+          "ethylene_ppm": 0.021,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-07-30",
+          "temperature_celsius": 3.7,
+          "humidity_percent": 89.9,
+          "ethylene_ppm": 0.021,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-07-31",
+          "temperature_celsius": 3.3,
+          "humidity_percent": 90.9,
+          "ethylene_ppm": 0.018,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-01",
+          "temperature_celsius": 3.7,
+          "humidity_percent": 91.7,
+          "ethylene_ppm": 0.021,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-02",
+          "temperature_celsius": 3.4,
+          "humidity_percent": 90.3,
+          "ethylene_ppm": 0.022,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-03",
+          "temperature_celsius": 3.5,
+          "humidity_percent": 91.8,
+          "ethylene_ppm": 0.024,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-04",
+          "temperature_celsius": 3.5,
+          "humidity_percent": 91.8,
+          "ethylene_ppm": 0.024,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-05",
+          "temperature_celsius": 3.9,
+          "humidity_percent": 91.4,
+          "ethylene_ppm": 0.02,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-06",
+          "temperature_celsius": 3.4,
+          "humidity_percent": 90.3,
+          "ethylene_ppm": 0.023,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-07",
+          "temperature_celsius": 3.4,
+          "humidity_percent": 92.2,
+          "ethylene_ppm": 0.017,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-08",
+          "temperature_celsius": 3.8,
+          "humidity_percent": 92.0,
+          "ethylene_ppm": 0.021,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-09",
+          "temperature_celsius": 3.4,
+          "humidity_percent": 90.4,
+          "ethylene_ppm": 0.015,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-10",
+          "temperature_celsius": 3.4,
+          "humidity_percent": 92.4,
+          "ethylene_ppm": 0.015,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-11",
+          "temperature_celsius": 3.4,
+          "humidity_percent": 90.8,
+          "ethylene_ppm": 0.023,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-12",
+          "temperature_celsius": 3.5,
+          "humidity_percent": 91.9,
+          "ethylene_ppm": 0.023,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-13",
+          "temperature_celsius": 3.1,
+          "humidity_percent": 91.9,
+          "ethylene_ppm": 0.023,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-14",
+          "temperature_celsius": 3.4,
+          "humidity_percent": 91.4,
+          "ethylene_ppm": 0.019,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-15",
+          "temperature_celsius": 3.2,
+          "humidity_percent": 89.6,
+          "ethylene_ppm": 0.024,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-16",
+          "temperature_celsius": 3.6,
+          "humidity_percent": 90.0,
+          "ethylene_ppm": 0.022,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-17",
+          "temperature_celsius": 3.4,
+          "humidity_percent": 90.8,
+          "ethylene_ppm": 0.025,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-18",
+          "temperature_celsius": 3.3,
+          "humidity_percent": 92.1,
+          "ethylene_ppm": 0.015,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-19",
+          "temperature_celsius": 4.0,
+          "humidity_percent": 91.5,
+          "ethylene_ppm": 0.02,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-20",
+          "temperature_celsius": 3.6,
+          "humidity_percent": 91.8,
+          "ethylene_ppm": 0.023,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-21",
+          "temperature_celsius": 3.0,
+          "humidity_percent": 92.5,
+          "ethylene_ppm": 0.017,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-22",
+          "temperature_celsius": 3.0,
+          "humidity_percent": 89.7,
+          "ethylene_ppm": 0.015,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-23",
+          "temperature_celsius": 3.6,
+          "humidity_percent": 90.9,
+          "ethylene_ppm": 0.016,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-24",
+          "temperature_celsius": 3.2,
+          "humidity_percent": 90.8,
+          "ethylene_ppm": 0.025,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-25",
+          "temperature_celsius": 3.6,
+          "humidity_percent": 90.1,
+          "ethylene_ppm": 0.024,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-26",
+          "temperature_celsius": 3.6,
+          "humidity_percent": 91.6,
+          "ethylene_ppm": 0.017,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-27",
+          "temperature_celsius": 3.6,
+          "humidity_percent": 90.3,
+          "ethylene_ppm": 0.018,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-28",
+          "temperature_celsius": 3.5,
+          "humidity_percent": 89.5,
+          "ethylene_ppm": 0.021,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-29",
+          "temperature_celsius": 3.6,
+          "humidity_percent": 91.7,
+          "ethylene_ppm": 0.02,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-30",
+          "temperature_celsius": 3.9,
+          "humidity_percent": 90.9,
+          "ethylene_ppm": 0.018,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-08-31",
+          "temperature_celsius": 3.5,
+          "humidity_percent": 92.5,
+          "ethylene_ppm": 0.02,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-09-01",
+          "temperature_celsius": 3.4,
+          "humidity_percent": 90.4,
+          "ethylene_ppm": 0.022,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-09-02",
+          "temperature_celsius": 3.2,
+          "humidity_percent": 92.2,
+          "ethylene_ppm": 0.018,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-09-03",
+          "temperature_celsius": 3.6,
+          "humidity_percent": 89.6,
+          "ethylene_ppm": 0.024,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-09-04",
+          "temperature_celsius": 3.3,
+          "humidity_percent": 90.7,
+          "ethylene_ppm": 0.019,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-09-05",
+          "temperature_celsius": 3.6,
+          "humidity_percent": 92.2,
+          "ethylene_ppm": 0.024,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-09-06",
+          "temperature_celsius": 3.7,
+          "humidity_percent": 90.7,
+          "ethylene_ppm": 0.023,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-09-07",
+          "temperature_celsius": 3.8,
+          "humidity_percent": 92.4,
+          "ethylene_ppm": 0.016,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-09-08",
+          "temperature_celsius": 3.3,
+          "humidity_percent": 91.4,
+          "ethylene_ppm": 0.017,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-09-09",
+          "temperature_celsius": 3.5,
+          "humidity_percent": 90.1,
+          "ethylene_ppm": 0.017,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-09-10",
+          "temperature_celsius": 4.0,
+          "humidity_percent": 90.5,
+          "ethylene_ppm": 0.02,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-09-11",
+          "temperature_celsius": 3.6,
+          "humidity_percent": 92.5,
+          "ethylene_ppm": 0.023,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-09-12",
+          "temperature_celsius": 3.3,
+          "humidity_percent": 90.6,
+          "ethylene_ppm": 0.018,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-09-13",
+          "temperature_celsius": 3.1,
+          "humidity_percent": 92.0,
+          "ethylene_ppm": 0.02,
+          "source": "FIXED_PRESET"
+        },
+        {
+          "date": "2026-09-14",
+          "temperature_celsius": 3.3,
+          "humidity_percent": 92.4,
+          "ethylene_ppm": 0.023,
+          "source": "FIXED_PRESET"
+        }
+      ]
+    }
+  ]
+}
