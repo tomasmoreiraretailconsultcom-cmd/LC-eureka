@@ -2,9 +2,11 @@ import json
 import os
 import pandas as pd
 import plotly.graph_objects as go
-import requests
 import streamlit as st
 import datetime
+
+from LC_model_v0_2_0 import PRESETS as MODEL_PRESETS
+from LC_model_v0_2_0 import forecast, add_preset, LifecycleDataRequest, PresetRequest
 
 from lang.lang import *
 
@@ -48,15 +50,8 @@ PRESETS = {
     "melao": {"firmeza_0_default": 20, "brix_0_default": 10.0, "acidez_0_default": 0.2},
 }
 
-def get_presets_from_api(api_url):
-    try:
-        url = f"{api_url.rstrip('/')}/presets"
-        r = requests.get(url, timeout=10)
-        if r.status_code == 200:
-            return r.json().get("fruits", list(PRESETS.keys()))
-    except:
-        pass
-    return list(PRESETS.keys())
+def get_presets_from_api():
+    return list(MODEL_PRESETS.keys())
 
 FORECAST_CLIENT_ID = os.getenv("FORECAST_CLIENT_ID", "streamlit-ui")
 
@@ -173,22 +168,20 @@ def build_lifecycle_payload(fruit_key, initial_firmness, initial_brix, initial_a
         "plot_info": plot_info
     }
 
-def post_simulation(api_url, payload, language_code):
-    """POST request and return normalized response or error."""
+def post_simulation(payload, language_code):
+    """Call the simulation directly natively and return normalized response or error."""
     try:
-        url = f"{api_url.rstrip('/')}/forecast"
-        response = requests.post(
-            url,
-            json=payload,
-            timeout=120,
-            headers={"Accept": "application/json", "client-id": FORECAST_CLIENT_ID},
-        )
-        if not response.ok:
-            st.error(f"Error {response.status_code}: {response.text}")
+        req = LifecycleDataRequest(**payload)
+        response = forecast(req, client_id=FORECAST_CLIENT_ID)
+        # Handle cases where forecast returns JSONResponse for errors
+        if hasattr(response, "status_code") and response.status_code != 200:
+            import json as j
+            st.error(f"Error {response.status_code}: {j.loads(response.body)}")
             return None
-        return response.json()
-    except requests.exceptions.RequestException as e:
-        st.error(f"Connection error: {e}")
+            
+        return response.model_dump()
+    except Exception as e:
+        st.error(f"Execution error: {e}")
         return None
 
 def plot_results(results, real_data_df=None):
@@ -274,17 +267,14 @@ def main():
     lang_sel = st.sidebar.selectbox("Language", ["en", "pt", "es", "tr"])
     
     st.sidebar.markdown("---")
-    st.sidebar.subheader(API_V020_LABEL.get(lang_sel, "API Base URL"))
-    api_url = st.sidebar.text_input("URL", "http://localhost:8181")
-    
     st.title("Life Cycle - LC - Eureka")
     
     tab1, tab2 = st.tabs([SIM_TAB.get(lang_sel, "Simulation"), "Create Preset"])
     
     with tab1:
-        fruits_list = get_presets_from_api(api_url)
+        fruits_list = get_presets_from_api()
         fruit_key = st.selectbox("Fruit", fruits_list)
-        preset = PRESETS.get(fruit_key, {"firmeza_0_default": 60, "brix_0_default": 10.0, "acidez_0_default": 1.0})
+        preset = MODEL_PRESETS.get(fruit_key, {"firmeza_0_default": 60, "brix_0_default": 10.0, "acidez_0_default": 1.0})
         
         st.header(METADATA_TITLE.get(lang_sel, "Metadata"))
         col_m1, col_m2 = st.columns(2)
@@ -409,7 +399,7 @@ def main():
         if st.button(RUN_SIMULATION_BTN.get(lang_sel, "Run Simulation"), type="primary"):
             payload = build_lifecycle_payload(fruit_key, f0, b0, a0, lot_id, json_fallback_mode, fixed_temp, fixed_rh, plot_info)
             with st.spinner("Simulating..."):
-                result = post_simulation(api_url, payload, lang_sel)
+                result = post_simulation(payload, lang_sel)
                 if result:
                     st.success(SIMULATION_COMPLETE.get(lang_sel, "Simulation Complete!"))
                     st.json(result)
@@ -491,20 +481,13 @@ def main():
                         "mold_max_penalty": mold_max_penalty, "Ea_mold_J": Ea_mold_J
                     }
                 }
-                
                 try:
-                    url = f"{api_url.rstrip('/')}/preset"
-                    res = requests.post(url, json=preset_payload, timeout=10)
-                    if res.status_code == 200:
-                        st.success(f"Preset '{new_fruit_key}' created successfully!")
-                        # Add to local cache for instant UI availability
-                        PRESETS[new_fruit_key] = preset_payload["preset"]
-                        st.rerun()
-                    else:
-                        st.error(f"Failed to create preset. Status code: {res.status_code}")
-                        st.write(res.text)
+                    req = PresetRequest(**preset_payload)
+                    add_preset(req)
+                    st.success(f"Preset '{new_fruit_key}' created successfully!")
+                    st.rerun()
                 except Exception as e:
-                    st.error(f"Error calling API: {e}")
+                    st.error(f"Error saving preset: {e}")
 
 if __name__ == "__main__":
     main()

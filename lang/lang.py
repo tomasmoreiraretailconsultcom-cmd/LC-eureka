@@ -2,12 +2,7 @@
 # TRANSLATIONS AND LOCALIZATION
 # =============================================================================
 
-API_V020_LABEL = {
-    'en': 'LC_model_v0_2_0 API URL',
-    'es': 'URL de la API LC_model_v0_2_0',
-    'pt': 'URL da API LC_model_v0_2_0',
-    'tr': 'LC_model_v0_2_0 API URL',
-}
+
 
 SEGMENTS_TITLE = {
     'en': 'Storage Segments',
