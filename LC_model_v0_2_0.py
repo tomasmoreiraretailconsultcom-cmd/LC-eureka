@@ -12,63 +12,77 @@ import uvicorn
 import uuid
 from datetime import datetime, timedelta
 
-# PRESETS
+# PRESETS & CONFIGURATION
 # =============================================================================
-# 1) PRESETS POR FRUTA
+# 1) FRUIT PRESETS
 # -----------------------------------------------------------------------------
 # Each fruit has:
 #
-#   Termodinâmica / cinética:
-#     - Tref_C      : temperature de referência dos parâmetros (°C)
-#     - Ea_J        : activation energy p/ softening (J/mol)
-#     - k_firm_ref  : taxa base de softening a Tref (1/dia aprox)
+#   Thermodynamics / Kinetics:
+#     - Tref_C      : reference temperature for parameters (°C)
+#     - Ea_J        : activation energy for softening (J/mol)
+#     - k_firm_ref  : base rate of softening at Tref (1/day approx)
 #
-#   Humidade:
-#     - RH_ref      : RH "ideal" (ou típica de armazenamento) para essa fruta (%)
-#     - beta_RH     : sensibilidade à RH baixa (desidratação) no softening
+#   Humidity:
+#     - RH_ref      : RH "ideal" (or typical storage) for this fruit (%)
+#     - beta_RH     : sensitivity to low RH (dehydration) in softening
 #
 #   Firmness:
-#     - firmness_0_default : firmness típica no dia 0 (valor inicial sugerido, em N)
-#     - firmness_min       : minimum limit (assíntota) de softening (em N)
+#     - firmness_0_default : typical firmness at day 0 (suggested initial value, in N)
+#     - firmness_min       : minimum limit (asymptote) of softening (in N)
 #
-#   Etileno e sensibilidade:
-#     - alpha_E     : quanto o etileno total acelera o amolecimento (1/ppm)
+#   Ethylene and Sensitivity:
+#     - alpha_E     : how much total ethylene accelerates softening (1/ppm)
 #
 #   Brix:
-#     - brix_0_default : brix típico no dia 0
-#     - brix_min/max   : limites mínimos/máximos teóricos no modelo
-#     - brix_g         : taxa base logística (não é "dias até maturação")
+#     - brix_0_default : typical brix at day 0
+#     - brix_min/max   : theoretical minimum/maximum limits in the model
+#     - brix_g         : base logistic rate (not 'days to maturation')
 #
-#   Qualidade (índice 0–100):
-#     - qual_firmness_threshold : "limiar" de firmness considerado aceitável (em N)
-#     - qual_brix_target    : brix "alvo" (pico do score de brix)
+#   Quality (Index 0-100):
+#     - qual_firmness_threshold : 'threshold' of firmness considered acceptable (in N)
+#     - qual_brix_target    : 'target' brix (peak of brix score)
 #
 #   Acidity:
-#     - acidity_0_default : acidity típica no dia 0
-#     - acidity_min       : acidity mínima teórica
-#     - k_acidity_ref     : taxa base de degradação da acidity
+#     - acidity_0_default : typical acidity at day 0
+#     - acidity_min       : theoretical minimum acidity
+#     - k_acidity_ref     : base rate of acidity degradation
 #     - Ea_acidity_J      : activation energy
-#     - qual_acidity_target: alvo de acidity para máxima qualidade
+#     - qual_acidity_target: target acidity for maximum quality
 #
-#   Tempo de Vida (Shelf Life):
-#     - SL_ref           : tempo de vida máximo de referência em dias
+#   Shelf Life:
+#     - SL_ref           : maximum reference shelf life in days
 #
-#   Etileno endógeno (produção interna):
-#     - E0_int      : etileno interno inicial (ppm)
-#     - Eref_prod   : produção máxima (ppm/dia) em Tref e após rampa
-#     - E_t0        : dia em que arranca a fase climatérica (sem E_ext)
-#     - E_g         : inclinação da sigmóide da rampa climatérica
-#     - E_auto      : autocatálise (mais E -> mais produção)
-#     - E_decay     : remoção/degradação (1/dia)
-#     - Ea_E_J      : energia de ativação para a produção de etileno
-#     - E_ext_shift : quanto E_ext antecipa o gatilho climatérico
+#   Endogenous Ethylene (internal production):
+#     - E0_int      : initial internal ethylene (ppm)
+#     - Eref_prod   : maximum production (ppm/day) at Tref and after ramp
+#     - E_t0        : day when climacteric phase starts (without E_ext)
+#     - E_g         : slope of climacteric ramp sigmoid
+#     - E_auto      : autocatalysis (more E -> more production)
+#     - E_decay     : removal/degradation (1/day)
+#     - Ea_E_J      : activation energy for ethylene production
+#     - E_ext_shift : how much E_ext anticipates the climacteric trigger
 #
-#   Bolor/podridão (RH alta):
-#     - RH_mold_thr     : limiar (%) a partir do qual há risco significativo
-#     - mold_rate_ref   : taxa base de crescimento do bolor em Tref (1/dia)
-#     - mold_sens_RH    : sensibilidade ao excedente de RH acima do limiar
-#     - mold_max_penalty: penalização máxima na qualidade (0..1)
-#     - Ea_mold_J       : activation energy para crescimento de bolor
+#   Mold/Rot (high RH):
+#     - RH_mold_thr     : threshold (%) from which there is significant risk
+#     - mold_rate_ref   : base rate of mold growth at Tref (1/day)
+#     - mold_sens_RH    : sensitivity to RH surplus above threshold
+#     - mold_max_penalty: maximum quality penalty (0..1)
+#     - Ea_mold_J       : activation energy for mold growth
+#
+# 2) PACKAGING FACTORS (PACKAGING_FACTORS)
+# -----------------------------------------------------------------------------
+# These act as multipliers applied directly to the Vapor Pressure Deficit (VPD)
+# and External Ethylene (E_ext) based on the packaging type, simulating modified
+# atmospheres or barriers that reduce moisture loss and gas exchange.
+#
+# 3) STAKEHOLDER PROFILES (STAKEHOLDER_PROFILES)
+# -----------------------------------------------------------------------------
+# Profiles defining custom quality limits based on who currently owns the fruit.
+# Contains relative multipliers applied to the fruit's base properties:
+#   - firm_multiplier: strictness on structural integrity
+#   - brix_multiplier / ratio_multiplier: strictness on sweetness and maturation
+#   - mold_limit / min_quality: hard absolute thresholds before rejection
 # =============================================================================
 
 PRESETS_ACADEMIC = {
@@ -924,9 +938,9 @@ PRESETS_SOFIA = {
 }
 
 MOLD_DEFAULTS = {
-    "RH_mold_thr": 95.0,        # RH (%) a partir do qual começa risco significativo
-    "mold_rate_ref": 0.06,      # taxa base (1/dia) em Tref
-    "mold_sens_RH": 10.0,       # sensibilidade ao excedente de RH acima do limiar
+    "RH_mold_thr": 95.0,        # RH (%) from which significant risk starts
+    "mold_rate_ref": 0.06,      # base rate (1/day) at Tref
+    "mold_sens_RH": 10.0,       # sensitivity to RH surplus above threshold
     "mold_max_penalty": 0.80,   # máximo de penalização (0..1)
     "Ea_mold_J": 45000.0,       # sensibilidade à temperature (Arrhenius)
 }
@@ -975,6 +989,29 @@ PACKAGING_FACTORS = {
    "MAP (Atmosfera Modificada) / Plástico Selado": 0.10
 }
 
+STAKEHOLDER_PROFILES = {
+    "Producer / Exporter": {
+        "min_quality": 75,       # High overall quality required for export clearance
+        "firm_multiplier": 1.4,  # Must be very firm to survive long transit
+        "mold_limit": 0.01,      # Near-zero tolerance (mold spreads in shipping containers)
+        "brix_multiplier": 0.75, # Can be harvested under-ripe (will ripen in transit)
+        "ratio_multiplier": 0.7  # Can be more acidic at shipping time
+    },
+    "Retailer (Grocery Store)": {
+        "min_quality": 65,       # Good visual and structural quality for display
+        "firm_multiplier": 1.0,  # Standard firmness (ready for consumer handling)
+        "mold_limit": 0.03,      # Very low tolerance on shelves
+        "brix_multiplier": 0.95, # Must be sweet enough for immediate consumption
+        "ratio_multiplier": 0.9  # Good sweet-to-acid balance
+    },
+    "Industry (Juices/Jellies)": {
+        "min_quality": 20,       # Visuals don't matter much
+        "firm_multiplier": 0.15,  # Can be very soft/overripe
+        "mold_limit": 0.08,      # Slightly higher tolerance (sorted out in processing)
+        "brix_multiplier": 1.0,  # Requires high sugar yield (but capped at 100% of target to avoid exceeding max brix)
+        "ratio_multiplier": 1.0  # Sweeter is better (capped at 100% of target)
+    }
+}
 
 for k in PRESETS_ACADEMIC:
     for kk, vv in MOLD_DEFAULTS.items():
@@ -1156,7 +1193,7 @@ def fill_nulls_with_warehouse_sim(temp_array, rh_array, region_codes, alphas, st
 
 #SIM WITH ETHYLENE (Firmness, Brix, Shelf Life & Mold) Luís Paulo
 # =============================================================================
-def run_simulation_prof_luis_paulo(fruit_key, T_c, E_ext_ppm, RH_pct, days, firmness_0_user, brix_0_user, custom_preset=None):
+def run_simulation_prof_luis_paulo(fruit_key, T_c, E_ext_ppm, RH_pct, days, firmness_0_user, brix_0_user, custom_preset=None) -> tuple[float, float, float, float, dict]:
     """
     Runs the post-harvest simulation incorporating Ethylene effects.
 
@@ -1171,7 +1208,7 @@ def run_simulation_prof_luis_paulo(fruit_key, T_c, E_ext_ppm, RH_pct, days, firm
         custom_preset (dict, optional): Custom preset properties to override defaults. Defaults to None.
 
     Returns:
-        tuple[float, float]: The quality index and the remaining shelf life on the final simulation day.
+        tuple[float, float, float, float, dict]: The final quality index, remaining shelf life, final firmness, final brix, and the continuous arrays dictionary.
     """
 
     dt = 0.05  # passo temporal (dias). 0.05 ~ 1.2 horas.
@@ -1210,7 +1247,7 @@ def run_simulation_prof_luis_paulo(fruit_key, T_c, E_ext_ppm, RH_pct, days, firm
     else:
         p = PRESETS_ACADEMIC[fruit_key]
     max_sim_days = max(days + 200, 365)
-    t = np.arange(0, max_sim_days, dt)
+    t = np.arange(0, max_sim_days + dt*0.5, dt)
     
     extra_days = max_sim_days - days
     if extra_days > 0:
@@ -1255,7 +1292,7 @@ def run_simulation_prof_luis_paulo(fruit_key, T_c, E_ext_ppm, RH_pct, days, firm
     E_int[0] = float(p["E0_int"])
 
     Ea_E_J = float(p["Ea_E_J"])
-    Eref_prod = float(p["Eref_prod"])            # produção máxima (ppm/dia)
+    Eref_prod = float(p["Eref_prod"])            # maximum production (ppm/dia)
     E_decay = float(p["E_decay"])                 # remoção (1/dia)
     E_t0 = float(p["E_t0"])                       # gatilho sem E_ext (dias)
     E_g = float(p["E_g"])                          # inclinação do gatilho
@@ -1311,17 +1348,17 @@ def run_simulation_prof_luis_paulo(fruit_key, T_c, E_ext_ppm, RH_pct, days, firm
     rT = k_temp_scaling(Ea_E_J, T_K, Tref_K)
 
     for i in range(1, len(t)):
-        # RH baixa pode reduzir a “eficiência” (stress/desidratação)
+        # Low RH can reduce 'efficiency' (stress/dehydration)
         bRH = max(0.0, (RH_ref - RH_pct[i-1]) / 100.0)
         rRH = (1.0 - 0.6 * bRH)
         r = r0 * rT[i-1] * rRH * (1.0 + alpha_bE * E_total[i-1])
-        x = max(0.0, brix[i-1] - brix_min)
+        x = max(0.01, brix[i-1] - brix_min)
         K = max(1e-6, (brix_max - brix_min))
         db = (r * x * (1.0 - x / K)) * dt
         brix[i] = min(brix_max, max(brix_min, brix[i-1] + db))
 
     # -------------------------------------------------------------------------
-    # 4.6) QUALIDADE base (0–100)
+    # 4.6) Base QUALITY (0-100)
     # -------------------------------------------------------------------------
     firm_score = 1 / (1 + np.exp(-0.35 * (firmness - float(p["qual_firmness_threshold"]))))
     brix_score = np.exp(-((brix - float(p["qual_brix_target"]))**2) / 2)
@@ -1330,9 +1367,9 @@ def run_simulation_prof_luis_paulo(fruit_key, T_c, E_ext_ppm, RH_pct, days, firm
     # -------------------------------------------------------------------------
     # 4.7) BOLOR / PODRIDÃO (RH alta)
     # -------------------------------------------------------------------------
-    # mold(t) cresce quando RH > RH_mold_thr:
+    # mold(t) grows when RH > RH_mold_thr:
     #   dm/dt = rate * (1 - m)
-    # rate aumenta com temperature e com excedente de RH.
+    # rate increases with temperature and RH surplus.
     RH_mold_thr = float(p["RH_mold_thr"])
     mold_rate_ref = float(p["mold_rate_ref"])
     mold_sens_RH = float(p["mold_sens_RH"])
@@ -1386,8 +1423,8 @@ def run_simulation_prof_luis_paulo(fruit_key, T_c, E_ext_ppm, RH_pct, days, firm
 def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[float], days: int,
                    firmness_0_user: float, brix_0_user: float, acidity_0_user: float, 
                    packaging_methods: Optional[list[str]] = None,
-                   dt: int = 0.05, custom_preset: dict = None
-                   ) -> tuple[float, float]:
+                   dt: int = 0.05, custom_preset: dict = None, current_owner_type: Optional[str] = None
+                   ) -> tuple[float, float, float, float, dict]:
     """
     Runs the post-harvest simulation to predict fruit quality and remaining shelf life.
 
@@ -1402,9 +1439,10 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
         packaging_methods (list[str] | None, optional): Array of packaging methods. Defaults to None.
         dt (int | None, optional): Time interval for simulation. Defaults to 0.05.
         custom_preset (dict, optional): Custom preset properties to override defaults. Defaults to None.
+        current_owner_type (str | None, optional): Stakeholder profile. Defaults to None.
 
     Returns:
-        tuple[float, float]: The quality index and the remaining shelf life on the final simulation day.
+        tuple[float, float, float, float, dict]: The final quality index, remaining shelf life, final firmness, final brix, and the continuous arrays dictionary.
     """
     R = 8.314
 
@@ -1428,7 +1466,7 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
     else:
         packaging_methods = [pm if pm is not None else "Granel (Sem embalagem)" for pm in packaging_methods]
         
-    t = np.arange(0, days, dt)
+    t = np.arange(0, days + dt*0.5, dt)
     T_c = np.repeat(np.array(T_c), int(1/dt))
     RH_pct = np.repeat(np.array(RH_pct), int(1/dt))
     packaging_methods_rep = np.repeat(np.array(packaging_methods), int(1/dt))
@@ -1481,7 +1519,7 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
         # Brix ODE
         r_VPD_brix = max(0, 1.0 - 0.2 * VPD_efetivo)
         r_brix = r0 * rT[i-1] * r_VPD_brix
-        x = max(0.0, brix[i-1] - brix_min)
+        x = max(0.01, brix[i-1] - brix_min)
         K = max(1e-6, (brix_max - brix_min))
         db = (r_brix * x * (1.0 - x / K)) * dt
         brix[i] = min(brix_max, max(brix[i-1] + db, brix_min))
@@ -1499,13 +1537,13 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
 
     # Quality
     firm_score = 1 / (1 + np.exp(-0.35 * (firmness - float(p["qual_firmness_threshold"]))))
-    brix_score = np.exp(-((brix - float(p["qual_brix_target"]))**2) / 2)
+    brix_score = np.exp(-((brix - float(p["qual_brix_target"]))**2) / 2.0)
     
     acidity_score = np.exp(-((acidity - float(p.get("qual_acidity_target", 1.0)))**2) / 0.5)
     maturation_index = brix / acidity
     target_ratio = float(p["qual_brix_target"]) / float(p.get("qual_acidity_target", 1.0))
     ratio_score = np.exp(-((maturation_index - target_ratio)**2) / 10.0)
-    quality_base = 100 * (0.40 * firm_score + 0.30 * ratio_score + 0.15 * brix_score + 0.15 * acidity_score)
+    quality_base = 100 * (0.35 * firm_score + 0.35 * ratio_score + 0.15 * brix_score + 0.15 * acidity_score)
 
     # Mold
     RH_mold_thr = float(p["RH_mold_thr"])
@@ -1520,18 +1558,43 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
     mold[0] = 0.0
     for i in range(1, len(t)):
         VPD_thr = calc_vpd(T_c[i-1], RH_mold_thr)
-        VPD_deficit = max(VPD_thr - VPD[i-1], 0) # Menor VPD = Maior humidade
+        VPD_deficit = max(VPD_thr - VPD[i-1], 0) # Lower VPD = Higher humidity
         VPD_factor = 1.0 - np.exp(-mold_sens_RH * VPD_deficit * 5.0)
         rate = mold_rate_ref * mold_T[i-1] * VPD_factor
         dm = (rate * (1.0 - mold[i-1])) * dt
         mold[i] = min(1.0, np.max(np.append(np.array(mold[i-1] + dm), 0)))
 
+    profile = STAKEHOLDER_PROFILES.get(current_owner_type, STAKEHOLDER_PROFILES["Retailer (Grocery Store)"])
+    
+    target_brix = float(p["qual_brix_target"])
+    target_acidity = float(p.get("qual_acidity_target", 1.0))
+    target_ratio = target_brix / target_acidity
+    
+    firmness_limit = float(p["qual_firmness_threshold"]) * profile["firm_multiplier"]
+    mold_limit = profile["mold_limit"]
+    min_quality = profile["min_quality"]
+    brix_limit = target_brix * profile["brix_multiplier"]
+    ratio_limit = target_ratio * profile["ratio_multiplier"]
+    
+    marketable = np.zeros_like(t, dtype=bool)
+    
+    for i in range(len(t)):
+        if (brix[i] >= brix_limit and 
+            maturation_index[i] >= ratio_limit and
+            quality_base[i] >= min_quality and 
+            firmness[i] >= firmness_limit and 
+            mold[i] <= mold_limit):
+            
+            marketable[i] = True
+            
     mold_penalty = mold_max_penalty * mold
     quality = quality_base * (1.0 - mold_penalty)
+    
+    quality[~marketable] = 0
 
     remaining_SL = np.where(mold_penalty > 0, 0, remaining_SL)
 
-    arrays_dict = {"quality": quality.tolist(), "firmness": firmness.tolist(), "brix": brix.tolist(), "acidity": acidity.tolist(), "t": t.tolist()}
+    arrays_dict = {"quality": quality.tolist(), "quality_base": quality_base.tolist(), "firmness": firmness.tolist(), "brix": brix.tolist(), "acidity": acidity.tolist(), "ratio": maturation_index.tolist(), "t": t.tolist()}
     return quality[len(quality) - 1], remaining_SL[len(remaining_SL) - 1], firmness[len(firmness) - 1], brix[len(brix) - 1], arrays_dict
 
 # FORECAST API ENDPOINT
@@ -1565,6 +1628,7 @@ class LotIdentification(BaseModel):
     fruit_type: str
     producer: str
     current_owner: str
+    current_owner_type: Optional[str] = None
     harvest_date: str
     initial_quantity_kg: float
     current_stock_kg: float
@@ -1755,7 +1819,8 @@ def forecast(request: LifecycleDataRequest, client_id: str = "dummy_client", sto
                 firmness_0_user=f0,
                 brix_0_user=b0,
                 acidity_0_user=a0,
-                packaging_methods=packaging_methods
+                packaging_methods=packaging_methods,
+                current_owner_type=request.lot_identification.current_owner_type
             )
 
         return ForecastResponse(

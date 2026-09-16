@@ -41,7 +41,7 @@ def init_session_state():
             "packaging_method": list(PACKAGING_FACTORS.keys())[0]
         }]
 
-def build_lifecycle_payload(fruit_key, initial_firmness, initial_brix, initial_acidity, lot_id, json_fallback_mode, fixed_temp, fixed_rh, plot_info):
+def build_lifecycle_payload(fruit_key, initial_firmness, initial_brix, initial_acidity, lot_id, json_fallback_mode, fixed_temp, fixed_rh, plot_info, current_owner_type):
     """Build the complex LifecycleDataRequest expected by LC_model_v0_2_0 API."""
     
     sensor_history = []
@@ -104,6 +104,7 @@ def build_lifecycle_payload(fruit_key, initial_firmness, initial_brix, initial_a
             "fruit_type": fruit_key,
             "producer": "Simulated Producer",
             "current_owner": "Simulated Retailer",
+            "current_owner_type": current_owner_type,
             "harvest_date": (datetime.date.today() - datetime.timedelta(days=total_days)).isoformat(),
             "initial_quantity_kg": 1000.0,
             "current_stock_kg": 1000.0,
@@ -159,7 +160,7 @@ def post_simulation(payload, language_code):
         st.error(f"Execution error: {e}")
         return None
 
-def plot_results(results, lang_sel="en", real_data_df=None):
+def plot_results(results, lang_sel="en", real_data_df=None, current_owner_type=None):
     if not results:
         return
         
@@ -169,6 +170,8 @@ def plot_results(results, lang_sel="en", real_data_df=None):
         brix = cdata.get("brix", [])
         acidity = cdata.get("acidity", [])
         quality = cdata.get("quality", [])
+        quality_base = cdata.get("quality_base", [])
+        ratio = cdata.get("ratio", [])
         days = cdata.get("t", list(range(len(firmness))))
         st.markdown(f"### {CONT_SIM_RESULTS_TITLE.get(lang_sel, 'Continuous Simulation Results')}")
         
@@ -176,7 +179,12 @@ def plot_results(results, lang_sel="en", real_data_df=None):
         _firmness = FIRMNESS_LBL.get(lang_sel, 'Firmness (N)')
         _acidity = ACIDITY_LBL.get(lang_sel, 'Acidity')
         _quality_idx = CHART_QUALITY_INDEX.get(lang_sel, 'Quality Index')
-        _quality = CHART_QUALITY.get(lang_sel, 'Quality')
+        _quality_base_word = CHART_QUALITY.get(lang_sel, 'Quality')
+        if current_owner_type:
+            short_owner = current_owner_type.split(" ")[0]
+            _quality = f"{short_owner} - {_quality_base_word}"
+        else:
+            _quality = _quality_base_word
         
         c1, c2 = st.columns(2)
         with c1:
@@ -202,10 +210,17 @@ def plot_results(results, lang_sel="en", real_data_df=None):
                 st.plotly_chart(fig_b, width="stretch")
             if quality:
                 fig_q = go.Figure(go.Scatter(x=days, y=quality, mode='lines', name=_quality, line=dict(color='#2ca02c')))
+                if quality_base:
+                    _base_quality = CHART_BASE_QUALITY.get(lang_sel, 'Base Quality')
+                    fig_q.add_trace(go.Scatter(x=days, y=quality_base, mode='lines', name=_base_quality, line=dict(color='#17becf', dash='dash')))
                 if real_data_df is not None and "Real_Quality" in real_data_df.columns and "Day" in real_data_df.columns:
                     fig_q.add_trace(go.Scatter(x=real_data_df["Day"], y=real_data_df["Real_Quality"], mode='markers', name='Real', marker=dict(color='black', size=8, symbol='x')))
                 fig_q.update_layout(title=_quality_idx, xaxis_title=_days, yaxis_title=_quality, margin=dict(l=20, r=20, t=40, b=20))
                 st.plotly_chart(fig_q, width="stretch")
+            if ratio:
+                fig_r = go.Figure(go.Scatter(x=days, y=ratio, mode='lines', name='Brix/Acidity Ratio', line=dict(color='#8c564b')))
+                fig_r.update_layout(title="Brix/Acidity Ratio", xaxis_title=_days, yaxis_title="Ratio", margin=dict(l=20, r=20, t=40, b=20))
+                st.plotly_chart(fig_r, width="stretch")
                 
         return
 
@@ -248,6 +263,13 @@ def main():
     lang_sel = st.session_state.get("lang", "en")
     st.sidebar.title(CONFIGURATION_TITLE.get(lang_sel, "Configuration"))
     lang_sel = st.sidebar.selectbox(LANGUAGE_SEL.get(lang_sel, "Language"), ["en", "pt", "es", "tr"], key="lang")
+    
+    st.sidebar.markdown("---")
+    
+    current_owner_type = st.sidebar.selectbox(
+        STAKEHOLDER_ROLE_LBL.get(lang_sel, "Stakeholder Role"), 
+        ["Retailer (Grocery Store)", "Producer / Exporter", "Industry (Juices/Jellies)"]
+    )
     
     st.sidebar.markdown("---")
     
@@ -379,7 +401,7 @@ def main():
         submitted = st.button(RUN_SIMULATION_BTN.get(lang_sel, "Run Simulation"), type="primary")
 
         if submitted:
-            payload = build_lifecycle_payload(fruit_key, f0, b0, a0, lot_id, json_fallback_mode, fixed_temp, fixed_rh, plot_info)
+            payload = build_lifecycle_payload(fruit_key, f0, b0, a0, lot_id, json_fallback_mode, fixed_temp, fixed_rh, plot_info, current_owner_type)
             with st.spinner(SIMULATING_SPINNER.get(lang_sel, "Simulating...")):
                 result = post_simulation(payload, lang_sel)
                 if result:
@@ -408,12 +430,12 @@ def main():
                         m1.metric(KPI_DAYS_SIM.get(lang_sel, 'Days Simulated'), days_sim)
                         m2.metric(KPI_FINAL_QUALITY.get(lang_sel, 'Final Quality'), final_q)
                         m3.metric(KPI_FINAL_FIRMNESS.get(lang_sel, 'Final Firmness'), f"{final_f:.1f} N")
-                        m4.metric(KPI_FINAL_BRIX.get(lang_sel, 'Final Brix'), final_b)
-                        m5.metric(KPI_FINAL_ACIDITY.get(lang_sel, 'Final Acidity'), final_a)
+                        m4.metric(KPI_FINAL_BRIX.get(lang_sel, 'Final Brix'), f"{final_b} ºBrix")
+                        m5.metric(KPI_FINAL_ACIDITY.get(lang_sel, 'Final Acidity'), f"{final_a} %")
                         st.markdown("---")
                     
                     try:
-                        plot_results(result, lang_sel, real_data_df)
+                        plot_results(result, lang_sel, real_data_df, current_owner_type)
                     except Exception as e:
                         pass
                     
