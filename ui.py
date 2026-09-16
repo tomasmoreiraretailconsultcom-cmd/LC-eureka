@@ -22,7 +22,7 @@ REGIONS = [
 ]
 
 def get_presets_from_api():
-    return list(set(list(PRESETS_ACADEMIC.keys()) + list(PRESETS_SOFIA.keys())))
+    return sorted(list(set(list(PRESETS_ACADEMIC.keys()) + list(PRESETS_SOFIA.keys()))))
 
 FORECAST_CLIENT_ID = os.getenv("FORECAST_CLIENT_ID", "streamlit-ui")
 

@@ -991,25 +991,25 @@ PACKAGING_FACTORS = {
 
 STAKEHOLDER_PROFILES = {
     "Producer / Exporter": {
-        "min_quality": 75,       # High overall quality required for export clearance
-        "firm_multiplier": 1.4,  # Must be very firm to survive long transit
-        "mold_limit": 0.01,      # Near-zero tolerance (mold spreads in shipping containers)
-        "brix_multiplier": 0.75, # Can be harvested under-ripe (will ripen in transit)
-        "ratio_multiplier": 0.7  # Can be more acidic at shipping time
+        "min_quality": 35,
+        "firm_multiplier": 1.75,
+        "mold_limit": 0.01,
+        "brix_multiplier": 0.3,
+        "ratio_multiplier": 0.5
     },
     "Retailer (Grocery Store)": {
-        "min_quality": 65,       # Good visual and structural quality for display
-        "firm_multiplier": 1.0,  # Standard firmness (ready for consumer handling)
-        "mold_limit": 0.03,      # Very low tolerance on shelves
-        "brix_multiplier": 0.95, # Must be sweet enough for immediate consumption
-        "ratio_multiplier": 0.9  # Good sweet-to-acid balance
+        "min_quality": 65,
+        "firm_multiplier": 1.0,
+        "mold_limit": 0.03,
+        "brix_multiplier": 0.95,
+        "ratio_multiplier": 0.9
     },
     "Industry (Juices/Jellies)": {
-        "min_quality": 20,       # Visuals don't matter much
-        "firm_multiplier": 0.15,  # Can be very soft/overripe
-        "mold_limit": 0.08,      # Slightly higher tolerance (sorted out in processing)
-        "brix_multiplier": 1.0,  # Requires high sugar yield (but capped at 100% of target to avoid exceeding max brix)
-        "ratio_multiplier": 1.0  # Sweeter is better (capped at 100% of target)
+        "min_quality": 20,       
+        "firm_multiplier": 0.15,
+        "mold_limit": 0.08,
+        "brix_multiplier": 1.0,
+        "ratio_multiplier": 1.0 
     }
 }
 
