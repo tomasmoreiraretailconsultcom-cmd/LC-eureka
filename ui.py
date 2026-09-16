@@ -84,7 +84,7 @@ def build_lifecycle_payload(fruit_key, initial_firmness, initial_brix, initial_a
         }
         
         if not seg.get("is_controlled"):
-            history_entry["keptancy_start_date"] = seg_start_date.isoformat()
+            history_entry["starting_date"] = seg_start_date.isoformat()
             
         sensor_history.append(history_entry)
             

@@ -1648,7 +1648,7 @@ class WarehouseHistory(BaseModel):
     region: str
     meteo_source: str
     total_days_recorded: int
-    keptancy_start_date: Optional[str] = None # Not on JSON
+    starting_date: Optional[str] = None # Not on JSON
     packaging_method: Optional[str] = None
     daily_readings: List[DailyReading] = []
 
@@ -1742,8 +1742,8 @@ def forecast(request: LifecycleDataRequest, client_id: str = "dummy_client", sto
         start_date_str = None
 
         for wh in request.sensor_history_by_warehouse:
-            if not wh.daily_readings and wh.keptancy_start_date and wh.total_days_recorded > 0:
-                s_dt = datetime.strptime(wh.keptancy_start_date, "%Y-%m-%d")
+            if not wh.daily_readings and wh.starting_date and wh.total_days_recorded > 0:
+                s_dt = datetime.strptime(wh.starting_date, "%Y-%m-%d")
                 for j in range(wh.total_days_recorded):
                     c_dt = s_dt + timedelta(days=j)
                     wh.daily_readings.append(DailyReading(date=c_dt.strftime("%Y-%m-%d"), source="GENERATED"))
