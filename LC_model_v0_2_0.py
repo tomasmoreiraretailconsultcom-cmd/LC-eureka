@@ -98,7 +98,7 @@ PRESETS_ACADEMIC = {
         "qual_firmness_threshold": 8,
     },
     "kiwi_baby": {
-        "label": "Kiwi (Baby / Kiwi Berry)",
+        "label": "Kiwi (Baby/Berry)",
         "Tref_C": 4.0,
         "Ea_J": 58000,
         "k_firm_ref": 0.14,
@@ -122,8 +122,8 @@ PRESETS_ACADEMIC = {
         "firmness_0_default": 28,
         "qual_firmness_threshold": 6,
     },
-    "maca_golden": {
-        "label": "Maçã (Golden)",
+    "apple_golden": {
+        "label": "Apple (Golden)",
         "Tref_C": 5.0,
         "Ea_J": 50000,
         "k_firm_ref": 0.025,
@@ -147,8 +147,8 @@ PRESETS_ACADEMIC = {
         "firmness_0_default": 72,
         "qual_firmness_threshold": 35,
     },
-    "maca_reineta": {
-        "label": "Maçã (Reineta)",
+    "apple_reineta": {
+        "label": "Apple (Reineta)",
         "Tref_C": 5.0,
         "Ea_J": 52000,
         "k_firm_ref": 0.035,
@@ -172,8 +172,8 @@ PRESETS_ACADEMIC = {
         "firmness_0_default": 65,
         "qual_firmness_threshold": 30,
     },
-    "maca_gala": {
-        "label": "Maçã (Gala)",
+    "apple_gala": {
+        "label": "Apple (Gala)",
         "Tref_C": 5.0,
         "Ea_J": 48000,
         "k_firm_ref": 0.04,
@@ -197,8 +197,8 @@ PRESETS_ACADEMIC = {
         "firmness_0_default": 60,
         "qual_firmness_threshold": 28,
     },
-    "maca_fuji": {
-        "label": "Maçã (Fuji)",
+    "apple_fuji": {
+        "label": "Apple (Fuji)",
         "Tref_C": 5.0,
         "Ea_J": 47000,
         "k_firm_ref": 0.018,
@@ -222,8 +222,8 @@ PRESETS_ACADEMIC = {
         "firmness_0_default": 80,
         "qual_firmness_threshold": 40,
     },
-    "laranja": {
-        "label": "Laranja",
+    "orange": {
+        "label": "Orange",
         "Tref_C": 5.0,
         "Ea_J": 42000,
         "k_firm_ref": 0.01,
@@ -272,8 +272,8 @@ PRESETS_ACADEMIC = {
         "firmness_0_default": 80,
         "qual_firmness_threshold": 15,
     },
-    "mirtilo": {
-        "label": "Mirtilo",
+    "blueberry": {
+        "label": "Blueberry",
         "Tref_C": 2.0,
         "Ea_J": 52000,
         "k_firm_ref": 0.03,
@@ -297,8 +297,8 @@ PRESETS_ACADEMIC = {
         "firmness_0_default": 30,
         "qual_firmness_threshold": 12,
     },
-    "framboesa": {
-        "label": "Framboesa",
+    "raspberry": {
+        "label": "Raspberry",
         "Tref_C": 2.0,
         "Ea_J": 56000,
         "k_firm_ref": 0.06,
@@ -322,8 +322,8 @@ PRESETS_ACADEMIC = {
         "firmness_0_default": 18,
         "qual_firmness_threshold": 6,
     },
-    "pera": {
-        "label": "Pera",
+    "pear": {
+        "label": "Pear",
         "Tref_C": 2.0,
         "Ea_J": 54000,
         "k_firm_ref": 0.05,
@@ -347,8 +347,8 @@ PRESETS_ACADEMIC = {
         "firmness_0_default": 55,
         "qual_firmness_threshold": 10,
     },
-    "ameixa": {
-        "label": "Ameixa",
+    "plum": {
+        "label": "Plum",
         "Tref_C": 2.0,
         "Ea_J": 52000,
         "k_firm_ref": 0.06,
@@ -372,8 +372,8 @@ PRESETS_ACADEMIC = {
         "firmness_0_default": 40,
         "qual_firmness_threshold": 8,
     },
-    "pessego": {
-        "label": "Pêssego",
+    "peach": {
+        "label": "Peach",
         "Tref_C": 2.0,
         "Ea_J": 56000,
         "k_firm_ref": 0.08,
@@ -397,8 +397,8 @@ PRESETS_ACADEMIC = {
         "firmness_0_default": 35,
         "qual_firmness_threshold": 6,
     },
-    "cereja": {
-        "label": "Cereja",
+    "cherry": {
+        "label": "Cherry",
         "Tref_C": 2.0,
         "Ea_J": 48000,
         "k_firm_ref": 0.045,
@@ -422,8 +422,8 @@ PRESETS_ACADEMIC = {
         "firmness_0_default": 28,
         "qual_firmness_threshold": 10,
     },
-    "morango": {
-        "label": "Morango",
+    "strawberry": {
+        "label": "Strawberry",
         "Tref_C": 2.0,
         "Ea_J": 52000,
         "k_firm_ref": 0.12,
@@ -447,8 +447,8 @@ PRESETS_ACADEMIC = {
         "firmness_0_default": 12,
         "qual_firmness_threshold": 4.5,
     },
-    "uva": {
-        "label": "Uva",
+    "grape": {
+        "label": "Grape",
         "Tref_C": 2.0,
         "Ea_J": 45000,
         "k_firm_ref": 0.02,
@@ -472,8 +472,8 @@ PRESETS_ACADEMIC = {
         "firmness_0_default": 20,
         "qual_firmness_threshold": 7,
     },
-    "figo": {
-        "label": "Figo",
+    "fig": {
+        "label": "Fig",
         "Tref_C": 2.0,
         "Ea_J": 52000,
         "k_firm_ref": 0.11,
@@ -497,8 +497,8 @@ PRESETS_ACADEMIC = {
         "firmness_0_default": 10,
         "qual_firmness_threshold": 3.5,
     },
-    "melao": {
-        "label": "Melão",
+    "melon": {
+        "label": "Melon",
         "Tref_C": 7.0,
         "Ea_J": 52000,
         "k_firm_ref": 0.06,
@@ -569,8 +569,8 @@ PRESETS_SOFIA = {
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
     },
-    "maca_fuji": {
-        "label": "Maçã (Fuji)",
+    "apple_fuji": {
+        "label": "Apple (Fuji)",
         "Tref_C": 5.0,
         "Ea_J": 47000,
         "k_firm_ref": 0.018,
@@ -591,8 +591,8 @@ PRESETS_SOFIA = {
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
     },
-    "maca_golden": {
-        "label": "Maçã (Golden)",
+    "apple_golden": {
+        "label": "Apple (Golden)",
         "Tref_C": 5.0,
         "Ea_J": 50000,
         "k_firm_ref": 0.025,
@@ -613,8 +613,8 @@ PRESETS_SOFIA = {
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
     },
-    "maca_gala": {
-        "label": "Maçã (Gala)",
+    "apple_gala": {
+        "label": "Apple (Gala)",
         "Tref_C": 5.0,
         "Ea_J": 48000,
         "k_firm_ref": 0.04,
@@ -635,8 +635,8 @@ PRESETS_SOFIA = {
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
     },
-    "maca_reineta": {
-        "label": "Maçã (Reineta)",
+    "apple_reineta": {
+        "label": "Apple (Reineta)",
         "Tref_C": 5.0,
         "Ea_J": 52000,
         "k_firm_ref": 0.035,
@@ -657,8 +657,8 @@ PRESETS_SOFIA = {
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
     },
-    "morango": {
-        "label": "Morango",
+    "strawberry": {
+        "label": "Strawberry",
         "Tref_C": 2.0,
         "Ea_J": 52000,
         "k_firm_ref": 0.12,
@@ -679,8 +679,8 @@ PRESETS_SOFIA = {
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
     },
-    "framboesa": {
-        "label": "Framboesa",
+    "raspberry": {
+        "label": "Raspberry",
         "Tref_C": 2.0,
         "Ea_J": 56000,
         "k_firm_ref": 0.06,
@@ -701,8 +701,8 @@ PRESETS_SOFIA = {
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
     },
-    "mirtilo": {
-        "label": "Mirtilo",
+    "blueberry": {
+        "label": "Blueberry",
         "Tref_C": 2.0,
         "Ea_J": 52000,
         "k_firm_ref": 0.03,
@@ -723,8 +723,8 @@ PRESETS_SOFIA = {
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
     },
-    "cereja": {
-        "label": "Cereja",
+    "cherry": {
+        "label": "Cherry",
         "Tref_C": 2.0,
         "Ea_J": 48000,
         "k_firm_ref": 0.045,
@@ -745,8 +745,8 @@ PRESETS_SOFIA = {
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
     },
-    "pessego": {
-        "label": "Pêssego",
+    "peach": {
+        "label": "Peach",
         "Tref_C": 2.0,
         "Ea_J": 56000,
         "k_firm_ref": 0.08,
@@ -767,8 +767,8 @@ PRESETS_SOFIA = {
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
     },
-    "ameixa": {
-        "label": "Ameixa",
+    "plum": {
+        "label": "Plum",
         "Tref_C": 2.0,
         "Ea_J": 52000,
         "k_firm_ref": 0.06,
@@ -789,8 +789,8 @@ PRESETS_SOFIA = {
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
     },
-    "laranja": {
-        "label": "Laranja",
+    "orange": {
+        "label": "Orange",
         "Tref_C": 5.0,
         "Ea_J": 42000,
         "k_firm_ref": 0.01,
@@ -833,8 +833,8 @@ PRESETS_SOFIA = {
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
     },
-    "pera": {
-        "label": "Pera",
+    "pear": {
+        "label": "Pear",
         "Tref_C": 2.0,
         "Ea_J": 54000,
         "k_firm_ref": 0.05,
@@ -855,8 +855,8 @@ PRESETS_SOFIA = {
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
     },
-    "uva": {
-        "label": "Uva",
+    "grape": {
+        "label": "Grape",
         "Tref_C": 2.0,
         "Ea_J": 45000,
         "k_firm_ref": 0.02,
@@ -877,8 +877,8 @@ PRESETS_SOFIA = {
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
     },
-    "figo": {
-        "label": "Figo",
+    "fig": {
+        "label": "Fig",
         "Tref_C": 2.0,
         "Ea_J": 52000,
         "k_firm_ref": 0.11,
@@ -899,8 +899,8 @@ PRESETS_SOFIA = {
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
     },
-    "melao": {
-        "label": "Melão",
+    "melon": {
+        "label": "Melon",
         "Tref_C": 7.0,
         "Ea_J": 52000,
         "k_firm_ref": 0.06,
@@ -1555,6 +1555,8 @@ class InitialMetrics(BaseModel):
     quality_score: Optional[int] = None
     waste_kg: Optional[float] = None
     expiration_date: Optional[str] = None
+    firmness: Optional[float] = None
+    acidity: Optional[float] = None
 
 class LotIdentification(BaseModel):
     lot_id: int
@@ -1723,8 +1725,14 @@ def forecast(request: LifecycleDataRequest, client_id: str = "dummy_client", sto
         b0 = request.lot_identification.initial_metrics.soluble_solids_brix
         if b0 is None:
             b0 = preset["brix_0_default"]
-        f0 = preset["firmness_0_default"]
-        a0 = preset.get("acidity_0_default", 0.5)
+        
+        f0 = request.lot_identification.initial_metrics.firmness
+        if f0 is None:
+            f0 = preset["firmness_0_default"]
+            
+        a0 = request.lot_identification.initial_metrics.acidity
+        if a0 is None:
+            a0 = preset.get("acidity_0_default", 0.5)
 
         if use_academic:
             algorithm = "ode_academic"
