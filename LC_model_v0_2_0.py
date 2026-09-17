@@ -110,6 +110,10 @@ PRESETS_ACADEMIC = {
         "firmness_min": 3,
         "firmness_0_default": 45,
         "qual_firmness_threshold": 8,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.25, "weight_brix": 0.40, "weight_ratio": 0.25, "weight_acidity": 0.10},
+            "Industry (Juices/Jellies)": {"weight_firmness": 0.05, "weight_brix": 0.70, "weight_ratio": 0.20, "weight_acidity": 0.05}
+        }
     },
     "kiwi_baby": {
         "label": "Kiwi (Baby/Berry)",
@@ -135,6 +139,10 @@ PRESETS_ACADEMIC = {
         "firmness_min": 2,
         "firmness_0_default": 28,
         "qual_firmness_threshold": 6,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.25, "weight_brix": 0.40, "weight_ratio": 0.25, "weight_acidity": 0.10},
+            "Industry (Juices/Jellies)": {"weight_firmness": 0.05, "weight_brix": 0.70, "weight_ratio": 0.20, "weight_acidity": 0.05}
+        }
     },
     "apple_golden": {
         "label": "Apple (Golden)",
@@ -160,6 +168,10 @@ PRESETS_ACADEMIC = {
         "firmness_min": 12,
         "firmness_0_default": 72,
         "qual_firmness_threshold": 35,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.25, "weight_brix": 0.40, "weight_ratio": 0.25, "weight_acidity": 0.10},
+            "Industry (Juices/Jellies)": {"weight_firmness": 0.05, "weight_brix": 0.70, "weight_ratio": 0.20, "weight_acidity": 0.05}
+        }
     },
     "apple_reineta": {
         "label": "Apple (Reineta)",
@@ -185,6 +197,10 @@ PRESETS_ACADEMIC = {
         "firmness_min": 10,
         "firmness_0_default": 65,
         "qual_firmness_threshold": 30,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.25, "weight_brix": 0.40, "weight_ratio": 0.25, "weight_acidity": 0.10},
+            "Industry (Juices/Jellies)": {"weight_firmness": 0.05, "weight_brix": 0.70, "weight_ratio": 0.20, "weight_acidity": 0.05}
+        }
     },
     "apple_gala": {
         "label": "Apple (Gala)",
@@ -210,6 +226,10 @@ PRESETS_ACADEMIC = {
         "firmness_min": 9,
         "firmness_0_default": 60,
         "qual_firmness_threshold": 28,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.25, "weight_brix": 0.40, "weight_ratio": 0.25, "weight_acidity": 0.10},
+            "Industry (Juices/Jellies)": {"weight_firmness": 0.05, "weight_brix": 0.70, "weight_ratio": 0.20, "weight_acidity": 0.05}
+        }
     },
     "apple_fuji": {
         "label": "Apple (Fuji)",
@@ -235,6 +255,10 @@ PRESETS_ACADEMIC = {
         "firmness_min": 15,
         "firmness_0_default": 80,
         "qual_firmness_threshold": 40,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.25, "weight_brix": 0.40, "weight_ratio": 0.25, "weight_acidity": 0.10},
+            "Industry (Juices/Jellies)": {"weight_firmness": 0.05, "weight_brix": 0.70, "weight_ratio": 0.20, "weight_acidity": 0.05}
+        }
     },
     "orange": {
         "label": "Orange",
@@ -260,6 +284,10 @@ PRESETS_ACADEMIC = {
         "firmness_min": 35,
         "firmness_0_default": 55,
         "qual_firmness_threshold": 42,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.15, "weight_brix": 0.30, "weight_ratio": 0.40, "weight_acidity": 0.15},
+            "Industry (Juices/Jellies)": {"weight_firmness": 0.0, "weight_brix": 0.80, "weight_ratio": 0.15, "weight_acidity": 0.05}
+        }
     },
     "banana": {
         "label": "Banana",
@@ -285,6 +313,10 @@ PRESETS_ACADEMIC = {
         "firmness_min": 5,
         "firmness_0_default": 80,
         "qual_firmness_threshold": 15,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.15, "weight_brix": 0.30, "weight_ratio": 0.40, "weight_acidity": 0.15},
+            "Industry (Juices/Jellies)": {"weight_firmness": 0.0, "weight_brix": 0.80, "weight_ratio": 0.15, "weight_acidity": 0.05}
+        }
     },
     "blueberry": {
         "label": "Blueberry",
@@ -310,6 +342,10 @@ PRESETS_ACADEMIC = {
         "firmness_min": 6,
         "firmness_0_default": 30,
         "qual_firmness_threshold": 12,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.60, "weight_brix": 0.20, "weight_ratio": 0.10, "weight_acidity": 0.10},
+            "Exporter / Processor": {"weight_firmness": 0.80, "weight_brix": 0.10, "weight_ratio": 0.05, "weight_acidity": 0.05}
+        }
     },
     "raspberry": {
         "label": "Raspberry",
@@ -335,6 +371,10 @@ PRESETS_ACADEMIC = {
         "firmness_min": 2.5,
         "firmness_0_default": 18,
         "qual_firmness_threshold": 6,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.60, "weight_brix": 0.20, "weight_ratio": 0.10, "weight_acidity": 0.10},
+            "Exporter / Processor": {"weight_firmness": 0.80, "weight_brix": 0.10, "weight_ratio": 0.05, "weight_acidity": 0.05}
+        }
     },
     "pear": {
         "label": "Pear",
@@ -360,6 +400,10 @@ PRESETS_ACADEMIC = {
         "firmness_min": 4,
         "firmness_0_default": 55,
         "qual_firmness_threshold": 10,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.25, "weight_brix": 0.40, "weight_ratio": 0.25, "weight_acidity": 0.10},
+            "Industry (Juices/Jellies)": {"weight_firmness": 0.05, "weight_brix": 0.70, "weight_ratio": 0.20, "weight_acidity": 0.05}
+        }
     },
     "plum": {
         "label": "Plum",
@@ -385,6 +429,10 @@ PRESETS_ACADEMIC = {
         "firmness_min": 3,
         "firmness_0_default": 40,
         "qual_firmness_threshold": 8,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.40, "weight_brix": 0.35, "weight_ratio": 0.15, "weight_acidity": 0.10},
+            "Exporter / Processor": {"weight_firmness": 0.60, "weight_brix": 0.20, "weight_ratio": 0.10, "weight_acidity": 0.10}
+        }
     },
     "peach": {
         "label": "Peach",
@@ -410,6 +458,10 @@ PRESETS_ACADEMIC = {
         "firmness_min": 2,
         "firmness_0_default": 35,
         "qual_firmness_threshold": 6,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.40, "weight_brix": 0.35, "weight_ratio": 0.15, "weight_acidity": 0.10},
+            "Exporter / Processor": {"weight_firmness": 0.60, "weight_brix": 0.20, "weight_ratio": 0.10, "weight_acidity": 0.10}
+        }
     },
     "cherry": {
         "label": "Cherry",
@@ -435,6 +487,10 @@ PRESETS_ACADEMIC = {
         "firmness_min": 4,
         "firmness_0_default": 28,
         "qual_firmness_threshold": 10,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.40, "weight_brix": 0.35, "weight_ratio": 0.15, "weight_acidity": 0.10},
+            "Exporter / Processor": {"weight_firmness": 0.60, "weight_brix": 0.20, "weight_ratio": 0.10, "weight_acidity": 0.10}
+        }
     },
     "strawberry": {
         "label": "Strawberry",
@@ -460,6 +516,10 @@ PRESETS_ACADEMIC = {
         "firmness_min": 1.5,
         "firmness_0_default": 12,
         "qual_firmness_threshold": 4.5,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.60, "weight_brix": 0.20, "weight_ratio": 0.10, "weight_acidity": 0.10},
+            "Exporter / Processor": {"weight_firmness": 0.80, "weight_brix": 0.10, "weight_ratio": 0.05, "weight_acidity": 0.05}
+        }
     },
     "grape": {
         "label": "Grape",
@@ -485,6 +545,10 @@ PRESETS_ACADEMIC = {
         "firmness_min": 3,
         "firmness_0_default": 20,
         "qual_firmness_threshold": 7,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.15, "weight_brix": 0.30, "weight_ratio": 0.40, "weight_acidity": 0.15},
+            "Industry (Juices/Jellies)": {"weight_firmness": 0.0, "weight_brix": 0.80, "weight_ratio": 0.15, "weight_acidity": 0.05}
+        }
     },
     "fig": {
         "label": "Fig",
@@ -510,6 +574,10 @@ PRESETS_ACADEMIC = {
         "firmness_min": 1.2,
         "firmness_0_default": 10,
         "qual_firmness_threshold": 3.5,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.60, "weight_brix": 0.20, "weight_ratio": 0.10, "weight_acidity": 0.10},
+            "Exporter / Processor": {"weight_firmness": 0.80, "weight_brix": 0.10, "weight_ratio": 0.05, "weight_acidity": 0.05}
+        }
     },
     "melon": {
         "label": "Melon",
@@ -535,6 +603,10 @@ PRESETS_ACADEMIC = {
         "firmness_min": 2.0,
         "firmness_0_default": 25,
         "qual_firmness_threshold": 6.0,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.15, "weight_brix": 0.30, "weight_ratio": 0.40, "weight_acidity": 0.15},
+            "Industry (Juices/Jellies)": {"weight_firmness": 0.0, "weight_brix": 0.80, "weight_ratio": 0.15, "weight_acidity": 0.05}
+        }
     },
 }
 
@@ -560,6 +632,10 @@ PRESETS_SOFIA = {
         "k_acidity_ref": 0.02,
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.25, "weight_brix": 0.40, "weight_ratio": 0.25, "weight_acidity": 0.10},
+            "Industry (Juices/Jellies)": {"weight_firmness": 0.05, "weight_brix": 0.70, "weight_ratio": 0.20, "weight_acidity": 0.05}
+        }
     },
     "kiwi_baby": {
         "label": "Kiwi (Baby/Berry)",
@@ -582,6 +658,10 @@ PRESETS_SOFIA = {
         "k_acidity_ref": 0.02,
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.25, "weight_brix": 0.40, "weight_ratio": 0.25, "weight_acidity": 0.10},
+            "Industry (Juices/Jellies)": {"weight_firmness": 0.05, "weight_brix": 0.70, "weight_ratio": 0.20, "weight_acidity": 0.05}
+        }
     },
     "apple_fuji": {
         "label": "Apple (Fuji)",
@@ -604,6 +684,10 @@ PRESETS_SOFIA = {
         "k_acidity_ref": 0.02,
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.25, "weight_brix": 0.40, "weight_ratio": 0.25, "weight_acidity": 0.10},
+            "Industry (Juices/Jellies)": {"weight_firmness": 0.05, "weight_brix": 0.70, "weight_ratio": 0.20, "weight_acidity": 0.05}
+        }
     },
     "apple_golden": {
         "label": "Apple (Golden)",
@@ -626,6 +710,10 @@ PRESETS_SOFIA = {
         "k_acidity_ref": 0.02,
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.25, "weight_brix": 0.40, "weight_ratio": 0.25, "weight_acidity": 0.10},
+            "Industry (Juices/Jellies)": {"weight_firmness": 0.05, "weight_brix": 0.70, "weight_ratio": 0.20, "weight_acidity": 0.05}
+        }
     },
     "apple_gala": {
         "label": "Apple (Gala)",
@@ -648,6 +736,10 @@ PRESETS_SOFIA = {
         "k_acidity_ref": 0.02,
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.25, "weight_brix": 0.40, "weight_ratio": 0.25, "weight_acidity": 0.10},
+            "Industry (Juices/Jellies)": {"weight_firmness": 0.05, "weight_brix": 0.70, "weight_ratio": 0.20, "weight_acidity": 0.05}
+        }
     },
     "apple_reineta": {
         "label": "Apple (Reineta)",
@@ -670,6 +762,10 @@ PRESETS_SOFIA = {
         "k_acidity_ref": 0.02,
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.25, "weight_brix": 0.40, "weight_ratio": 0.25, "weight_acidity": 0.10},
+            "Industry (Juices/Jellies)": {"weight_firmness": 0.05, "weight_brix": 0.70, "weight_ratio": 0.20, "weight_acidity": 0.05}
+        }
     },
     "strawberry": {
         "label": "Strawberry",
@@ -692,6 +788,10 @@ PRESETS_SOFIA = {
         "k_acidity_ref": 0.02,
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.60, "weight_brix": 0.20, "weight_ratio": 0.10, "weight_acidity": 0.10},
+            "Exporter / Processor": {"weight_firmness": 0.80, "weight_brix": 0.10, "weight_ratio": 0.05, "weight_acidity": 0.05}
+        }
     },
     "raspberry": {
         "label": "Raspberry",
@@ -714,6 +814,10 @@ PRESETS_SOFIA = {
         "k_acidity_ref": 0.02,
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.60, "weight_brix": 0.20, "weight_ratio": 0.10, "weight_acidity": 0.10},
+            "Exporter / Processor": {"weight_firmness": 0.80, "weight_brix": 0.10, "weight_ratio": 0.05, "weight_acidity": 0.05}
+        }
     },
     "blueberry": {
         "label": "Blueberry",
@@ -736,6 +840,10 @@ PRESETS_SOFIA = {
         "k_acidity_ref": 0.02,
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.60, "weight_brix": 0.20, "weight_ratio": 0.10, "weight_acidity": 0.10},
+            "Exporter / Processor": {"weight_firmness": 0.80, "weight_brix": 0.10, "weight_ratio": 0.05, "weight_acidity": 0.05}
+        }
     },
     "cherry": {
         "label": "Cherry",
@@ -758,6 +866,10 @@ PRESETS_SOFIA = {
         "k_acidity_ref": 0.02,
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.40, "weight_brix": 0.35, "weight_ratio": 0.15, "weight_acidity": 0.10},
+            "Exporter / Processor": {"weight_firmness": 0.60, "weight_brix": 0.20, "weight_ratio": 0.10, "weight_acidity": 0.10}
+        }
     },
     "peach": {
         "label": "Peach",
@@ -780,6 +892,10 @@ PRESETS_SOFIA = {
         "k_acidity_ref": 0.02,
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.40, "weight_brix": 0.35, "weight_ratio": 0.15, "weight_acidity": 0.10},
+            "Exporter / Processor": {"weight_firmness": 0.60, "weight_brix": 0.20, "weight_ratio": 0.10, "weight_acidity": 0.10}
+        }
     },
     "plum": {
         "label": "Plum",
@@ -802,6 +918,10 @@ PRESETS_SOFIA = {
         "k_acidity_ref": 0.02,
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.40, "weight_brix": 0.35, "weight_ratio": 0.15, "weight_acidity": 0.10},
+            "Exporter / Processor": {"weight_firmness": 0.60, "weight_brix": 0.20, "weight_ratio": 0.10, "weight_acidity": 0.10}
+        }
     },
     "orange": {
         "label": "Orange",
@@ -824,6 +944,10 @@ PRESETS_SOFIA = {
         "k_acidity_ref": 0.02,
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.15, "weight_brix": 0.30, "weight_ratio": 0.40, "weight_acidity": 0.15},
+            "Industry (Juices/Jellies)": {"weight_firmness": 0.0, "weight_brix": 0.80, "weight_ratio": 0.15, "weight_acidity": 0.05}
+        }
     },
     "banana": {
         "label": "Banana",
@@ -846,6 +970,10 @@ PRESETS_SOFIA = {
         "k_acidity_ref": 0.02,
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.15, "weight_brix": 0.30, "weight_ratio": 0.40, "weight_acidity": 0.15},
+            "Industry (Juices/Jellies)": {"weight_firmness": 0.0, "weight_brix": 0.80, "weight_ratio": 0.15, "weight_acidity": 0.05}
+        }
     },
     "pear": {
         "label": "Pear",
@@ -868,6 +996,10 @@ PRESETS_SOFIA = {
         "k_acidity_ref": 0.02,
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.25, "weight_brix": 0.40, "weight_ratio": 0.25, "weight_acidity": 0.10},
+            "Industry (Juices/Jellies)": {"weight_firmness": 0.05, "weight_brix": 0.70, "weight_ratio": 0.20, "weight_acidity": 0.05}
+        }
     },
     "grape": {
         "label": "Grape",
@@ -890,6 +1022,10 @@ PRESETS_SOFIA = {
         "k_acidity_ref": 0.02,
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.15, "weight_brix": 0.30, "weight_ratio": 0.40, "weight_acidity": 0.15},
+            "Industry (Juices/Jellies)": {"weight_firmness": 0.0, "weight_brix": 0.80, "weight_ratio": 0.15, "weight_acidity": 0.05}
+        }
     },
     "fig": {
         "label": "Fig",
@@ -912,6 +1048,10 @@ PRESETS_SOFIA = {
         "k_acidity_ref": 0.02,
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.60, "weight_brix": 0.20, "weight_ratio": 0.10, "weight_acidity": 0.10},
+            "Exporter / Processor": {"weight_firmness": 0.80, "weight_brix": 0.10, "weight_ratio": 0.05, "weight_acidity": 0.05}
+        }
     },
     "melon": {
         "label": "Melon",
@@ -934,6 +1074,10 @@ PRESETS_SOFIA = {
         "k_acidity_ref": 0.02,
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 1.0,
+        "stakeholder_overrides": {
+            "Retailer (Grocery Store)": {"weight_firmness": 0.15, "weight_brix": 0.30, "weight_ratio": 0.40, "weight_acidity": 0.15},
+            "Industry (Juices/Jellies)": {"weight_firmness": 0.0, "weight_brix": 0.80, "weight_ratio": 0.15, "weight_acidity": 0.05}
+        }
     },
 }
 
@@ -990,26 +1134,37 @@ PACKAGING_FACTORS = {
 }
 
 STAKEHOLDER_PROFILES = {
-    "Producer / Exporter": {
-        "min_quality": 35,
-        "firm_multiplier": 1.75,
+    "Producer": {
+        "min_quality": 70,
         "mold_limit": 0.01,
-        "brix_multiplier": 0.3,
-        "ratio_multiplier": 0.5
+        "weight_firmness": 0.70,
+        "weight_brix": 0.125,
+        "weight_ratio": 0.5,
+        "weight_acidity": 0.125
+    },
+    "Exporter / Processor": {
+        "min_quality": 65,
+        "mold_limit": 0.02,
+        "weight_firmness": 0.50,
+        "weight_brix": 0.20,
+        "weight_ratio": 0.15,
+        "weight_acidity": 0.15
     },
     "Retailer (Grocery Store)": {
-        "min_quality": 65,
-        "firm_multiplier": 1.0,
+        "min_quality": 50,
         "mold_limit": 0.03,
-        "brix_multiplier": 0.95,
-        "ratio_multiplier": 0.9
+        "weight_firmness": 0.40,
+        "weight_brix": 0.25,
+        "weight_ratio": 0.15,
+        "weight_acidity": 0.20
     },
     "Industry (Juices/Jellies)": {
-        "min_quality": 20,       
-        "firm_multiplier": 0.15,
+        "min_quality": 50,
         "mold_limit": 0.08,
-        "brix_multiplier": 1.0,
-        "ratio_multiplier": 1.0 
+        "weight_firmness": 0.05,
+        "weight_brix": 0.60,
+        "weight_ratio": 0.30,
+        "weight_acidity": 0.05
     }
 }
 
@@ -1538,12 +1693,24 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
     # Quality
     firm_score = 1 / (1 + np.exp(-0.35 * (firmness - float(p["qual_firmness_threshold"]))))
     brix_score = np.exp(-((brix - float(p["qual_brix_target"]))**2) / 2.0)
-    
     acidity_score = np.exp(-((acidity - float(p.get("qual_acidity_target", 1.0)))**2) / 0.5)
     maturation_index = brix / acidity
     target_ratio = float(p["qual_brix_target"]) / float(p.get("qual_acidity_target", 1.0))
     ratio_score = np.exp(-((maturation_index - target_ratio)**2) / 10.0)
-    quality_base = 100 * (0.35 * firm_score + 0.35 * ratio_score + 0.15 * brix_score + 0.15 * acidity_score)
+    
+    # Apply stakeholder-specific weights
+    base_profile = STAKEHOLDER_PROFILES.get(current_owner_type, STAKEHOLDER_PROFILES["Retailer (Grocery Store)"]).copy()
+    
+    if "stakeholder_overrides" in p and current_owner_type in p["stakeholder_overrides"]:
+        base_profile.update(p["stakeholder_overrides"][current_owner_type])
+        
+    profile = base_profile
+    w_firm = profile.get("weight_firmness", 0.35)
+    w_brix = profile.get("weight_brix", 0.30)
+    w_ratio = profile.get("weight_ratio", 0.20)
+    w_acid = profile.get("weight_acidity", 0.15)
+    
+    quality_base = 100 * (w_firm * firm_score + w_ratio * ratio_score + w_brix * brix_score + w_acid * acidity_score)
 
     # Mold
     RH_mold_thr = float(p["RH_mold_thr"])
@@ -1564,25 +1731,17 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
         dm = (rate * (1.0 - mold[i-1])) * dt
         mold[i] = min(1.0, np.max(np.append(np.array(mold[i-1] + dm), 0)))
 
-    profile = STAKEHOLDER_PROFILES.get(current_owner_type, STAKEHOLDER_PROFILES["Retailer (Grocery Store)"])
-    
     target_brix = float(p["qual_brix_target"])
     target_acidity = float(p.get("qual_acidity_target", 1.0))
     target_ratio = target_brix / target_acidity
     
-    firmness_limit = float(p["qual_firmness_threshold"]) * profile["firm_multiplier"]
     mold_limit = profile["mold_limit"]
     min_quality = profile["min_quality"]
-    brix_limit = target_brix * profile["brix_multiplier"]
-    ratio_limit = target_ratio * profile["ratio_multiplier"]
     
     marketable = np.zeros_like(t, dtype=bool)
     
     for i in range(len(t)):
-        if (brix[i] >= brix_limit and 
-            maturation_index[i] >= ratio_limit and
-            quality_base[i] >= min_quality and 
-            firmness[i] >= firmness_limit and 
+        if (quality_base[i] >= min_quality and 
             mold[i] <= mold_limit):
             
             marketable[i] = True

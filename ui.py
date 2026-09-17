@@ -268,7 +268,7 @@ def main():
     
     current_owner_type = st.sidebar.selectbox(
         STAKEHOLDER_ROLE_LBL.get(lang_sel, "Stakeholder Role"), 
-        ["Retailer (Grocery Store)", "Producer / Exporter", "Industry (Juices/Jellies)"]
+        ["Retailer (Grocery Store)", "Producer", "Exporter / Processor", "Industry (Juices/Jellies)"]
     )
     
     st.sidebar.markdown("---")
