@@ -1409,18 +1409,25 @@ def run_simulation_prof_luis_paulo(fruit_key, T_c, E_ext_ppm, RH_pct, days, firm
         T_c = list(T_c) + [p["Tref_C"]] * extra_days
         RH_pct = list(RH_pct) + [p["RH_ref"]] * extra_days
         
-    T_c = np.array(T_c)
-    T_c = np.repeat(T_c, int(1/dt))
-    RH_pct = np.array(RH_pct)
-    RH_pct = np.repeat(RH_pct, int(1/dt))
+    T_c = np.repeat(np.array(T_c), int(1/dt))
+    if len(T_c) < len(t):
+        T_c = np.append(T_c, [T_c[-1]] * (len(t) - len(T_c)))
+    T_c = T_c[:len(t)]
+    
+    RH_pct = np.repeat(np.array(RH_pct), int(1/dt))
+    if len(RH_pct) < len(t):
+        RH_pct = np.append(RH_pct, [RH_pct[-1]] * (len(t) - len(RH_pct)))
+    RH_pct = RH_pct[:len(t)]
 
     if np.isscalar(E_ext_ppm):
         E_ext_ppm = np.full(len(t), float(E_ext_ppm))
     else:
         if extra_days > 0:
             E_ext_ppm = list(E_ext_ppm) + [0.0] * extra_days
-        E_ext_ppm = np.array(E_ext_ppm)
-        E_ext_ppm = np.repeat(E_ext_ppm, int(1/dt))
+        E_ext_ppm = np.repeat(np.array(E_ext_ppm), int(1/dt))
+        if len(E_ext_ppm) < len(t):
+            E_ext_ppm = np.append(E_ext_ppm, [E_ext_ppm[-1]] * (len(t) - len(E_ext_ppm)))
+        E_ext_ppm = E_ext_ppm[:len(t)]
 
     # -------------------------------------------------------------------------
     # 4.1) Efeito da temperature no softening (kT_firm)
@@ -1569,6 +1576,8 @@ def run_simulation_prof_luis_paulo(fruit_key, T_c, E_ext_ppm, RH_pct, days, firm
         "quality": quality[:idx_end].tolist(),
         "firmness": firmness[:idx_end].tolist(),
         "brix": brix[:idx_end].tolist(),
+        "temperature": T_c[:idx_end].tolist(),
+        "humidity": RH_pct[:idx_end].tolist(),
         "t": t[:idx_end].tolist()
     }
     return final_quality, remaining_SL, firmness[idx_days], brix[idx_days], arrays_dict
@@ -1622,9 +1631,21 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
         packaging_methods = [pm if pm is not None else "Granel (Sem embalagem)" for pm in packaging_methods]
         
     t = np.arange(0, days + dt*0.5, dt)
+    
     T_c = np.repeat(np.array(T_c), int(1/dt))
+    if len(T_c) < len(t):
+        T_c = np.append(T_c, [T_c[-1]] * (len(t) - len(T_c)))
+    T_c = T_c[:len(t)]
+    
     RH_pct = np.repeat(np.array(RH_pct), int(1/dt))
+    if len(RH_pct) < len(t):
+        RH_pct = np.append(RH_pct, [RH_pct[-1]] * (len(t) - len(RH_pct)))
+    RH_pct = RH_pct[:len(t)]
+    
     packaging_methods_rep = np.repeat(np.array(packaging_methods), int(1/dt))
+    if len(packaging_methods_rep) < len(t):
+        packaging_methods_rep = np.append(packaging_methods_rep, [packaging_methods_rep[-1]] * (len(t) - len(packaging_methods_rep)))
+    packaging_methods_rep = packaging_methods_rep[:len(t)]
 
     T_K = T_c + 273.15
     Tref_K = p["Tref_C"] + 273.15
@@ -1753,7 +1774,7 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
 
     remaining_SL = np.where(mold_penalty > 0, 0, remaining_SL)
 
-    arrays_dict = {"quality": quality.tolist(), "quality_base": quality_base.tolist(), "firmness": firmness.tolist(), "brix": brix.tolist(), "acidity": acidity.tolist(), "ratio": maturation_index.tolist(), "t": t.tolist()}
+    arrays_dict = {"quality": quality.tolist(), "quality_base": quality_base.tolist(), "firmness": firmness.tolist(), "brix": brix.tolist(), "acidity": acidity.tolist(), "ratio": maturation_index.tolist(), "temperature": T_c.tolist(), "humidity": RH_pct.tolist(), "t": t.tolist()}
     return quality[len(quality) - 1], remaining_SL[len(remaining_SL) - 1], firmness[len(firmness) - 1], brix[len(brix) - 1], arrays_dict
 
 # FORECAST API ENDPOINT
@@ -1935,7 +1956,7 @@ def forecast(request: LifecycleDataRequest, client_id: str = "dummy_client", sto
             T_c, RH_pct = fill_nulls_with_warehouse_sim(T_c, RH_pct, region_codes, alphas, start_date)
         
         # Orchestrator: academic model requires BOTH ethylene data AND academic preset
-        has_ethylene = any(e is not None for e in E_ppm)
+        has_ethylene = all(e is not None for e in E_ppm) if E_ppm else False
         has_academic_preset = fruit_key in PRESETS_ACADEMIC
         use_academic = has_ethylene and has_academic_preset
 

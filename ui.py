@@ -172,12 +172,16 @@ def plot_results(results, lang_sel="en", real_data_df=None, current_owner_type=N
         quality = cdata.get("quality", [])
         quality_base = cdata.get("quality_base", [])
         ratio = cdata.get("ratio", [])
+        temperature = cdata.get("temperature", [])
+        humidity = cdata.get("humidity", [])
         days = cdata.get("t", list(range(len(firmness))))
         st.markdown(f"### {CONT_SIM_RESULTS_TITLE.get(lang_sel, 'Continuous Simulation Results')}")
         
         _days = CHART_DAYS.get(lang_sel, 'Days')
         _firmness = FIRMNESS_LBL.get(lang_sel, 'Firmness (N)')
         _acidity = ACIDITY_LBL.get(lang_sel, 'Acidity')
+        _temperature = TEMP_SHORT.get(lang_sel, 'Temperature')
+        _humidity = RH_SHORT.get(lang_sel, 'Relative Humidity')
         _quality_idx = CHART_QUALITY_INDEX.get(lang_sel, 'Quality Index')
         _quality_base_word = CHART_QUALITY.get(lang_sel, 'Quality')
         if current_owner_type:
@@ -200,6 +204,19 @@ def plot_results(results, lang_sel="en", real_data_df=None, current_owner_type=N
                     fig_a.add_trace(go.Scatter(x=real_data_df["Day"], y=real_data_df["Real_Acidity"], mode='markers', name='Real', marker=dict(color='black', size=8, symbol='x')))
                 fig_a.update_layout(title=_acidity, xaxis_title=_days, yaxis_title=_acidity, margin=dict(l=20, r=20, t=40, b=20))
                 st.plotly_chart(fig_a, width="stretch")
+            if temperature:
+                fig_t = go.Figure(go.Scatter(x=days, y=temperature, mode='lines', name=_temperature, line=dict(color='#9467bd')))
+                if real_data_df is not None and "Temperature_C" in real_data_df.columns and "Date" in real_data_df.columns:
+                    # If we wanted to plot real temperatures, we'd need to map dates to days, but skipping for now to keep it simple
+                    pass
+                fig_t.update_layout(title=_temperature, xaxis_title=_days, yaxis_title=f"{_temperature} (°C)", margin=dict(l=20, r=20, t=40, b=20))
+                st.plotly_chart(fig_t, width="stretch")
+            if humidity:
+                fig_h = go.Figure(go.Scatter(x=days, y=humidity, mode='lines', name=_humidity, line=dict(color='#8c564b')))
+                if real_data_df is not None and "Humidity_Percent" in real_data_df.columns and "Date" in real_data_df.columns:
+                    pass
+                fig_h.update_layout(title=_humidity, xaxis_title=_days, yaxis_title=f"{_humidity} (%)", margin=dict(l=20, r=20, t=40, b=20))
+                st.plotly_chart(fig_h, width="stretch")
                 
         with c2:
             if brix:
@@ -215,7 +232,7 @@ def plot_results(results, lang_sel="en", real_data_df=None, current_owner_type=N
                     fig_q.add_trace(go.Scatter(x=days, y=quality_base, mode='lines', name=_base_quality, line=dict(color='#17becf', dash='dash')))
                 if real_data_df is not None and "Real_Quality" in real_data_df.columns and "Day" in real_data_df.columns:
                     fig_q.add_trace(go.Scatter(x=real_data_df["Day"], y=real_data_df["Real_Quality"], mode='markers', name='Real', marker=dict(color='black', size=8, symbol='x')))
-                fig_q.update_layout(title=_quality_idx, xaxis_title=_days, yaxis_title=_quality, margin=dict(l=20, r=20, t=40, b=20))
+                fig_q.update_layout(title=_quality_idx, xaxis_title=_days, yaxis_title=_quality_base_word, margin=dict(l=20, r=20, t=40, b=20))
                 st.plotly_chart(fig_q, width="stretch")
             if ratio:
                 fig_r = go.Figure(go.Scatter(x=days, y=ratio, mode='lines', name='Brix/Acidity Ratio', line=dict(color='#8c564b')))
@@ -285,9 +302,184 @@ def main():
     # ── Main Area ──
     st.title(f"🍎 {APP_TITLE.get(lang_sel, 'Life Cycle - LC - Eureka')}")
     
-    tab1, tab2 = st.tabs([f"1. 📈 {SIM_TAB.get(lang_sel, 'Simulation')}", f"2. 📜 {CREATE_PRESET_TAB.get(lang_sel, 'Create Preset')}"])
+    tab_excel, tab_sim, tab_json, tab_presets = st.tabs([
+        f"1. 📊 {SIM_EXCEL_TAB.get(lang_sel, 'Simulation - Excel Upload')}", 
+        f"2. 📈 {SIM_TAB.get(lang_sel, 'Simulation')}", 
+        f"3. 📄 {SIM_JSON_TAB.get(lang_sel, 'Simulation - JSON Upload')}",
+        f"4. 📜 {CREATE_PRESET_TAB.get(lang_sel, 'Presets')}"
+    ])
     
-    with tab1:
+    with tab_excel:
+        st.markdown(f"### {SIM_FROM_EXCEL_TITLE.get(lang_sel, 'Simulation from Excel')}")
+        fruits_list_xl = get_presets_from_api()
+        fruit_key_xl = st.selectbox(FRUIT_LBL.get(lang_sel, "Fruit") + " (Excel)", fruits_list_xl)
+        preset_xl = PRESETS_SOFIA.get(fruit_key_xl, PRESETS_ACADEMIC.get(fruit_key_xl, {"firmness_0_default": 60, "brix_0_default": 10.0, "acidity_0_default": 1.0, "brix_min": 0.0, "acidity_min": 0.0}))
+        
+        col1_xl, col2_xl, col3_xl = st.columns(3)
+        with col1_xl:
+            f0_xl = st.number_input(FIRMNESS_LBL.get(lang_sel, "Firmness (N)") + " (Excel)", value=float(preset_xl.get("firmness_0_default", 60)))
+        with col2_xl:
+            b0_xl = st.number_input(BRIX_LBL.get(lang_sel, "Brix") + " (Excel)", value=max(float(preset_xl.get("brix_0_default", 10.0)), float(preset_xl.get("brix_min", 0.0))), min_value=float(preset_xl.get("brix_min", 0.0)))
+        with col3_xl:
+            a0_xl = st.number_input(ACIDITY_LBL.get(lang_sel, "Acidity") + " (Excel)", value=max(float(preset_xl.get("acidity_0_default", 1.0)), float(preset_xl.get("acidity_min", 0.0))), min_value=float(preset_xl.get("acidity_min", 0.0)))
+        
+        st.markdown("---")
+        
+        dl_col, up_col = st.columns(2)
+        with dl_col:
+            try:
+                with open("example_files/example_inputs.xlsx", "rb") as f:
+                    st.download_button(
+                        label=st.session_state.get('lang', 'en') == 'en' and 'Download Excel Example' or 'Baixar Exemplo Excel',
+                        data=f.read(),
+                        file_name="example_inputs.xlsx",
+                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    )
+            except FileNotFoundError:
+                st.warning("Excel example not found.")
+                
+        with up_col:
+            uploaded_excel = st.file_uploader(st.session_state.get('lang', 'en') == 'en' and 'Upload Excel Data' or 'Upload Dados Excel', type=["xlsx"])
+            
+        if uploaded_excel is not None:
+            try:
+                excel_input = pd.read_excel(uploaded_excel, sheet_name="Input Data")
+                try:
+                    excel_real = pd.read_excel(uploaded_excel, sheet_name="Real Data")
+                except:
+                    excel_real = None
+                
+                if st.button(RUN_SIMULATION_BTN.get(lang_sel, "Run Simulation") + " (Excel)", type="primary"):
+                    lot_id_xl = 1
+                    # Sort chronologically and group by contiguous blocks of Segment_ID to preserve timeline
+                    if 'Date' in excel_input.columns:
+                        excel_input['Date'] = pd.to_datetime(excel_input['Date'])
+                        excel_input = excel_input.sort_values('Date')
+                        
+                    excel_input['block'] = (excel_input['Segment_ID'] != excel_input['Segment_ID'].shift(1)).cumsum()
+                    
+                    sensor_history_xl = []
+                    for (seg_id, _), group in excel_input.groupby(['Segment_ID', 'block']):
+                        daily_readings = []
+                        for _, row in group.iterrows():
+                            reading = {
+                                "date": pd.to_datetime(row['Date']).date().isoformat() if pd.notnull(row.get('Date')) else datetime.date.today().isoformat(),
+                                "source": "SIMULATION_UI_EXCEL"
+                            }
+                            if pd.notnull(row.get('Temperature_C')): reading["temperature_celsius"] = float(row['Temperature_C'])
+                            if pd.notnull(row.get('Humidity_Percent')): reading["humidity_percent"] = float(row['Humidity_Percent'])
+                            if pd.notnull(row.get('Ethylene_ppm')): reading["ethylene_ppm"] = float(row['Ethylene_ppm'])
+                            daily_readings.append(reading)
+                            
+                        first_row = group.iloc[0]
+                        sensor_history_xl.append({
+                            "warehouse_id": int(seg_id),
+                            "warehouse_location": f"Warehouse {int(seg_id)}",
+                            "meteo_source": "SIMULATION",
+                            "region": str(first_row.get('Region', 'PT-LVT')),
+                            "total_days_recorded": len(group),
+                            "packaging_method": str(first_row.get('Packaging', list(PACKAGING_FACTORS.keys())[0])),
+                            "starting_date": pd.to_datetime(first_row['Date']).date().isoformat() if pd.notnull(first_row.get('Date')) else datetime.date.today().isoformat(),
+                            "daily_readings": daily_readings
+                        })
+                    
+                    # Ensure segments are in chronological order
+                    sensor_history_xl = sorted(sensor_history_xl, key=lambda x: x['starting_date'])
+                    
+                    total_days_xl = sum(sh["total_days_recorded"] for sh in sensor_history_xl)
+                    
+                    payload_xl = {
+                        "version": "1.0",
+                        "export_metadata": {
+                            "generated_at": datetime.datetime.now().isoformat(),
+                            "target_service": "Lifecycle Decay Prediction Model Web Service",
+                            "days_elapsed_total": total_days_xl,
+                        },
+                        "lot_identification": {
+                            "lot_id": lot_id_xl,
+                            "batch_id": f"BATCH-{lot_id_xl}",
+                            "culture_name": fruit_key_xl,
+                            "fruit_type": fruit_key_xl,
+                            "producer": "Simulated Producer",
+                            "current_owner": "Simulated Retailer",
+                            "current_owner_type": current_owner_type,
+                            "harvest_date": (datetime.date.today() - datetime.timedelta(days=total_days_xl)).isoformat(),
+                            "initial_quantity_kg": 1000.0,
+                            "current_stock_kg": 1000.0,
+                            "delivered_quantity_kg": 0.0,
+                            "initial_metrics": {
+                                "soluble_solids_brix": float(b0_xl),
+                                "quality_score": 100,
+                                "waste_kg": 0.0,
+                                "firmness": float(f0_xl),
+                                "acidity": float(a0_xl)
+                            }
+                        },
+                        "plantation_origin": {
+                            "farm_id": "F-01",
+                            "location": "Simulated Location",
+                            "region_code": "PT-LVT",
+                            "soil_type": "Unknown",
+                            "irrigation_system": "Unknown"
+                        },
+                        "plantation_agricultural_events": [],
+                        "meteorology_and_imputation_strategy": {
+                            "json_fallback_mode": json_fallback_mode,
+                            "json_fallback_display": json_fallback_mode,
+                            "fixed_temperature_celsius": float(fixed_temp),
+                            "fixed_humidity_percent": float(fixed_rh),
+                            "ipma_region_code": "PT-LVT",
+                            "imputation_instructions": "Simulation defaults"
+                        },
+                        "blockchain_ledger": {
+                            "total_blocks_count": 0,
+                            "blocks": []
+                        },
+                        "transport_and_logistics": [],
+                        "current_warehouse": {
+                            "id": sensor_history_xl[-1]["warehouse_id"] if sensor_history_xl else None
+                        },
+                        "sensor_history_by_warehouse": sensor_history_xl,
+                        "plot_info": True
+                    }
+                    
+                    with st.spinner(SIMULATING_SPINNER.get(lang_sel, "Simulating...")):
+                        result_xl = post_simulation(payload_xl, lang_sel)
+                        if result_xl:
+                            algo = result_xl.get("algorithm", "unknown")
+                            st.success(f"{SIMULATION_COMPLETE.get(lang_sel, 'Simulation Complete!')} {ALGORITHM_USED.get(lang_sel, 'Algorithm used')}: {algo}")
+                            
+                            if result_xl.get("continuous_data") and result_xl["continuous_data"].get("firmness"):
+                                final_f = result_xl["continuous_data"]["firmness"][-1]
+                                brix_list = result_xl["continuous_data"].get("brix")
+                                final_b = f"{brix_list[-1]:.1f}" if brix_list else "N/A"
+                                acidity_list = result_xl["continuous_data"].get("acidity")
+                                final_a = f"{acidity_list[-1]:.2f}" if acidity_list else "N/A"
+                                quality_list = result_xl["continuous_data"].get("quality")
+                                final_q = f"{quality_list[-1]:.1f}/100" if quality_list else "N/A"
+                                
+                                if "t" in result_xl["continuous_data"]:
+                                    days_sim = round(result_xl["continuous_data"]["t"][-1], 2)
+                                else:
+                                    days_sim = total_days_xl
+                                
+                                st.markdown(f"### {KPI_TITLE.get(lang_sel, 'Key Performance Indicators')}")
+                                m1, m2, m3, m4, m5 = st.columns(5)
+                                m1.metric(KPI_DAYS_SIM.get(lang_sel, 'Days Simulated'), days_sim)
+                                m2.metric(KPI_FINAL_QUALITY.get(lang_sel, 'Final Quality'), final_q)
+                                m3.metric(KPI_FINAL_FIRMNESS.get(lang_sel, 'Final Firmness'), f"{final_f:.1f} N")
+                                m4.metric(KPI_FINAL_BRIX.get(lang_sel, 'Final Brix'), f"{final_b} ºBrix")
+                                m5.metric(KPI_FINAL_ACIDITY.get(lang_sel, 'Final Acidity'), f"{final_a} %")
+                                st.markdown("---")
+                            
+                            try:
+                                plot_results(result_xl, lang_sel, excel_real, current_owner_type)
+                            except Exception as e:
+                                pass
+            except Exception as e:
+                st.error(f"Error parsing Excel: {e}")
+                
+    with tab_sim:
         # ── Fruit Selection & Initial Metrics (directly visible) ──
         fruits_list = get_presets_from_api()
         fruit_key = st.selectbox(FRUIT_LBL.get(lang_sel, "Fruit"), fruits_list)
@@ -297,9 +489,9 @@ def main():
         with col1:
             f0 = st.number_input(FIRMNESS_LBL.get(lang_sel, "Firmness (N)"), value=float(preset.get("firmness_0_default", 60)))
         with col2:
-            b0 = st.number_input(BRIX_LBL.get(lang_sel, "Brix"), value=float(preset.get("brix_0_default", 10.0)))
+            b0 = st.number_input(BRIX_LBL.get(lang_sel, "Brix"), value=max(float(preset.get("brix_0_default", 10.0)), float(preset.get("brix_min", 0.0))), min_value=float(preset.get("brix_min", 0.0)))
         with col3:
-            a0 = st.number_input(ACIDITY_LBL.get(lang_sel, "Acidity"), value=float(preset.get("acidity_0_default", 1.0)))
+            a0 = st.number_input(ACIDITY_LBL.get(lang_sel, "Acidity"), value=max(float(preset.get("acidity_0_default", 1.0)), float(preset.get("acidity_min", 0.0))), min_value=float(preset.get("acidity_min", 0.0)))
         
         st.markdown("---")
         
@@ -439,7 +631,69 @@ def main():
                     except Exception as e:
                         pass
                     
-    with tab2:
+    with tab_json:
+        st.markdown(f"### {SIM_FROM_JSON_TITLE.get(lang_sel, 'Simulation from JSON')}")
+        
+        dl_col2, up_col2 = st.columns(2)
+        with dl_col2:
+            try:
+                with open("jsons/example.json", "r", encoding="utf-8") as f:
+                    st.download_button(
+                        label=st.session_state.get('lang', 'en') == 'en' and 'Download JSON Example' or 'Baixar Exemplo JSON',
+                        data=f.read(),
+                        file_name="example.json",
+                        mime="application/json"
+                    )
+            except FileNotFoundError:
+                st.warning("JSON example not found.")
+                
+        with up_col2:
+            uploaded_json = st.file_uploader(st.session_state.get('lang', 'en') == 'en' and 'Upload JSON Payload' or 'Upload Payload JSON', type=["json"])
+            
+        if uploaded_json is not None:
+            try:
+                payload_json = json.load(uploaded_json)
+                # Overwrite plot_info
+                payload_json["plot_info"] = True
+                
+                if st.button(RUN_SIMULATION_BTN.get(lang_sel, "Run Simulation") + " (JSON)", type="primary"):
+                    with st.spinner(SIMULATING_SPINNER.get(lang_sel, "Simulating...")):
+                        result_json = post_simulation(payload_json, lang_sel)
+                        if result_json:
+                            algo = result_json.get("algorithm", "unknown")
+                            st.success(f"{SIMULATION_COMPLETE.get(lang_sel, 'Simulation Complete!')} {ALGORITHM_USED.get(lang_sel, 'Algorithm used')}: {algo}")
+                            
+                            if result_json.get("continuous_data") and result_json["continuous_data"].get("firmness"):
+                                final_f = result_json["continuous_data"]["firmness"][-1]
+                                brix_list = result_json["continuous_data"].get("brix")
+                                final_b = f"{brix_list[-1]:.1f}" if brix_list else "N/A"
+                                acidity_list = result_json["continuous_data"].get("acidity")
+                                final_a = f"{acidity_list[-1]:.2f}" if acidity_list else "N/A"
+                                quality_list = result_json["continuous_data"].get("quality")
+                                final_q = f"{quality_list[-1]:.1f}/100" if quality_list else "N/A"
+                                
+                                if "t" in result_json["continuous_data"]:
+                                    days_sim = round(result_json["continuous_data"]["t"][-1], 2)
+                                else:
+                                    days_sim = payload_json.get("export_metadata", {}).get("days_elapsed_total", 0)
+                                
+                                st.markdown(f"### {KPI_TITLE.get(lang_sel, 'Key Performance Indicators')}")
+                                m1, m2, m3, m4, m5 = st.columns(5)
+                                m1.metric(KPI_DAYS_SIM.get(lang_sel, 'Days Simulated'), days_sim)
+                                m2.metric(KPI_FINAL_QUALITY.get(lang_sel, 'Final Quality'), final_q)
+                                m3.metric(KPI_FINAL_FIRMNESS.get(lang_sel, 'Final Firmness'), f"{final_f:.1f} N")
+                                m4.metric(KPI_FINAL_BRIX.get(lang_sel, 'Final Brix'), f"{final_b} ºBrix")
+                                m5.metric(KPI_FINAL_ACIDITY.get(lang_sel, 'Final Acidity'), f"{final_a} %")
+                                st.markdown("---")
+                            
+                            try:
+                                plot_results(result_json, lang_sel, None, current_owner_type)
+                            except Exception as e:
+                                pass
+            except Exception as e:
+                st.error(f"Error parsing JSON: {e}")
+
+    with tab_presets:
         st.header(CREATE_NEW_PRESET_TITLE.get(lang_sel, "Create New Preset"))
         new_fruit_key = st.text_input(FRUIT_KEY_LBL.get(lang_sel, "Fruit Key (e.g., apple_gala_custom)"), "")
         

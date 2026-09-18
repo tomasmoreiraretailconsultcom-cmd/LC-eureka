@@ -32,22 +32,6 @@ DURATION_DAYS = {
     'tr': 'Süre (Gün)',
 }
 
-METADATA_TITLE = {
-    'en': 'Fallback Mode Configuration',
-    'es': 'Configuración del Modo de Respaldo',
-    'pt': 'Configuração do Modo de Fallback',
-    'tr': 'Yedek Mod Yapılandırması',
-}
-
-
-
-INITIAL_METRICS_TITLE = {
-    'en': 'Initial Metrics',
-    'es': 'Métricas Iniciales',
-    'pt': 'Métricas Iniciais',
-    'tr': 'Başlangıç Metrikleri',
-}
-
 SIM_TAB = {
     'en': 'Simulation',
     'es': 'Simulación',
@@ -362,13 +346,6 @@ ENABLE_ETHYLENE_TOGGLE = {
     'tr': 'Etilen Özelliklerini Etkinleştir (Akademik Model)',
 }
 
-SIMULATION_SETUP_TITLE = {
-    'en': 'Simulation Setup',
-    'es': 'Configuración de Simulación',
-    'pt': 'Configuração de Simulação',
-    'tr': 'Simülasyon Kurulumu',
-}
-
 KPI_TITLE = {
     'en': 'Key Performance Indicators',
     'es': 'Indicadores Clave de Rendimiento',
@@ -557,13 +534,6 @@ ENABLE_ETHYLENE_TOGGLE = {
     'tr': 'Etilen Özelliklerini Etkinleştir (Akademik Model)',
 }
 
-SIMULATION_SETUP_TITLE = {
-    'en': 'Simulation Setup',
-    'es': 'Configuración de Simulación',
-    'pt': 'Configuração de Simulação',
-    'tr': 'Simülasyon Kurulumu',
-}
-
 KPI_TITLE = {
     'en': 'Key Performance Indicators',
     'es': 'Indicadores Clave de Rendimiento',
@@ -648,3 +618,31 @@ CHART_BASE_QUALITY = {
     'tr': 'Temel Kalite',
 }
 
+
+SIM_EXCEL_TAB = {
+    'en': "Simulation - Excel Upload",
+    'es': "Simulación - Subida Excel",
+    'pt': "Simulação - Upload Excel",
+    'tr': "Simülasyon - Excel Yükle",
+}
+
+SIM_JSON_TAB = {
+    'en': "Simulation - JSON Upload",
+    'es': "Simulación - Subida JSON",
+    'pt': "Simulação - Upload JSON",
+    'tr': "Simülasyon - JSON Yükle",
+}
+
+SIM_FROM_EXCEL_TITLE = {
+    'en': "Simulation from Excel",
+    'es': "Simulación desde Excel",
+    'pt': "Simulação de Excel",
+    'tr': "Excel'den Simülasyon",
+}
+
+SIM_FROM_JSON_TITLE = {
+    'en': "Simulation from JSON",
+    'es': "Simulación desde JSON",
+    'pt': "Simulação de JSON",
+    'tr': "JSON'dan Simülasyon",
+}
