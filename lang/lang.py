@@ -619,18 +619,25 @@ CHART_BASE_QUALITY = {
 }
 
 
-SIM_EXCEL_TAB = {
-    'en': "Simulation - Excel Upload",
-    'es': "Simulación - Subida Excel",
-    'pt': "Simulação - Upload Excel",
-    'tr': "Simülasyon - Excel Yükle",
+UPLOAD_DATA_TAB = {
+    'en': "Upload Data (Excel/JSON)",
+    'es': "Subir Datos (Excel/JSON)",
+    'pt': "Upload de Dados (Excel/JSON)",
+    'tr': "Veri Yükle (Excel/JSON)",
 }
 
-SIM_JSON_TAB = {
-    'en': "Simulation - JSON Upload",
-    'es': "Simulación - Subida JSON",
-    'pt': "Simulação - Upload JSON",
-    'tr': "Simülasyon - JSON Yükle",
+EXCEL_TIPS_TITLE = {
+    'en': "💡 Tips for Excel Formatting",
+    'es': "💡 Consejos para Formato Excel",
+    'pt': "💡 Dicas para Formatação no Excel",
+    'tr': "💡 Excel Formatı İçin İpuçları",
+}
+
+EXCEL_TIPS_TEXT = {
+    'en': "- Your Excel file should contain **only one sheet**.\n- Add daily inputs for environment conditions (e.g., `Temperature_C`, `Humidity_Percent`).\n- **Real data is completely optional.** If you have real measurements to compare, add them directly on the same row using columns like `Real_Firmness`, `Real_BRIX`, `Real_Acidity`, or `Real_Quality`.\n- **Regions:** `PT-NL`, `PT-NI`, `PT-CL`, `PT-CI`, `PT-LVT`, `PT-AL`, `PT-ALG`, `PT-SM`, `PT-MAD`, `PT-ACO`\n- **Packaging:** `Granel (Sem embalagem)`, `Caixa de Cartao Aberta`, `Saco Plástico Perfurado`, `MAP (Atmosfera Modificada) / Plástico Selado`\n- 💡 **Note:** If `Ethylene_ppm` values are provided for all rows, the simulation will automatically use the **Academic Model**.",
+    'es': "- Su archivo Excel debe contener **solo una hoja**.\n- Añada entradas diarias para las condiciones ambientales (ej., `Temperature_C`, `Humidity_Percent`).\n- **Los datos reales son completamente opcionales.** Si tiene medidas reales para comparar, añádalas directamente en la misma fila utilizando columnas como `Real_Firmness`, `Real_BRIX`, `Real_Acidity` o `Real_Quality`.\n- **Regiones:** `PT-NL`, `PT-NI`, `PT-CL`, `PT-CI`, `PT-LVT`, `PT-AL`, `PT-ALG`, `PT-SM`, `PT-MAD`, `PT-ACO`\n- **Embalaje:** `Granel (Sem embalagem)`, `Caixa de Cartao Aberta`, `Saco Plástico Perfurado`, `MAP (Atmosfera Modificada) / Plástico Selado`\n- 💡 **Nota:** Si se proporcionan valores de `Ethylene_ppm` para todas las filas, la simulación utilizará automáticamente el **Modelo Académico**.",
+    'pt': "- O seu ficheiro Excel deve conter **apenas uma folha (sheet)**.\n- Adicione dados diários para condições ambientais (ex., `Temperature_C`, `Humidity_Percent`).\n- **Dados reais são completamente opcionais.** Se tem medições reais para comparar, adicione-as diretamente na mesma linha usando colunas como `Real_Firmness`, `Real_BRIX`, `Real_Acidity` ou `Real_Quality`.\n- **Regiões:** `PT-NL`, `PT-NI`, `PT-CL`, `PT-CI`, `PT-LVT`, `PT-AL`, `PT-ALG`, `PT-SM`, `PT-MAD`, `PT-ACO`\n- **Embalagem:** `Granel (Sem embalagem)`, `Caixa de Cartao Aberta`, `Saco Plástico Perfurado`, `MAP (Atmosfera Modificada) / Plástico Selado`\n- 💡 **Nota:** Se os valores de `Ethylene_ppm` forem fornecidos para todas as linhas, a simulação usará automaticamente o **Modelo Académico**.",
+    'tr': "- Excel dosyanız **sadece bir sayfa** içermelidir.\n- Çevre koşulları için günlük girdiler ekleyin (örn., `Temperature_C`, `Humidity_Percent`).\n- **Gerçek veriler tamamen isteğe bağlıdır.** Karşılaştırılacak gerçek ölçümleriniz varsa, bunları `Real_Firmness`, `Real_BRIX`, `Real_Acidity` veya `Real_Quality` gibi sütunlar kullanarak aynı satıra ekleyin.\n- **Bölgeler:** `PT-NL`, `PT-NI`, `PT-CL`, `PT-CI`, `PT-LVT`, `PT-AL`, `PT-ALG`, `PT-SM`, `PT-MAD`, `PT-ACO`\n- **Paketleme:** `Granel (Sem embalagem)`, `Caixa de Cartao Aberta`, `Saco Plástico Perfurado`, `MAP (Atmosfera Modificada) / Plástico Selado`\n- 💡 **Not:** Tüm satırlar için `Ethylene_ppm` değerleri sağlanırsa, simülasyon otomatik olarak **Akademik Model**'i kullanacaktır."
 }
 
 SIM_FROM_EXCEL_TITLE = {
@@ -645,4 +652,106 @@ SIM_FROM_JSON_TITLE = {
     'es': "Simulación desde JSON",
     'pt': "Simulação de JSON",
     'tr': "JSON'dan Simülasyon",
+}
+
+ALGORITHM_NAMES = {
+    'en': {
+        'ode_new': 'New Model',
+        'ode_academic': 'Academical Model'
+    },
+    'es': {
+        'ode_new': 'Nuevo Modelo',
+        'ode_academic': 'Modelo Académico'
+    },
+    'pt': {
+        'ode_new': 'Novo Modelo',
+        'ode_academic': 'Modelo Académico'
+    },
+    'tr': {
+        'ode_new': 'Yeni Model',
+        'ode_academic': 'Akademik Model'
+    }
+}
+
+FRUIT_NAMES = {
+    'en': {
+        'kiwi_hayward': 'Kiwi (Hayward)',
+        'kiwi_baby': 'Kiwi (Baby/Berry)',
+        'apple_golden': 'Apple (Golden)',
+        'apple_reineta': 'Apple (Reineta)',
+        'apple_gala': 'Apple (Gala)',
+        'apple_fuji': 'Apple (Fuji)',
+        'orange': 'Orange',
+        'banana': 'Banana',
+        'blueberry': 'Blueberry',
+        'raspberry': 'Raspberry',
+        'pear': 'Pear',
+        'plum': 'Plum',
+        'peach': 'Peach',
+        'cherry': 'Cherry',
+        'strawberry': 'Strawberry',
+        'grape': 'Grape',
+        'fig': 'Fig',
+        'melon': 'Melon'
+    },
+    'es': {
+        'kiwi_hayward': 'Kiwi (Hayward)',
+        'kiwi_baby': 'Kiwi (Baby/Berry)',
+        'apple_golden': 'Manzana (Golden)',
+        'apple_reineta': 'Manzana (Reineta)',
+        'apple_gala': 'Manzana (Gala)',
+        'apple_fuji': 'Manzana (Fuji)',
+        'orange': 'Naranja',
+        'banana': 'Plátano',
+        'blueberry': 'Arándano',
+        'raspberry': 'Frambuesa',
+        'pear': 'Pera',
+        'plum': 'Ciruela',
+        'peach': 'Melocotón',
+        'cherry': 'Cereza',
+        'strawberry': 'Fresa',
+        'grape': 'Uva',
+        'fig': 'Higo',
+        'melon': 'Melón'
+    },
+    'pt': {
+        'kiwi_hayward': 'Kiwi (Hayward)',
+        'kiwi_baby': 'Kiwi (Baby/Berry)',
+        'apple_golden': 'Maçã (Golden)',
+        'apple_reineta': 'Maçã (Reineta)',
+        'apple_gala': 'Maçã (Gala)',
+        'apple_fuji': 'Maçã (Fuji)',
+        'orange': 'Laranja',
+        'banana': 'Banana',
+        'blueberry': 'Mirtilo',
+        'raspberry': 'Framboesa',
+        'pear': 'Pera',
+        'plum': 'Ameixa',
+        'peach': 'Pêssego',
+        'cherry': 'Cereja',
+        'strawberry': 'Morango',
+        'grape': 'Uva',
+        'fig': 'Figo',
+        'melon': 'Melão'
+    },
+    'tr': {
+        'kiwi_hayward': 'Kivi (Hayward)',
+        'kiwi_baby': 'Kivi (Bebek/Meyve)',
+        'apple_golden': 'Elma (Golden)',
+        'apple_reineta': 'Elma (Reineta)',
+        'apple_gala': 'Elma (Gala)',
+        'apple_fuji': 'Elma (Fuji)',
+        'orange': 'Portakal',
+        'banana': 'Muz',
+        'blueberry': 'Yaban Mersini',
+        'raspberry': 'Ahududu',
+        'pear': 'Armut',
+        'plum': 'Erik',
+        'peach': 'Şeftali',
+        'cherry': 'Kiraz',
+        'strawberry': 'Çilek',
+        'grape': 'Üzüm',
+        'fig': 'İncir',
+        'melon': 'Kavun'
+    }
 }

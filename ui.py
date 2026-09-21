@@ -174,6 +174,7 @@ def plot_results(results, lang_sel="en", real_data_df=None, current_owner_type=N
         ratio = cdata.get("ratio", [])
         temperature = cdata.get("temperature", [])
         humidity = cdata.get("humidity", [])
+        remaining_sl = cdata.get("remaining_SL", [])
         days = cdata.get("t", list(range(len(firmness))))
         st.markdown(f"### {CONT_SIM_RESULTS_TITLE.get(lang_sel, 'Continuous Simulation Results')}")
         
@@ -192,39 +193,27 @@ def plot_results(results, lang_sel="en", real_data_df=None, current_owner_type=N
         
         c1, c2 = st.columns(2)
         with c1:
+            if temperature:
+                fig_t = go.Figure(go.Scatter(x=days, y=temperature, mode='lines', name=_temperature, line=dict(color='#9467bd')))
+                if real_data_df is not None and "Temperature_C" in real_data_df.columns and "Date" in real_data_df.columns:
+                    pass
+                fig_t.update_layout(title=_temperature, xaxis_title=_days, yaxis_title=f"{_temperature} (°C)", margin=dict(l=20, r=20, t=40, b=20), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+                st.plotly_chart(fig_t, width="stretch")
+                
             if firmness:
                 fig_f = go.Figure(go.Scatter(x=days, y=firmness, mode='lines', name=_firmness, line=dict(color='#1f77b4')))
                 if real_data_df is not None and "Real_Firmness" in real_data_df.columns and "Day" in real_data_df.columns:
                     fig_f.add_trace(go.Scatter(x=real_data_df["Day"], y=real_data_df["Real_Firmness"], mode='markers', name='Real', marker=dict(color='black', size=8, symbol='x')))
-                fig_f.update_layout(title=_firmness, xaxis_title=_days, yaxis_title=_firmness, margin=dict(l=20, r=20, t=40, b=20))
+                fig_f.update_layout(title=_firmness, xaxis_title=_days, yaxis_title=_firmness, margin=dict(l=20, r=20, t=40, b=20), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
                 st.plotly_chart(fig_f, width="stretch")
+                
             if acidity:
                 fig_a = go.Figure(go.Scatter(x=days, y=acidity, mode='lines', name=_acidity, line=dict(color='#d62728')))
                 if real_data_df is not None and "Real_Acidity" in real_data_df.columns and "Day" in real_data_df.columns:
                     fig_a.add_trace(go.Scatter(x=real_data_df["Day"], y=real_data_df["Real_Acidity"], mode='markers', name='Real', marker=dict(color='black', size=8, symbol='x')))
-                fig_a.update_layout(title=_acidity, xaxis_title=_days, yaxis_title=_acidity, margin=dict(l=20, r=20, t=40, b=20))
+                fig_a.update_layout(title=_acidity, xaxis_title=_days, yaxis_title=_acidity, margin=dict(l=20, r=20, t=40, b=20), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
                 st.plotly_chart(fig_a, width="stretch")
-            if temperature:
-                fig_t = go.Figure(go.Scatter(x=days, y=temperature, mode='lines', name=_temperature, line=dict(color='#9467bd')))
-                if real_data_df is not None and "Temperature_C" in real_data_df.columns and "Date" in real_data_df.columns:
-                    # If we wanted to plot real temperatures, we'd need to map dates to days, but skipping for now to keep it simple
-                    pass
-                fig_t.update_layout(title=_temperature, xaxis_title=_days, yaxis_title=f"{_temperature} (°C)", margin=dict(l=20, r=20, t=40, b=20))
-                st.plotly_chart(fig_t, width="stretch")
-            if humidity:
-                fig_h = go.Figure(go.Scatter(x=days, y=humidity, mode='lines', name=_humidity, line=dict(color='#8c564b')))
-                if real_data_df is not None and "Humidity_Percent" in real_data_df.columns and "Date" in real_data_df.columns:
-                    pass
-                fig_h.update_layout(title=_humidity, xaxis_title=_days, yaxis_title=f"{_humidity} (%)", margin=dict(l=20, r=20, t=40, b=20))
-                st.plotly_chart(fig_h, width="stretch")
                 
-        with c2:
-            if brix:
-                fig_b = go.Figure(go.Scatter(x=days, y=brix, mode='lines', name='Brix', line=dict(color='#ff7f0e')))
-                if real_data_df is not None and "Real_BRIX" in real_data_df.columns and "Day" in real_data_df.columns:
-                    fig_b.add_trace(go.Scatter(x=real_data_df["Day"], y=real_data_df["Real_BRIX"], mode='markers', name='Real', marker=dict(color='black', size=8, symbol='x')))
-                fig_b.update_layout(title="Brix", xaxis_title=_days, yaxis_title="Brix", margin=dict(l=20, r=20, t=40, b=20))
-                st.plotly_chart(fig_b, width="stretch")
             if quality:
                 fig_q = go.Figure(go.Scatter(x=days, y=quality, mode='lines', name=_quality, line=dict(color='#2ca02c')))
                 if quality_base:
@@ -232,12 +221,33 @@ def plot_results(results, lang_sel="en", real_data_df=None, current_owner_type=N
                     fig_q.add_trace(go.Scatter(x=days, y=quality_base, mode='lines', name=_base_quality, line=dict(color='#17becf', dash='dash')))
                 if real_data_df is not None and "Real_Quality" in real_data_df.columns and "Day" in real_data_df.columns:
                     fig_q.add_trace(go.Scatter(x=real_data_df["Day"], y=real_data_df["Real_Quality"], mode='markers', name='Real', marker=dict(color='black', size=8, symbol='x')))
-                fig_q.update_layout(title=_quality_idx, xaxis_title=_days, yaxis_title=_quality_base_word, margin=dict(l=20, r=20, t=40, b=20))
+                fig_q.update_layout(title=_quality_idx, xaxis_title=_days, yaxis_title=_quality_base_word, margin=dict(l=20, r=20, t=40, b=20), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
                 st.plotly_chart(fig_q, width="stretch")
+                
+        with c2:
+            if humidity:
+                fig_h = go.Figure(go.Scatter(x=days, y=humidity, mode='lines', name=_humidity, line=dict(color='#8c564b')))
+                if real_data_df is not None and "Humidity_Percent" in real_data_df.columns and "Date" in real_data_df.columns:
+                    pass
+                fig_h.update_layout(title=_humidity, xaxis_title=_days, yaxis_title=f"{_humidity} (%)", margin=dict(l=20, r=20, t=40, b=20), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+                st.plotly_chart(fig_h, width="stretch")
+
+            if brix:
+                fig_b = go.Figure(go.Scatter(x=days, y=brix, mode='lines', name='Brix', line=dict(color='#ff7f0e')))
+                if real_data_df is not None and "Real_BRIX" in real_data_df.columns and "Day" in real_data_df.columns:
+                    fig_b.add_trace(go.Scatter(x=real_data_df["Day"], y=real_data_df["Real_BRIX"], mode='markers', name='Real', marker=dict(color='black', size=8, symbol='x')))
+                fig_b.update_layout(title="Brix", xaxis_title=_days, yaxis_title="Brix", margin=dict(l=20, r=20, t=40, b=20), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+                st.plotly_chart(fig_b, width="stretch")
+                
             if ratio:
                 fig_r = go.Figure(go.Scatter(x=days, y=ratio, mode='lines', name='Brix/Acidity Ratio', line=dict(color='#8c564b')))
-                fig_r.update_layout(title="Brix/Acidity Ratio", xaxis_title=_days, yaxis_title="Ratio", margin=dict(l=20, r=20, t=40, b=20))
+                fig_r.update_layout(title="Brix/Acidity Ratio", xaxis_title=_days, yaxis_title="Ratio", margin=dict(l=20, r=20, t=40, b=20), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
                 st.plotly_chart(fig_r, width="stretch")
+            
+            if remaining_sl:
+                fig_sl = go.Figure(go.Scatter(x=days, y=remaining_sl, mode='lines', name='Remaining Shelf Life', line=dict(color='#e377c2')))
+                fig_sl.update_layout(title="Remaining Shelf Life", xaxis_title=_days, yaxis_title="Days", margin=dict(l=20, r=20, t=40, b=20), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+                st.plotly_chart(fig_sl, width="stretch")
                 
         return
 
@@ -302,31 +312,17 @@ def main():
     # ── Main Area ──
     st.title(f"🍎 {APP_TITLE.get(lang_sel, 'Life Cycle - LC - Eureka')}")
     
-    tab_excel, tab_sim, tab_json, tab_presets = st.tabs([
-        f"1. 📊 {SIM_EXCEL_TAB.get(lang_sel, 'Simulation - Excel Upload')}", 
+    tab_upload, tab_sim, tab_presets = st.tabs([
+        f"1. 📊 {UPLOAD_DATA_TAB.get(lang_sel, 'Upload Data (Excel/JSON)')}", 
         f"2. 📈 {SIM_TAB.get(lang_sel, 'Simulation')}", 
-        f"3. 📄 {SIM_JSON_TAB.get(lang_sel, 'Simulation - JSON Upload')}",
-        f"4. 📜 {CREATE_PRESET_TAB.get(lang_sel, 'Presets')}"
+        f"3. 📜 {CREATE_PRESET_TAB.get(lang_sel, 'Presets')}"
     ])
     
-    with tab_excel:
-        st.markdown(f"### {SIM_FROM_EXCEL_TITLE.get(lang_sel, 'Simulation from Excel')}")
-        fruits_list_xl = get_presets_from_api()
-        fruit_key_xl = st.selectbox(FRUIT_LBL.get(lang_sel, "Fruit") + " (Excel)", fruits_list_xl)
-        preset_xl = PRESETS_SOFIA.get(fruit_key_xl, PRESETS_ACADEMIC.get(fruit_key_xl, {"firmness_0_default": 60, "brix_0_default": 10.0, "acidity_0_default": 1.0, "brix_min": 0.0, "acidity_min": 0.0}))
+    with tab_upload:
+        st.markdown(f"### Upload Data (Excel or JSON)")
         
-        col1_xl, col2_xl, col3_xl = st.columns(3)
-        with col1_xl:
-            f0_xl = st.number_input(FIRMNESS_LBL.get(lang_sel, "Firmness (N)") + " (Excel)", value=float(preset_xl.get("firmness_0_default", 60)))
-        with col2_xl:
-            b0_xl = st.number_input(BRIX_LBL.get(lang_sel, "Brix") + " (Excel)", value=max(float(preset_xl.get("brix_0_default", 10.0)), float(preset_xl.get("brix_min", 0.0))), min_value=float(preset_xl.get("brix_min", 0.0)))
-        with col3_xl:
-            a0_xl = st.number_input(ACIDITY_LBL.get(lang_sel, "Acidity") + " (Excel)", value=max(float(preset_xl.get("acidity_0_default", 1.0)), float(preset_xl.get("acidity_min", 0.0))), min_value=float(preset_xl.get("acidity_min", 0.0)))
-        
-        st.markdown("---")
-        
-        dl_col, up_col = st.columns(2)
-        with dl_col:
+        dl_col1, dl_col2 = st.columns(2)
+        with dl_col1:
             try:
                 with open("example_files/example_inputs.xlsx", "rb") as f:
                     st.download_button(
@@ -338,18 +334,54 @@ def main():
             except FileNotFoundError:
                 st.warning("Excel example not found.")
                 
-        with up_col:
-            uploaded_excel = st.file_uploader(st.session_state.get('lang', 'en') == 'en' and 'Upload Excel Data' or 'Upload Dados Excel', type=["xlsx"])
-            
-        if uploaded_excel is not None:
+        with dl_col2:
             try:
-                excel_input = pd.read_excel(uploaded_excel, sheet_name="Input Data")
-                try:
-                    excel_real = pd.read_excel(uploaded_excel, sheet_name="Real Data")
-                except:
-                    excel_real = None
+                with open("jsons/example.json", "r", encoding="utf-8") as f:
+                    st.download_button(
+                        label=st.session_state.get('lang', 'en') == 'en' and 'Download JSON Example' or 'Baixar Exemplo JSON',
+                        data=f.read(),
+                        file_name="example.json",
+                        mime="application/json"
+                    )
+            except FileNotFoundError:
+                st.warning("JSON example not found.")
                 
-                if st.button(RUN_SIMULATION_BTN.get(lang_sel, "Run Simulation") + " (Excel)", type="primary"):
+        with st.expander(EXCEL_TIPS_TITLE.get(lang_sel, "💡 Tips for Excel Formatting")):
+            st.markdown(EXCEL_TIPS_TEXT.get(lang_sel, "Tips not found"))
+            
+        uploaded_file = st.file_uploader(st.session_state.get('lang', 'en') == 'en' and 'Upload Data (Excel or JSON)' or 'Upload Dados (Excel ou JSON)', type=["xlsx", "json"])
+        
+        if uploaded_file is not None:
+            if uploaded_file.name.endswith('.xlsx'):
+                st.markdown(f"### {SIM_FROM_EXCEL_TITLE.get(lang_sel, 'Simulation from Excel')}")
+                fruits_list_xl = get_presets_from_api()
+                fruit_key_xl = st.selectbox(
+                    FRUIT_LBL.get(lang_sel, "Fruit") + " (Excel)", 
+                    fruits_list_xl,
+                    format_func=lambda x: FRUIT_NAMES.get(lang_sel, {}).get(x, x)
+                )
+                preset_xl = PRESETS_SOFIA.get(fruit_key_xl, PRESETS_ACADEMIC.get(fruit_key_xl, {"firmness_0_default": 60, "brix_0_default": 10.0, "acidity_0_default": 1.0, "brix_min": 0.0, "acidity_min": 0.0}))
+                
+                col1_xl, col2_xl, col3_xl = st.columns(3)
+                with col1_xl:
+                    f0_xl = st.number_input(FIRMNESS_LBL.get(lang_sel, "Firmness (N)") + " (Excel)", value=float(preset_xl.get("firmness_0_default", 60)))
+                with col2_xl:
+                    b0_xl = st.number_input(BRIX_LBL.get(lang_sel, "Brix") + " (Excel)", value=max(float(preset_xl.get("brix_0_default", 10.0)), float(preset_xl.get("brix_min", 0.0))), min_value=float(preset_xl.get("brix_min", 0.0)))
+                with col3_xl:
+                    a0_xl = st.number_input(ACIDITY_LBL.get(lang_sel, "Acidity") + " (Excel)", value=max(float(preset_xl.get("acidity_0_default", 1.0)), float(preset_xl.get("acidity_min", 0.0))), min_value=float(preset_xl.get("acidity_min", 0.0)))
+                
+                st.markdown("---")
+                
+                try:
+                    excel_input = pd.read_excel(uploaded_file)
+                    excel_real = excel_input.copy()
+                    if 'Day' not in excel_real.columns:
+                        excel_real['Day'] = range(len(excel_real))
+                except Exception as e:
+                    st.error(f"Error parsing Excel: {e}")
+                    excel_input = None
+                
+                if excel_input is not None and st.button(RUN_SIMULATION_BTN.get(lang_sel, "Run Simulation") + " (Excel)", type="primary"):
                     lot_id_xl = 1
                     # Sort chronologically and group by contiguous blocks of Segment_ID to preserve timeline
                     if 'Date' in excel_input.columns:
@@ -447,7 +479,8 @@ def main():
                         result_xl = post_simulation(payload_xl, lang_sel)
                         if result_xl:
                             algo = result_xl.get("algorithm", "unknown")
-                            st.success(f"{SIMULATION_COMPLETE.get(lang_sel, 'Simulation Complete!')} {ALGORITHM_USED.get(lang_sel, 'Algorithm used')}: {algo}")
+                            algo_display = ALGORITHM_NAMES.get(lang_sel, {}).get(algo, algo)
+                            st.success(f"{SIMULATION_COMPLETE.get(lang_sel, 'Simulation Complete!')} {ALGORITHM_USED.get(lang_sel, 'Algorithm used')}: {algo_display}")
                             
                             if result_xl.get("continuous_data") and result_xl["continuous_data"].get("firmness"):
                                 final_f = result_xl["continuous_data"]["firmness"][-1]
@@ -476,13 +509,60 @@ def main():
                                 plot_results(result_xl, lang_sel, excel_real, current_owner_type)
                             except Exception as e:
                                 pass
-            except Exception as e:
-                st.error(f"Error parsing Excel: {e}")
                 
+            elif uploaded_file.name.endswith('.json'):
+                st.markdown(f"### {SIM_FROM_JSON_TITLE.get(lang_sel, 'Simulation from JSON')}")
+                try:
+                    payload_json = json.load(uploaded_file)
+                    # Overwrite plot_info
+                    payload_json["plot_info"] = True
+                    
+                    if st.button(RUN_SIMULATION_BTN.get(lang_sel, "Run Simulation") + " (JSON)", type="primary"):
+                        with st.spinner(SIMULATING_SPINNER.get(lang_sel, "Simulating...")):
+                            result_json = post_simulation(payload_json, lang_sel)
+                            if result_json:
+                                algo = result_json.get("algorithm", "unknown")
+                                algo_display = ALGORITHM_NAMES.get(lang_sel, {}).get(algo, algo)
+                                st.success(f"{SIMULATION_COMPLETE.get(lang_sel, 'Simulation Complete!')} {ALGORITHM_USED.get(lang_sel, 'Algorithm used')}: {algo_display}")
+                                
+                                if result_json.get("continuous_data") and result_json["continuous_data"].get("firmness"):
+                                    final_f = result_json["continuous_data"]["firmness"][-1]
+                                    brix_list = result_json["continuous_data"].get("brix")
+                                    final_b = f"{brix_list[-1]:.1f}" if brix_list else "N/A"
+                                    acidity_list = result_json["continuous_data"].get("acidity")
+                                    final_a = f"{acidity_list[-1]:.2f}" if acidity_list else "N/A"
+                                    quality_list = result_json["continuous_data"].get("quality")
+                                    final_q = f"{quality_list[-1]:.1f}/100" if quality_list else "N/A"
+                                    
+                                    if "t" in result_json["continuous_data"]:
+                                        days_sim = round(result_json["continuous_data"]["t"][-1], 2)
+                                    else:
+                                        days_sim = payload_json.get("export_metadata", {}).get("days_elapsed_total", 0)
+                                    
+                                    st.markdown(f"### {KPI_TITLE.get(lang_sel, 'Key Performance Indicators')}")
+                                    m1, m2, m3, m4, m5 = st.columns(5)
+                                    m1.metric(KPI_DAYS_SIM.get(lang_sel, 'Days Simulated'), days_sim)
+                                    m2.metric(KPI_FINAL_QUALITY.get(lang_sel, 'Final Quality'), final_q)
+                                    m3.metric(KPI_FINAL_FIRMNESS.get(lang_sel, 'Final Firmness'), f"{final_f:.1f} N")
+                                    m4.metric(KPI_FINAL_BRIX.get(lang_sel, 'Final Brix'), f"{final_b} ºBrix")
+                                    m5.metric(KPI_FINAL_ACIDITY.get(lang_sel, 'Final Acidity'), f"{final_a} %")
+                                    st.markdown("---")
+                                
+                                try:
+                                    plot_results(result_json, lang_sel, None, current_owner_type)
+                                except Exception as e:
+                                    pass
+                except Exception as e:
+                    st.error(f"Error parsing JSON: {e}")
+
     with tab_sim:
         # ── Fruit Selection & Initial Metrics (directly visible) ──
         fruits_list = get_presets_from_api()
-        fruit_key = st.selectbox(FRUIT_LBL.get(lang_sel, "Fruit"), fruits_list)
+        fruit_key = st.selectbox(
+            FRUIT_LBL.get(lang_sel, "Fruit"), 
+            fruits_list,
+            format_func=lambda x: FRUIT_NAMES.get(lang_sel, {}).get(x, x)
+        )
         preset = PRESETS_SOFIA.get(fruit_key, PRESETS_ACADEMIC.get(fruit_key, {"firmness_0_default": 60, "brix_0_default": 10.0, "acidity_0_default": 1.0}))
         
         col1, col2, col3 = st.columns(3)
@@ -598,7 +678,8 @@ def main():
                 result = post_simulation(payload, lang_sel)
                 if result:
                     algo = result.get("algorithm", "unknown")
-                    st.success(f"{SIMULATION_COMPLETE.get(lang_sel, 'Simulation Complete!')} {ALGORITHM_USED.get(lang_sel, 'Algorithm used')}: {algo}")
+                    algo_display = ALGORITHM_NAMES.get(lang_sel, {}).get(algo, algo)
+                    st.success(f"{SIMULATION_COMPLETE.get(lang_sel, 'Simulation Complete!')} {ALGORITHM_USED.get(lang_sel, 'Algorithm used')}: {algo_display}")
                     
                     if result.get("continuous_data") and result["continuous_data"].get("firmness"):
                         final_f = result["continuous_data"]["firmness"][-1]
@@ -631,67 +712,7 @@ def main():
                     except Exception as e:
                         pass
                     
-    with tab_json:
-        st.markdown(f"### {SIM_FROM_JSON_TITLE.get(lang_sel, 'Simulation from JSON')}")
-        
-        dl_col2, up_col2 = st.columns(2)
-        with dl_col2:
-            try:
-                with open("jsons/example.json", "r", encoding="utf-8") as f:
-                    st.download_button(
-                        label=st.session_state.get('lang', 'en') == 'en' and 'Download JSON Example' or 'Baixar Exemplo JSON',
-                        data=f.read(),
-                        file_name="example.json",
-                        mime="application/json"
-                    )
-            except FileNotFoundError:
-                st.warning("JSON example not found.")
-                
-        with up_col2:
-            uploaded_json = st.file_uploader(st.session_state.get('lang', 'en') == 'en' and 'Upload JSON Payload' or 'Upload Payload JSON', type=["json"])
-            
-        if uploaded_json is not None:
-            try:
-                payload_json = json.load(uploaded_json)
-                # Overwrite plot_info
-                payload_json["plot_info"] = True
-                
-                if st.button(RUN_SIMULATION_BTN.get(lang_sel, "Run Simulation") + " (JSON)", type="primary"):
-                    with st.spinner(SIMULATING_SPINNER.get(lang_sel, "Simulating...")):
-                        result_json = post_simulation(payload_json, lang_sel)
-                        if result_json:
-                            algo = result_json.get("algorithm", "unknown")
-                            st.success(f"{SIMULATION_COMPLETE.get(lang_sel, 'Simulation Complete!')} {ALGORITHM_USED.get(lang_sel, 'Algorithm used')}: {algo}")
-                            
-                            if result_json.get("continuous_data") and result_json["continuous_data"].get("firmness"):
-                                final_f = result_json["continuous_data"]["firmness"][-1]
-                                brix_list = result_json["continuous_data"].get("brix")
-                                final_b = f"{brix_list[-1]:.1f}" if brix_list else "N/A"
-                                acidity_list = result_json["continuous_data"].get("acidity")
-                                final_a = f"{acidity_list[-1]:.2f}" if acidity_list else "N/A"
-                                quality_list = result_json["continuous_data"].get("quality")
-                                final_q = f"{quality_list[-1]:.1f}/100" if quality_list else "N/A"
-                                
-                                if "t" in result_json["continuous_data"]:
-                                    days_sim = round(result_json["continuous_data"]["t"][-1], 2)
-                                else:
-                                    days_sim = payload_json.get("export_metadata", {}).get("days_elapsed_total", 0)
-                                
-                                st.markdown(f"### {KPI_TITLE.get(lang_sel, 'Key Performance Indicators')}")
-                                m1, m2, m3, m4, m5 = st.columns(5)
-                                m1.metric(KPI_DAYS_SIM.get(lang_sel, 'Days Simulated'), days_sim)
-                                m2.metric(KPI_FINAL_QUALITY.get(lang_sel, 'Final Quality'), final_q)
-                                m3.metric(KPI_FINAL_FIRMNESS.get(lang_sel, 'Final Firmness'), f"{final_f:.1f} N")
-                                m4.metric(KPI_FINAL_BRIX.get(lang_sel, 'Final Brix'), f"{final_b} ºBrix")
-                                m5.metric(KPI_FINAL_ACIDITY.get(lang_sel, 'Final Acidity'), f"{final_a} %")
-                                st.markdown("---")
-                            
-                            try:
-                                plot_results(result_json, lang_sel, None, current_owner_type)
-                            except Exception as e:
-                                pass
-            except Exception as e:
-                st.error(f"Error parsing JSON: {e}")
+
 
     with tab_presets:
         st.header(CREATE_NEW_PRESET_TITLE.get(lang_sel, "Create New Preset"))

@@ -1561,15 +1561,15 @@ def run_simulation_prof_luis_paulo(fruit_key, T_c, E_ext_ppm, RH_pct, days, firm
     final_quality = quality[idx_days]
     
     # Calculate remaining shelf life based on 30% quality threshold
+    remaining_SL_arr = np.zeros_like(t)
     below_30 = np.where(quality <= 30.0)[0]
     if len(below_30) > 0:
         idx_30 = below_30[0]
-        if idx_30 <= idx_days:
-            remaining_SL = 0.0
-        else:
-            remaining_SL = t[idx_30] - days
+        remaining_SL_arr = np.maximum(0.0, t[idx_30] - t)
     else:
-        remaining_SL = float(max_sim_days - days)
+        remaining_SL_arr = np.maximum(0.0, float(max_sim_days) - t)
+        
+    remaining_SL = float(remaining_SL_arr[idx_days])
         
     idx_end = idx_days + 1
     arrays_dict = {
@@ -1578,7 +1578,8 @@ def run_simulation_prof_luis_paulo(fruit_key, T_c, E_ext_ppm, RH_pct, days, firm
         "brix": brix[:idx_end].tolist(),
         "temperature": T_c[:idx_end].tolist(),
         "humidity": RH_pct[:idx_end].tolist(),
-        "t": t[:idx_end].tolist()
+        "t": t[:idx_end].tolist(),
+        "remaining_SL": remaining_SL_arr[:idx_end].tolist()
     }
     return final_quality, remaining_SL, firmness[idx_days], brix[idx_days], arrays_dict
 
@@ -1676,7 +1677,7 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
 
     # Acidity
     acidity = np.zeros_like(t)
-    acidity_min = float(p["acidity_min"])
+    acidity_min = min(float(p["acidity_min"]), float(acidity_0_user) * 0.5)
     acidity[0] = max(acidity_min + 1e-6, float(acidity_0_user))
     kT_acidity = p["k_acidity_ref"] * k_temp_scaling(p["Ea_acidity_J"], T_K, Tref_K)
     
@@ -1774,7 +1775,7 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
 
     remaining_SL = np.where(mold_penalty > 0, 0, remaining_SL)
 
-    arrays_dict = {"quality": quality.tolist(), "quality_base": quality_base.tolist(), "firmness": firmness.tolist(), "brix": brix.tolist(), "acidity": acidity.tolist(), "ratio": maturation_index.tolist(), "temperature": T_c.tolist(), "humidity": RH_pct.tolist(), "t": t.tolist()}
+    arrays_dict = {"quality": quality.tolist(), "quality_base": quality_base.tolist(), "firmness": firmness.tolist(), "brix": brix.tolist(), "acidity": acidity.tolist(), "ratio": maturation_index.tolist(), "temperature": T_c.tolist(), "humidity": RH_pct.tolist(), "t": t.tolist(), "remaining_SL": remaining_SL.tolist()}
     return quality[len(quality) - 1], remaining_SL[len(remaining_SL) - 1], firmness[len(firmness) - 1], brix[len(brix) - 1], arrays_dict
 
 # FORECAST API ENDPOINT
