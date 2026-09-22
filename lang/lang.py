@@ -88,13 +88,6 @@ DAILY_READINGS_HINT = {
     'tr': 'Sahip olduğunuz değerleri girin. Modelin tahmin etmesi için boş bırakın.',
 }
 
-DAY_LABEL = {
-    'en': 'Day',
-    'es': 'Día',
-    'pt': 'Dia',
-    'tr': 'Gün',
-}
-
 TEMP_SHORT = {
     'en': 'Temp',
     'es': 'Temp',
@@ -158,11 +151,18 @@ APP_TITLE = {
     'tr': 'Yaşam Döngüsü - LC - Eureka',
 }
 
-CREATE_PRESET_TAB = {
-    'en': 'Create Preset',
-    'es': 'Crear Ajuste',
-    'pt': 'Criar Predefinição',
-    'tr': 'Ön Ayar Oluştur',
+VIEW_FRUIT_PARAMS_TITLE = {
+    'en': 'View Fruit Parameters',
+    'es': 'Ver Parámetros de Fruta',
+    'pt': 'Ver Parâmetros da Fruta',
+    'tr': 'Meyve Parametrelerini Görüntüle',
+}
+
+SELECT_MODEL_LBL = {
+    'en': 'Select Model',
+    'es': 'Seleccionar Modelo',
+    'pt': 'Selecionar Modelo',
+    'tr': 'Model Seçin',
 }
 
 FRUIT_LBL = {
@@ -207,41 +207,6 @@ ACIDITY_LBL = {
     'tr': 'Asidite',
 }
 
-REAL_DATA_COMP_TITLE = {
-    'en': 'Real Measured Data Comparison',
-    'es': 'Comparación de Datos Reales',
-    'pt': 'Comparação de Dados Reais',
-    'tr': 'Gerçek Ölçülen Veri Karşılaştırması',
-}
-
-DOWNLOAD_CSV_LBL = {
-    'en': 'Download Example CSV Template',
-    'es': 'Descargar Plantilla CSV',
-    'pt': 'Baixar Modelo CSV',
-    'tr': 'Örnek CSV Şablonunu İndir',
-}
-
-UPLOAD_DATA_LBL = {
-    'en': 'Upload Real Data (CSV or Excel)',
-    'es': 'Subir Datos Reales (CSV o Excel)',
-    'pt': 'Enviar Dados Reais (CSV ou Excel)',
-    'tr': 'Gerçek Veri Yükle (CSV veya Excel)',
-}
-
-FILE_UPLOAD_SUCCESS = {
-    'en': 'File uploaded successfully!',
-    'es': '¡Archivo subido con éxito!',
-    'pt': 'Arquivo enviado com sucesso!',
-    'tr': 'Dosya başarıyla yüklendi!',
-}
-
-FILE_UPLOAD_ERROR = {
-    'en': 'Error reading file:',
-    'es': 'Error al leer el archivo:',
-    'pt': 'Erro ao ler o arquivo:',
-    'tr': 'Dosya okuma hatası:',
-}
-
 SIMULATING_SPINNER = {
     'en': 'Simulating...',
     'es': 'Simulando...',
@@ -250,7 +215,7 @@ SIMULATING_SPINNER = {
 }
 
 CREATE_NEW_PRESET_TITLE = {
-    'en': 'Create New Preset',
+    'en': 'Create New Fruit Parameter',
     'es': 'Crear Nuevo Ajuste',
     'pt': 'Criar Nova Predefinição',
     'tr': 'Yeni Ön Ayar Oluştur',
@@ -285,7 +250,7 @@ MOLD_PROP_TITLE = {
 }
 
 SAVE_PRESET_BTN = {
-    'en': 'Save Custom Preset',
+    'en': 'Save Custom Fruit Parameter',
     'es': 'Guardar Ajuste',
     'pt': 'Salvar Predefinição Personalizada',
     'tr': 'Özel Ön Ayarı Kaydet',
@@ -299,14 +264,14 @@ PLEASE_ENTER_KEY_ERR = {
 }
 
 PRESET_CREATED_SUCC = {
-    'en': 'Preset created successfully!',
+    'en': 'Fruit Parameter created successfully!',
     'es': '¡Ajuste creado con éxito!',
     'pt': 'Predefinição criada com sucesso!',
     'tr': 'Ön ayar başarıyla oluşturuldu!',
 }
 
 PRESET_SAVE_ERR = {
-    'en': 'Error saving preset:',
+    'en': 'Error saving fruit parameter:',
     'es': 'Error al guardar el ajuste:',
     'pt': 'Erro ao salvar a predefinição:',
     'tr': 'Ön ayar kaydetme hatası:',
@@ -395,192 +360,32 @@ CONT_SIM_RESULTS_TITLE = {
     'tr': 'Sürekli Simülasyon Sonuçları',
 }
 
-CHART_DAYS = {
-    'en': 'Days',
-    'es': 'Comparación de Datos Reales',
-    'pt': 'Comparação de Dados Reais',
-    'tr': 'Gerçek Ölçülen Veri Karşılaştırması',
+VIEW_COMPLEX_PARAMS_TITLE = {
+    'en': 'View Complex Parameters:',
+    'es': 'Ver Parámetros Complejos:',
+    'pt': 'Ver Parâmetros Complexos:',
+    'tr': 'Karmaşık Parametreleri Görüntüle:',
 }
 
-DOWNLOAD_CSV_LBL = {
-    'en': 'Download Example CSV Template',
-    'es': 'Descargar Plantilla CSV',
-    'pt': 'Baixar Modelo CSV',
-    'tr': 'Örnek CSV Şablonunu İndir',
+NO_PARAMS_FOUND_WARN = {
+    'en': 'No parameters found for {fruit} in {model} model.',
+    'es': 'No se encontraron parámetros para {fruit} en el modelo {model}.',
+    'pt': 'Não foram encontrados parâmetros para {fruit} no modelo {model}.',
+    'tr': '{model} modelinde {fruit} için parametre bulunamadı.',
 }
 
-UPLOAD_DATA_LBL = {
-    'en': 'Upload Real Data (CSV or Excel)',
-    'es': 'Subir Datos Reales (CSV o Excel)',
-    'pt': 'Enviar Dados Reais (CSV ou Excel)',
-    'tr': 'Gerçek Veri Yükle (CSV veya Excel)',
+STAKEHOLDER_OVERRIDES_TITLE = {
+    'en': 'Stakeholder Overrides',
+    'es': 'Anulaciones de Interesados',
+    'pt': 'Substituições de Stakeholders',
+    'tr': 'Paydaş Geçersiz Kılmaları',
 }
 
-FILE_UPLOAD_SUCCESS = {
-    'en': 'File uploaded successfully!',
-    'es': '¡Archivo subido con éxito!',
-    'pt': 'Arquivo enviado com sucesso!',
-    'tr': 'Dosya başarıyla yüklendi!',
-}
-
-FILE_UPLOAD_ERROR = {
-    'en': 'Error reading file:',
-    'es': 'Error al leer el archivo:',
-    'pt': 'Erro ao ler o arquivo:',
-    'tr': 'Dosya okuma hatası:',
-}
-
-SIMULATING_SPINNER = {
-    'en': 'Simulating...',
-    'es': 'Simulando...',
-    'pt': 'A simular...',
-    'tr': 'Simüle ediliyor...',
-}
-
-CREATE_NEW_PRESET_TITLE = {
-    'en': 'Create New Preset',
-    'es': 'Crear Nuevo Ajuste',
-    'pt': 'Criar Nova Predefinição',
-    'tr': 'Yeni Ön Ayar Oluştur',
-}
-
-FRUIT_KEY_LBL = {
-    'en': 'Fruit Key (e.g., apple_gala_custom)',
-    'es': 'Clave de Fruta (ej., manzana_gala_custom)',
-    'pt': 'Chave da Fruta (ex., maca_gala_custom)',
-    'tr': 'Meyve Anahtarı (örn., elma_gala_ozel)',
-}
-
-GENERAL_KINETICS_TITLE = {
-    'en': 'General / Kinetics',
-    'es': 'General / Cinética',
-    'pt': 'Geral / Cinética',
-    'tr': 'Genel / Kinetik',
-}
-
-ETHYLENE_PROP_TITLE = {
-    'en': 'Ethylene Properties',
-    'es': 'Propiedades de Etileno',
-    'pt': 'Propriedades do Etileno',
-    'tr': 'Etilen Özellikleri',
-}
-
-MOLD_PROP_TITLE = {
-    'en': 'Mold Properties',
-    'es': 'Propiedades de Moho',
-    'pt': 'Propriedades de Bolor',
-    'tr': 'Küf Özellikleri',
-}
-
-SAVE_PRESET_BTN = {
-    'en': 'Save Custom Preset',
-    'es': 'Guardar Ajuste',
-    'pt': 'Salvar Predefinição Personalizada',
-    'tr': 'Özel Ön Ayarı Kaydet',
-}
-
-PLEASE_ENTER_KEY_ERR = {
-    'en': 'Please enter a Fruit Key.',
-    'es': 'Por favor, introduce una Clave de Fruta.',
-    'pt': 'Por favor, insira uma Chave de Fruta.',
-    'tr': 'Lütfen bir Meyve Anahtarı girin.',
-}
-
-PRESET_CREATED_SUCC = {
-    'en': 'Preset created successfully!',
-    'es': '¡Ajuste creado con éxito!',
-    'pt': 'Predefinição criada com sucesso!',
-    'tr': 'Ön ayar başarıyla oluşturuldu!',
-}
-
-PRESET_SAVE_ERR = {
-    'en': 'Error saving preset:',
-    'es': 'Error al guardar el ajuste:',
-    'pt': 'Erro ao salvar a predefinição:',
-    'tr': 'Ön ayar kaydetme hatası:',
-}
-
-PACKAGING_TRANS = {
-    'en': {
-        "Granel (Sem embalagem)": "Bulk (No packaging)",
-        "Caixa de Cartão Aberta": "Open Cardboard Box",
-        "Saco Plástico Perfurado": "Perforated Plastic Bag",
-        "MAP (Atmosfera Modificada) / Plástico Selado": "MAP / Sealed Plastic"
-    },
-    'es': {
-        "Granel (Sem embalagem)": "A Granel (Sin envase)",
-        "Caixa de Cartão Aberta": "Caja de Cartón Abierta",
-        "Saco Plástico Perfurado": "Bolsa de Plástico Perforada",
-        "MAP (Atmosfera Modificada) / Plástico Selado": "EAM / Plástico Sellado"
-    },
-    'pt': {
-        "Granel (Sem embalagem)": "Granel (Sem embalagem)",
-        "Caixa de Cartão Aberta": "Caixa de Cartão Aberta",
-        "Saco Plástico Perfurado": "Saco Plástico Perfurado",
-        "MAP (Atmosfera Modificada) / Plástico Selado": "MAP (Atmosfera Modificada) / Plástico Selado"
-    },
-    'tr': {
-        "Granel (Sem embalagem)": "Dökme (Ambalajsız)",
-        "Caixa de Cartão Aberta": "Açık Karton Kutu",
-        "Saco Plástico Perfurado": "Delikli Plastik Torba",
-        "MAP (Atmosfera Modificada) / Plástico Selado": "MAP / Sızdırmaz Plastik"
-    }
-}
-
-ENABLE_ETHYLENE_TOGGLE = {
-    'en': 'Enable Ethylene Properties (Academic Model)',
-    'es': 'Habilitar Propiedades de Etileno (Modelo Académico)',
-    'pt': 'Ativar Propriedades de Etileno (Modelo Académico)',
-    'tr': 'Etilen Özelliklerini Etkinleştir (Akademik Model)',
-}
-
-KPI_TITLE = {
-    'en': 'Key Performance Indicators',
-    'es': 'Indicadores Clave de Rendimiento',
-    'pt': 'Indicadores de Desempenho',
-    'tr': 'Temel Performans Göstergeleri',
-}
-
-KPI_DAYS_SIM = {
-    'en': 'Days Simulated',
-    'es': 'Días Simulados',
-    'pt': 'Dias Simulados',
-    'tr': 'Simüle Edilen Gün',
-}
-
-KPI_FINAL_QUALITY = {
-    'en': 'Final Quality',
-    'es': 'Calidad Final',
-    'pt': 'Qualidade Final',
-    'tr': 'Son Kalite',
-}
-
-KPI_FINAL_FIRMNESS = {
-    'en': 'Final Firmness',
-    'es': 'Firmeza Final',
-    'pt': 'Firmeza Final',
-    'tr': 'Son Sertlik',
-}
-
-KPI_FINAL_BRIX = {
-    'en': 'Final Brix',
-    'es': 'Brix Final',
-    'pt': 'Brix Final',
-    'tr': 'Son Brix',
-}
-
-KPI_FINAL_ACIDITY = {
-    'en': 'Final Acidity',
-    'es': 'Acidez Final',
-    'pt': 'Acidez Final',
-    'tr': 'Son Asidite',
-}
-
-CONT_SIM_RESULTS_TITLE = {
-    'en': 'Continuous Simulation Results',
-    'es': 'Resultados de Simulación Continua',
-    'pt': 'Resultados da Simulação Contínua',
-    'tr': 'Sürekli Simülasyon Sonuçları',
+STAKEHOLDER_OVERRIDES_CAPTION = {
+    'en': 'Leave fields empty to use default values. Only filled rows will be saved.',
+    'es': 'Deje los campos vacíos para usar los valores predeterminados. Solo se guardarán las filas llenas.',
+    'pt': 'Deixe os campos vazios para usar os valores padrão. Apenas as linhas preenchidas serão salvas.',
+    'tr': 'Varsayılan değerleri kullanmak için alanları boş bırakın. Sadece doldurulmuş satırlar kaydedilecektir.',
 }
 
 CHART_DAYS = {
@@ -754,4 +559,47 @@ FRUIT_NAMES = {
         'fig': 'İncir',
         'melon': 'Kavun'
     }
+}
+
+
+NO_ETHYLENE_LBL = {
+    'en': ' (No Ethylene)',
+    'pt': ' (Sem Etileno)',
+    'es': ' (Sin Etileno)',
+    'tr': ' (Etilensiz)'
+}
+
+WITH_ETHYLENE_LBL = {
+    'en': ' (With Ethylene)',
+    'pt': ' (Com Etileno)',
+    'es': ' (Con Etileno)',
+    'tr': ' (Etilenli)'
+}
+
+FRUITS_TAB = {
+    'en': 'Fruits',
+    'pt': 'Frutas',
+    'es': 'Frutas',
+    'tr': 'Meyveler'
+}
+
+DOWNLOAD_EXCEL_EXAMPLE = {
+    'en': 'Download Excel Example',
+    'pt': 'Baixar Exemplo Excel',
+    'es': 'Descargar Ejemplo Excel',
+    'tr': 'Excel Örneğini İndir'
+}
+
+DOWNLOAD_JSON_EXAMPLE = {
+    'en': 'Download JSON Example',
+    'pt': 'Baixar Exemplo JSON',
+    'es': 'Descargar Ejemplo JSON',
+    'tr': 'JSON Örneğini İndir'
+}
+
+UPLOAD_DATA_EXCEL_JSON = {
+    'en': 'Upload Data (Excel or JSON)',
+    'pt': 'Upload Dados (Excel ou JSON)',
+    'es': 'Subir Datos (Excel o JSON)',
+    'tr': 'Veri Yükle (Excel veya JSON)'
 }

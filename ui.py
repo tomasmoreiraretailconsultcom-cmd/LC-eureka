@@ -41,35 +41,40 @@ def init_session_state():
             "packaging_method": list(PACKAGING_FACTORS.keys())[0]
         }]
 
-def build_lifecycle_payload(fruit_key, initial_firmness, initial_brix, initial_acidity, lot_id, json_fallback_mode, fixed_temp, fixed_rh, plot_info, current_owner_type):
+def build_lifecycle_payload(fruit_key, initial_firmness, initial_brix, initial_acidity, lot_id, json_fallback_mode, fixed_temp, fixed_rh, plot_info, current_owner_type, all_segment_dfs, lang_sel):
     """Build the complex LifecycleDataRequest expected by LC_model_v0_2_0 API."""
     
     sensor_history = []
     current_date = datetime.date.today()
     
+    col_temp = f"{TEMP_SHORT.get(lang_sel, 'Temp')} (°C)"
+    col_hr = f"{RH_SHORT.get(lang_sel, 'RH')} (%)"
+    col_eth = f"{ETH_SHORT.get(lang_sel, 'Eth')} (ppm)"
+    
     for i, seg in enumerate(st.session_state.segments):
         daily_readings = []
         seg_start_date = seg.get("start_date", datetime.date.today())
         
-        if seg.get("is_controlled"):
+        if seg.get("is_controlled") and i < len(all_segment_dfs):
+            df = all_segment_dfs[i]
             for d in range(seg["duration"]):
+                if d >= len(df):
+                    break
                 current_date = seg_start_date + datetime.timedelta(days=d)
                 reading = {
                     "date": current_date.isoformat(),
                     "source": "SIMULATION_UI"
                 }
                 
-                val_t = st.session_state.get(f"val_t_{i}_{d}")
-                if val_t is not None:
-                    reading["temperature_celsius"] = float(val_t)
+                row = df.iloc[d]
+                if pd.notna(row.get(col_temp)):
+                    reading["temperature_celsius"] = float(row[col_temp])
                     
-                val_h = st.session_state.get(f"val_h_{i}_{d}")
-                if val_h is not None:
-                    reading["humidity_percent"] = float(val_h)
+                if pd.notna(row.get(col_hr)):
+                    reading["humidity_percent"] = float(row[col_hr])
                     
-                val_e = st.session_state.get(f"val_e_{i}_{d}")
-                if val_e is not None:
-                    reading["ethylene_ppm"] = float(val_e)
+                if pd.notna(row.get(col_eth)):
+                    reading["ethylene_ppm"] = float(row[col_eth])
                     
                 daily_readings.append(reading)
             
@@ -280,6 +285,415 @@ def plot_results(results, lang_sel="en", real_data_df=None, current_owner_type=N
 # MAIN UI
 # =============================================================================
 
+
+def render_upload_tab(with_ethylene, lang_sel, current_owner_type, json_fallback_mode, fixed_temp, fixed_rh):
+    st.markdown(f"### Upload Data (Excel or JSON)")
+    
+    dl_col1, dl_col2 = st.columns(2)
+    with dl_col1:
+        try:
+            with open("example_files/example_inputs_ethylene.xlsx" if with_ethylene else "example_files/example_inputs.xlsx", "rb") as f:
+                st.download_button(
+                    label=DOWNLOAD_EXCEL_EXAMPLE.get(lang_sel, 'Download Excel Example'),
+                    data=f.read(),
+                    file_name="example_inputs_ethylene.xlsx" if with_ethylene else "example_inputs.xlsx",
+                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    key=f"dl_excel_{with_ethylene}"
+                )
+        except FileNotFoundError:
+            st.warning("Excel example not found.")
+        except PermissionError:
+            st.warning("Excel example file is open in another program.")
+            
+    with dl_col2:
+        try:
+            with open("jsons/example_ethylene.json" if with_ethylene else "jsons/example.json", "r", encoding="utf-8") as f:
+                st.download_button(
+                    label=DOWNLOAD_JSON_EXAMPLE.get(lang_sel, 'Download JSON Example'),
+                    data=f.read(),
+                    file_name="example_ethylene.json" if with_ethylene else "example.json",
+                    mime="application/json",
+                    key=f"dl_json_{with_ethylene}"
+                )
+        except FileNotFoundError:
+            st.warning("JSON example not found.")
+        except PermissionError:
+            st.warning("JSON example file is open in another program.")
+            
+    with st.expander(EXCEL_TIPS_TITLE.get(lang_sel, "💡 Tips for Excel Formatting")):
+        st.markdown(EXCEL_TIPS_TEXT.get(lang_sel, "Tips not found"))
+        
+    uploaded_file = st.file_uploader(UPLOAD_DATA_EXCEL_JSON.get(lang_sel, 'Upload Data (Excel or JSON)'), type=["xlsx", "json"], key=f"file_uploader_{with_ethylene}")
+    
+    if uploaded_file is not None:
+        if uploaded_file.name.endswith('.xlsx'):
+            st.markdown(f"### {SIM_FROM_EXCEL_TITLE.get(lang_sel, 'Simulation from Excel')}")
+            fruits_list_xl = get_presets_from_api()
+            fruit_key_xl = st.selectbox(
+                FRUIT_LBL.get(lang_sel, "Fruit") + " (Excel)", 
+                fruits_list_xl,
+                format_func=lambda x: FRUIT_NAMES.get(lang_sel, {}).get(x, x),
+                key=f"fruit_xl_{with_ethylene}"
+            )
+            preset_xl = PRESETS_SOFIA.get(fruit_key_xl, PRESETS_ACADEMIC.get(fruit_key_xl, {"firmness_0_default": 60, "brix_0_default": 10.0, "acidity_0_default": 1.0, "brix_min": 0.0, "acidity_min": 0.0}))
+            
+            col1_xl, col2_xl, col3_xl = st.columns(3)
+            with col1_xl:
+                f0_xl = st.number_input(FIRMNESS_LBL.get(lang_sel, "Firmness (N)") + " (Excel)", value=float(preset_xl.get("firmness_0_default", 60)), key=f"f0_xl_{with_ethylene}")
+            with col2_xl:
+                b0_xl = st.number_input(BRIX_LBL.get(lang_sel, "Brix") + " (Excel)", value=max(float(preset_xl.get("brix_0_default", 10.0)), float(preset_xl.get("brix_min", 0.0))), min_value=float(preset_xl.get("brix_min", 0.0)), key=f"b0_xl_{with_ethylene}")
+            with col3_xl:
+                a0_xl = st.number_input(ACIDITY_LBL.get(lang_sel, "Acidity") + " (Excel)", value=max(float(preset_xl.get("acidity_0_default", 1.0)), float(preset_xl.get("acidity_min", 0.0))), min_value=float(preset_xl.get("acidity_min", 0.0)), key=f"a0_xl_{with_ethylene}")
+            
+            st.markdown("---")
+            
+            try:
+                excel_input = pd.read_excel(uploaded_file)
+                excel_real = excel_input.copy()
+                if 'Day' not in excel_real.columns:
+                    excel_real['Day'] = range(len(excel_real))
+            except Exception as e:
+                st.error(f"Error parsing Excel: {e}")
+                excel_input = None
+            
+            if excel_input is not None and st.button(RUN_SIMULATION_BTN.get(lang_sel, "Run Simulation") + " (Excel)", type="primary", key=f"run_xl_{with_ethylene}"):
+                lot_id_xl = 1
+                # Sort chronologically and group by contiguous blocks of Segment_ID to preserve timeline
+                if 'Date' in excel_input.columns:
+                    excel_input['Date'] = pd.to_datetime(excel_input['Date'])
+                    excel_input = excel_input.sort_values('Date')
+                    
+                excel_input['block'] = (excel_input['Segment_ID'] != excel_input['Segment_ID'].shift(1)).cumsum()
+                
+                sensor_history_xl = []
+                for (seg_id, _), group in excel_input.groupby(['Segment_ID', 'block']):
+                    daily_readings = []
+                    for _, row in group.iterrows():
+                        reading = {
+                            "date": pd.to_datetime(row['Date']).date().isoformat() if pd.notnull(row.get('Date')) else datetime.date.today().isoformat(),
+                            "source": "SIMULATION_UI_EXCEL"
+                        }
+                        if pd.notnull(row.get('Temperature_C')): reading["temperature_celsius"] = float(row['Temperature_C'])
+                        if pd.notnull(row.get('Humidity_Percent')): reading["humidity_percent"] = float(row['Humidity_Percent'])
+                        if pd.notnull(row.get('Ethylene_ppm')): reading["ethylene_ppm"] = float(row['Ethylene_ppm'])
+                        daily_readings.append(reading)
+                        
+                    first_row = group.iloc[0]
+                    sensor_history_xl.append({
+                        "warehouse_id": int(seg_id),
+                        "warehouse_location": f"Warehouse {int(seg_id)}",
+                        "meteo_source": "SIMULATION",
+                        "region": str(first_row.get('Region', 'PT-LVT')),
+                        "total_days_recorded": len(group),
+                        "packaging_method": str(first_row.get('Packaging', list(PACKAGING_FACTORS.keys())[0])),
+                        "starting_date": pd.to_datetime(first_row['Date']).date().isoformat() if pd.notnull(first_row.get('Date')) else datetime.date.today().isoformat(),
+                        "daily_readings": daily_readings
+                    })
+                
+                # Ensure segments are in chronological order
+                sensor_history_xl = sorted(sensor_history_xl, key=lambda x: x['starting_date'])
+                
+                total_days_xl = sum(sh["total_days_recorded"] for sh in sensor_history_xl)
+                
+                payload_xl = {
+                    "version": "1.0",
+                    "export_metadata": {
+                        "generated_at": datetime.datetime.now().isoformat(),
+                        "target_service": "Lifecycle Decay Prediction Model Web Service",
+                        "days_elapsed_total": total_days_xl,
+                    },
+                    "lot_identification": {
+                        "lot_id": lot_id_xl,
+                        "batch_id": f"BATCH-{lot_id_xl}",
+                        "culture_name": fruit_key_xl,
+                        "fruit_type": fruit_key_xl,
+                        "producer": "Simulated Producer",
+                        "current_owner": "Simulated Retailer",
+                        "current_owner_type": current_owner_type,
+                        "harvest_date": (datetime.date.today() - datetime.timedelta(days=total_days_xl)).isoformat(),
+                        "initial_quantity_kg": 1000.0,
+                        "current_stock_kg": 1000.0,
+                        "delivered_quantity_kg": 0.0,
+                        "initial_metrics": {
+                            "soluble_solids_brix": float(b0_xl),
+                            "quality_score": 100,
+                            "waste_kg": 0.0,
+                            "firmness": float(f0_xl),
+                            "acidity": float(a0_xl)
+                        }
+                    },
+                    "plantation_origin": {
+                        "farm_id": "F-01",
+                        "location": "Simulated Location",
+                        "region_code": "PT-LVT",
+                        "soil_type": "Unknown",
+                        "irrigation_system": "Unknown"
+                    },
+                    "plantation_agricultural_events": [],
+                    "meteorology_and_imputation_strategy": {
+                        "json_fallback_mode": json_fallback_mode,
+                        "json_fallback_display": json_fallback_mode,
+                        "fixed_temperature_celsius": float(fixed_temp),
+                        "fixed_humidity_percent": float(fixed_rh),
+                        "ipma_region_code": "PT-LVT",
+                        "imputation_instructions": "Simulation defaults"
+                    },
+                    "blockchain_ledger": {
+                        "total_blocks_count": 0,
+                        "blocks": []
+                    },
+                    "transport_and_logistics": [],
+                    "current_warehouse": {
+                        "id": sensor_history_xl[-1]["warehouse_id"] if sensor_history_xl else None
+                    },
+                    "sensor_history_by_warehouse": sensor_history_xl,
+                    "plot_info": True
+                }
+                
+                with st.spinner(SIMULATING_SPINNER.get(lang_sel, "Simulating...")):
+                    result_xl = post_simulation(payload_xl, lang_sel)
+                    if result_xl:
+                        algo = result_xl.get("algorithm", "unknown")
+                        algo_display = ALGORITHM_NAMES.get(lang_sel, {}).get(algo, algo)
+                        st.success(f"{SIMULATION_COMPLETE.get(lang_sel, 'Simulation Complete!')} {ALGORITHM_USED.get(lang_sel, 'Algorithm used')}: {algo_display}")
+                        
+                        if result_xl.get("continuous_data") and result_xl["continuous_data"].get("firmness"):
+                            final_f = result_xl["continuous_data"]["firmness"][-1]
+                            brix_list = result_xl["continuous_data"].get("brix")
+                            final_b = f"{brix_list[-1]:.1f}" if brix_list else "N/A"
+                            acidity_list = result_xl["continuous_data"].get("acidity")
+                            final_a = f"{acidity_list[-1]:.2f}" if acidity_list else "N/A"
+                            quality_list = result_xl["continuous_data"].get("quality")
+                            final_q = f"{quality_list[-1]:.1f}/100" if quality_list else "N/A"
+                            
+                            if "t" in result_xl["continuous_data"]:
+                                days_sim = round(result_xl["continuous_data"]["t"][-1], 2)
+                            else:
+                                days_sim = total_days_xl
+                            
+                            st.markdown(f"### {KPI_TITLE.get(lang_sel, 'Key Performance Indicators')}")
+                            m1, m2, m3, m4, m5 = st.columns(5)
+                            m1.metric(KPI_DAYS_SIM.get(lang_sel, 'Days Simulated'), days_sim)
+                            m2.metric(KPI_FINAL_QUALITY.get(lang_sel, 'Final Quality'), final_q)
+                            m3.metric(KPI_FINAL_FIRMNESS.get(lang_sel, 'Final Firmness'), f"{final_f:.1f} N")
+                            m4.metric(KPI_FINAL_BRIX.get(lang_sel, 'Final Brix'), f"{final_b} ºBrix")
+                            m5.metric(KPI_FINAL_ACIDITY.get(lang_sel, 'Final Acidity'), f"{final_a} %")
+                            st.markdown("---")
+                        
+                        try:
+                            plot_results(result_xl, lang_sel, excel_real, current_owner_type)
+                        except Exception as e:
+                            pass
+            
+        elif uploaded_file.name.endswith('.json'):
+            st.markdown(f"### {SIM_FROM_JSON_TITLE.get(lang_sel, 'Simulation from JSON')}")
+            try:
+                payload_json = json.load(uploaded_file)
+                # Overwrite plot_info
+                payload_json["plot_info"] = True
+                
+                if st.button(RUN_SIMULATION_BTN.get(lang_sel, "Run Simulation") + " (JSON)", type="primary", key=f"run_json_{with_ethylene}"):
+                    with st.spinner(SIMULATING_SPINNER.get(lang_sel, "Simulating...")):
+                        result_json = post_simulation(payload_json, lang_sel)
+                        if result_json:
+                            algo = result_json.get("algorithm", "unknown")
+                            algo_display = ALGORITHM_NAMES.get(lang_sel, {}).get(algo, algo)
+                            st.success(f"{SIMULATION_COMPLETE.get(lang_sel, 'Simulation Complete!')} {ALGORITHM_USED.get(lang_sel, 'Algorithm used')}: {algo_display}")
+                            
+                            if result_json.get("continuous_data") and result_json["continuous_data"].get("firmness"):
+                                final_f = result_json["continuous_data"]["firmness"][-1]
+                                brix_list = result_json["continuous_data"].get("brix")
+                                final_b = f"{brix_list[-1]:.1f}" if brix_list else "N/A"
+                                acidity_list = result_json["continuous_data"].get("acidity")
+                                final_a = f"{acidity_list[-1]:.2f}" if acidity_list else "N/A"
+                                quality_list = result_json["continuous_data"].get("quality")
+                                final_q = f"{quality_list[-1]:.1f}/100" if quality_list else "N/A"
+                                
+                                if "t" in result_json["continuous_data"]:
+                                    days_sim = round(result_json["continuous_data"]["t"][-1], 2)
+                                else:
+                                    days_sim = payload_json.get("export_metadata", {}).get("days_elapsed_total", 0)
+                                
+                                st.markdown(f"### {KPI_TITLE.get(lang_sel, 'Key Performance Indicators')}")
+                                m1, m2, m3, m4, m5 = st.columns(5)
+                                m1.metric(KPI_DAYS_SIM.get(lang_sel, 'Days Simulated'), days_sim)
+                                m2.metric(KPI_FINAL_QUALITY.get(lang_sel, 'Final Quality'), final_q)
+                                m3.metric(KPI_FINAL_FIRMNESS.get(lang_sel, 'Final Firmness'), f"{final_f:.1f} N")
+                                m4.metric(KPI_FINAL_BRIX.get(lang_sel, 'Final Brix'), f"{final_b} ºBrix")
+                                m5.metric(KPI_FINAL_ACIDITY.get(lang_sel, 'Final Acidity'), f"{final_a} %")
+                                st.markdown("---")
+                            
+                            try:
+                                plot_results(result_json, lang_sel, None, current_owner_type)
+                            except Exception as e:
+                                pass
+            except Exception as e:
+                st.error(f"Error parsing JSON: {e}")
+
+def render_simulation_tab(with_ethylene, lang_sel, current_owner_type, json_fallback_mode, fixed_temp, fixed_rh):
+    # ── Fruit Selection & Initial Metrics (directly visible) ──
+    fruits_list = get_presets_from_api()
+    fruit_key = st.selectbox(
+        FRUIT_LBL.get(lang_sel, "Fruit"), 
+        fruits_list,
+        format_func=lambda x: FRUIT_NAMES.get(lang_sel, {}).get(x, x),
+        key=f"fruit_sim_{with_ethylene}"
+    )
+    preset = PRESETS_SOFIA.get(fruit_key, PRESETS_ACADEMIC.get(fruit_key, {"firmness_0_default": 60, "brix_0_default": 10.0, "acidity_0_default": 1.0}))
+    
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        f0 = st.number_input(FIRMNESS_LBL.get(lang_sel, "Firmness (N)"), value=float(preset.get("firmness_0_default", 60)), key=f"f0_sim_{with_ethylene}")
+    with col2:
+        b0 = st.number_input(BRIX_LBL.get(lang_sel, "Brix"), value=max(float(preset.get("brix_0_default", 10.0)), float(preset.get("brix_min", 0.0))), min_value=float(preset.get("brix_min", 0.0)), key=f"b0_sim_{with_ethylene}")
+    with col3:
+        a0 = st.number_input(ACIDITY_LBL.get(lang_sel, "Acidity"), value=max(float(preset.get("acidity_0_default", 1.0)), float(preset.get("acidity_min", 0.0))), min_value=float(preset.get("acidity_min", 0.0)), key=f"a0_sim_{with_ethylene}")
+    
+    st.markdown("---")
+    
+
+    # ── Storage Segments ──
+    st.markdown(f"### {SEGMENTS_TITLE.get(lang_sel, 'Storage Segments')}")
+    
+    col_btn1, col_btn2, _ = st.columns([1, 1, 2])
+    with col_btn1:
+        if st.button(ADD_SEGMENT_BTN.get(lang_sel, "Add Storage Segment"), key=f"add_seg_{with_ethylene}"):
+            st.session_state.segments.append({
+                "duration": 5, "is_controlled": False, "start_date": datetime.date.today(),
+                "warehouse_id": 1, "region": "PT-LVT", "packaging_method": list(PACKAGING_FACTORS.keys())[0]
+            })
+            st.rerun()
+    with col_btn2:
+        if st.button(REMOVE_SEGMENT_BTN.get(lang_sel, "Remove Storage Segment"), key=f"rm_seg_{with_ethylene}") and len(st.session_state.segments) > 1:
+            st.session_state.segments.pop()
+            st.rerun()
+    
+    lot_id = 1
+    
+    all_segment_dfs = []
+    for i, seg in enumerate(st.session_state.segments):
+        with st.expander(f"📦 {SEGMENTS_TITLE.get(lang_sel, 'Storage Segments').split(' ')[-1]} {i+1}", expanded=True):
+            seg["warehouse_id"] = i + 1
+            w_col1, w_col2 = st.columns(2)
+            with w_col1:
+                seg["region"] = st.selectbox(REGION_LBL.get(lang_sel, "Region"), REGIONS, index=REGIONS.index(seg.get("region", "PT-LVT")) if seg.get("region", "PT-LVT") in REGIONS else 4, key=f"reg_{i}_{with_ethylene}")
+            with w_col2:
+                packaging_opts = list(PACKAGING_FACTORS.keys())
+                seg["packaging_method"] = st.selectbox(PACKAGING_LBL.get(lang_sel, "Packaging"), packaging_opts, format_func=lambda x: PACKAGING_TRANS.get(lang_sel, {}).get(x, x), index=packaging_opts.index(seg.get("packaging_method", packaging_opts[0])) if seg.get("packaging_method") in packaging_opts else 0, key=f"pack_{i}_{with_ethylene}")
+            
+            d_col1, d_col2, d_col3 = st.columns(3)
+            with d_col1:
+                seg["duration"] = st.number_input(DURATION_DAYS.get(lang_sel, "Days"), min_value=1, value=seg["duration"], key=f"dur_{i}_{with_ethylene}")
+            with d_col2:
+                seg["start_date"] = st.date_input(START_DATE.get(lang_sel, "Start Date"), value=seg.get("start_date", datetime.date.today()), key=f"start_date_{i}_{with_ethylene}")
+            with d_col3:
+                st.write("")
+                st.write("")
+                seg["is_controlled"] = st.checkbox(IS_CONTROLLED.get(lang_sel, "Is the warehouse controlled?"), value=seg.get("is_controlled", False), key=f"controlled_{i}_{with_ethylene}")
+                
+            st.markdown(f"#### {DAILY_READINGS.get(lang_sel, 'Daily Readings')}")
+            st.caption(DAILY_READINGS_HINT.get(lang_sel, "Fill in values you have. Leave empty to let the model estimate."))
+            
+            dur = seg["duration"]
+            df_data = {
+                "Day": list(range(1, dur + 1))
+            }
+            
+            col_temp = f"{TEMP_SHORT.get(lang_sel, 'Temp')} (°C)"
+            col_hr = f"{RH_SHORT.get(lang_sel, 'RH')} (%)"
+            col_eth = f"{ETH_SHORT.get(lang_sel, 'Eth')} (ppm)"
+            
+            if seg.get("is_controlled"):
+                df_data[col_temp] = [None] * dur
+                df_data[col_hr] = [None] * dur
+                if with_ethylene:
+                    df_data[col_eth] = [None] * dur
+                
+            df_data["Real_Firmness"] = [None] * dur
+            df_data["Real_BRIX"] = [None] * dur
+            df_data["Real_Acidity"] = [None] * dur
+            df_data["Real_Quality"] = [None] * dur
+            
+            default_df = pd.DataFrame(df_data)
+            
+            col_config = {
+                "Day": st.column_config.NumberColumn(disabled=True)
+            }
+            
+            edited_df = st.data_editor(
+                default_df,
+                hide_index=True,
+                width="stretch",
+                column_config=col_config,
+                key=f"segment_data_{i}_{with_ethylene}"
+            )
+            all_segment_dfs.append(edited_df)
+    
+    plot_info = True
+    submitted = st.button(RUN_SIMULATION_BTN.get(lang_sel, "Run Simulation"), type="primary", key=f"run_sim_{with_ethylene}")
+
+    if submitted:
+        payload = build_lifecycle_payload(fruit_key, f0, b0, a0, lot_id, json_fallback_mode, fixed_temp, fixed_rh, plot_info, current_owner_type, all_segment_dfs, lang_sel)
+        
+        # Build real_data_df from all segments
+        real_data_rows = []
+        day_offset = 0
+        for i, seg in enumerate(st.session_state.segments):
+            if i < len(all_segment_dfs):
+                df = all_segment_dfs[i]
+                for idx, row in df.iterrows():
+                    real_data_rows.append({
+                        "Day": row["Day"] + day_offset,
+                        "Real_Firmness": row.get("Real_Firmness"),
+                        "Real_BRIX": row.get("Real_BRIX"),
+                        "Real_Acidity": row.get("Real_Acidity"),
+                        "Real_Quality": row.get("Real_Quality")
+                    })
+            day_offset += seg["duration"]
+        
+        real_data_df = pd.DataFrame(real_data_rows)
+        real_data_df = real_data_df.dropna(subset=["Real_Firmness", "Real_BRIX", "Real_Acidity", "Real_Quality"], how="all")
+        if real_data_df.empty:
+            real_data_df = None
+        
+        with st.spinner(SIMULATING_SPINNER.get(lang_sel, "Simulating...")):
+            result = post_simulation(payload, lang_sel)
+            if result:
+                algo = result.get("algorithm", "unknown")
+                algo_display = ALGORITHM_NAMES.get(lang_sel, {}).get(algo, algo)
+                st.success(f"{SIMULATION_COMPLETE.get(lang_sel, 'Simulation Complete!')} {ALGORITHM_USED.get(lang_sel, 'Algorithm used')}: {algo_display}")
+                
+                if result.get("continuous_data") and result["continuous_data"].get("firmness"):
+                    final_f = result["continuous_data"]["firmness"][-1]
+                    
+                    brix_list = result["continuous_data"].get("brix")
+                    final_b = f"{brix_list[-1]:.1f}" if brix_list else "N/A"
+                    
+                    acidity_list = result["continuous_data"].get("acidity")
+                    final_a = f"{acidity_list[-1]:.2f}" if acidity_list else "N/A"
+                    
+                    quality_list = result["continuous_data"].get("quality")
+                    final_q = f"{quality_list[-1]:.1f}/100" if quality_list else "N/A"
+                    
+                    if "t" in result["continuous_data"]:
+                        days_sim = round(result["continuous_data"]["t"][-1], 2)
+                    else:
+                        days_sim = sum(seg["duration"] for seg in st.session_state.segments)
+                    
+                    st.markdown(f"### {KPI_TITLE.get(lang_sel, 'Key Performance Indicators')}")
+                    m1, m2, m3, m4, m5 = st.columns(5)
+                    m1.metric(KPI_DAYS_SIM.get(lang_sel, 'Days Simulated'), days_sim)
+                    m2.metric(KPI_FINAL_QUALITY.get(lang_sel, 'Final Quality'), final_q)
+                    m3.metric(KPI_FINAL_FIRMNESS.get(lang_sel, 'Final Firmness'), f"{final_f:.1f} N")
+                    m4.metric(KPI_FINAL_BRIX.get(lang_sel, 'Final Brix'), f"{final_b} ºBrix")
+                    m5.metric(KPI_FINAL_ACIDITY.get(lang_sel, 'Final Acidity'), f"{final_a} %")
+                    st.markdown("---")
+                
+                try:
+                    plot_results(result, lang_sel, real_data_df, current_owner_type)
+                except Exception as e:
+                    pass
+                
 def main():
     init_session_state()
     
@@ -312,409 +726,67 @@ def main():
     # ── Main Area ──
     st.title(f"🍎 {APP_TITLE.get(lang_sel, 'Life Cycle - LC - Eureka')}")
     
-    tab_upload, tab_sim, tab_presets = st.tabs([
-        f"1. 📊 {UPLOAD_DATA_TAB.get(lang_sel, 'Upload Data (Excel/JSON)')}", 
-        f"2. 📈 {SIM_TAB.get(lang_sel, 'Simulation')}", 
-        f"3. 📜 {CREATE_PRESET_TAB.get(lang_sel, 'Presets')}"
+
+    tab_up_no_eth, tab_up_eth, tab_sim_no_eth, tab_sim_eth, tab_presets = st.tabs([
+        f"1. 📊 {UPLOAD_DATA_TAB.get(lang_sel, 'Upload Data')}{NO_ETHYLENE_LBL.get(lang_sel, ' (No Ethylene)')}",
+        f"2. 📊 {UPLOAD_DATA_TAB.get(lang_sel, 'Upload Data')}{WITH_ETHYLENE_LBL.get(lang_sel, ' (With Ethylene)')}",
+        f"3. 📈 {SIM_TAB.get(lang_sel, 'Simulation')}{NO_ETHYLENE_LBL.get(lang_sel, ' (No Ethylene)')}",
+        f"4. 📈 {SIM_TAB.get(lang_sel, 'Simulation')}{WITH_ETHYLENE_LBL.get(lang_sel, ' (With Ethylene)')}",
+        f"5. 📜 {FRUITS_TAB.get(lang_sel, 'Fruits')}"
     ])
     
-    with tab_upload:
-        st.markdown(f"### Upload Data (Excel or JSON)")
+    with tab_up_no_eth:
+        render_upload_tab(False, lang_sel, current_owner_type, json_fallback_mode, fixed_temp, fixed_rh)
         
-        dl_col1, dl_col2 = st.columns(2)
-        with dl_col1:
-            try:
-                with open("example_files/example_inputs.xlsx", "rb") as f:
-                    st.download_button(
-                        label=st.session_state.get('lang', 'en') == 'en' and 'Download Excel Example' or 'Baixar Exemplo Excel',
-                        data=f.read(),
-                        file_name="example_inputs.xlsx",
-                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                    )
-            except FileNotFoundError:
-                st.warning("Excel example not found.")
-                
-        with dl_col2:
-            try:
-                with open("jsons/example.json", "r", encoding="utf-8") as f:
-                    st.download_button(
-                        label=st.session_state.get('lang', 'en') == 'en' and 'Download JSON Example' or 'Baixar Exemplo JSON',
-                        data=f.read(),
-                        file_name="example.json",
-                        mime="application/json"
-                    )
-            except FileNotFoundError:
-                st.warning("JSON example not found.")
-                
-        with st.expander(EXCEL_TIPS_TITLE.get(lang_sel, "💡 Tips for Excel Formatting")):
-            st.markdown(EXCEL_TIPS_TEXT.get(lang_sel, "Tips not found"))
-            
-        uploaded_file = st.file_uploader(st.session_state.get('lang', 'en') == 'en' and 'Upload Data (Excel or JSON)' or 'Upload Dados (Excel ou JSON)', type=["xlsx", "json"])
+    with tab_up_eth:
+        render_upload_tab(True, lang_sel, current_owner_type, json_fallback_mode, fixed_temp, fixed_rh)
         
-        if uploaded_file is not None:
-            if uploaded_file.name.endswith('.xlsx'):
-                st.markdown(f"### {SIM_FROM_EXCEL_TITLE.get(lang_sel, 'Simulation from Excel')}")
-                fruits_list_xl = get_presets_from_api()
-                fruit_key_xl = st.selectbox(
-                    FRUIT_LBL.get(lang_sel, "Fruit") + " (Excel)", 
-                    fruits_list_xl,
-                    format_func=lambda x: FRUIT_NAMES.get(lang_sel, {}).get(x, x)
-                )
-                preset_xl = PRESETS_SOFIA.get(fruit_key_xl, PRESETS_ACADEMIC.get(fruit_key_xl, {"firmness_0_default": 60, "brix_0_default": 10.0, "acidity_0_default": 1.0, "brix_min": 0.0, "acidity_min": 0.0}))
-                
-                col1_xl, col2_xl, col3_xl = st.columns(3)
-                with col1_xl:
-                    f0_xl = st.number_input(FIRMNESS_LBL.get(lang_sel, "Firmness (N)") + " (Excel)", value=float(preset_xl.get("firmness_0_default", 60)))
-                with col2_xl:
-                    b0_xl = st.number_input(BRIX_LBL.get(lang_sel, "Brix") + " (Excel)", value=max(float(preset_xl.get("brix_0_default", 10.0)), float(preset_xl.get("brix_min", 0.0))), min_value=float(preset_xl.get("brix_min", 0.0)))
-                with col3_xl:
-                    a0_xl = st.number_input(ACIDITY_LBL.get(lang_sel, "Acidity") + " (Excel)", value=max(float(preset_xl.get("acidity_0_default", 1.0)), float(preset_xl.get("acidity_min", 0.0))), min_value=float(preset_xl.get("acidity_min", 0.0)))
-                
-                st.markdown("---")
-                
-                try:
-                    excel_input = pd.read_excel(uploaded_file)
-                    excel_real = excel_input.copy()
-                    if 'Day' not in excel_real.columns:
-                        excel_real['Day'] = range(len(excel_real))
-                except Exception as e:
-                    st.error(f"Error parsing Excel: {e}")
-                    excel_input = None
-                
-                if excel_input is not None and st.button(RUN_SIMULATION_BTN.get(lang_sel, "Run Simulation") + " (Excel)", type="primary"):
-                    lot_id_xl = 1
-                    # Sort chronologically and group by contiguous blocks of Segment_ID to preserve timeline
-                    if 'Date' in excel_input.columns:
-                        excel_input['Date'] = pd.to_datetime(excel_input['Date'])
-                        excel_input = excel_input.sort_values('Date')
-                        
-                    excel_input['block'] = (excel_input['Segment_ID'] != excel_input['Segment_ID'].shift(1)).cumsum()
-                    
-                    sensor_history_xl = []
-                    for (seg_id, _), group in excel_input.groupby(['Segment_ID', 'block']):
-                        daily_readings = []
-                        for _, row in group.iterrows():
-                            reading = {
-                                "date": pd.to_datetime(row['Date']).date().isoformat() if pd.notnull(row.get('Date')) else datetime.date.today().isoformat(),
-                                "source": "SIMULATION_UI_EXCEL"
-                            }
-                            if pd.notnull(row.get('Temperature_C')): reading["temperature_celsius"] = float(row['Temperature_C'])
-                            if pd.notnull(row.get('Humidity_Percent')): reading["humidity_percent"] = float(row['Humidity_Percent'])
-                            if pd.notnull(row.get('Ethylene_ppm')): reading["ethylene_ppm"] = float(row['Ethylene_ppm'])
-                            daily_readings.append(reading)
-                            
-                        first_row = group.iloc[0]
-                        sensor_history_xl.append({
-                            "warehouse_id": int(seg_id),
-                            "warehouse_location": f"Warehouse {int(seg_id)}",
-                            "meteo_source": "SIMULATION",
-                            "region": str(first_row.get('Region', 'PT-LVT')),
-                            "total_days_recorded": len(group),
-                            "packaging_method": str(first_row.get('Packaging', list(PACKAGING_FACTORS.keys())[0])),
-                            "starting_date": pd.to_datetime(first_row['Date']).date().isoformat() if pd.notnull(first_row.get('Date')) else datetime.date.today().isoformat(),
-                            "daily_readings": daily_readings
-                        })
-                    
-                    # Ensure segments are in chronological order
-                    sensor_history_xl = sorted(sensor_history_xl, key=lambda x: x['starting_date'])
-                    
-                    total_days_xl = sum(sh["total_days_recorded"] for sh in sensor_history_xl)
-                    
-                    payload_xl = {
-                        "version": "1.0",
-                        "export_metadata": {
-                            "generated_at": datetime.datetime.now().isoformat(),
-                            "target_service": "Lifecycle Decay Prediction Model Web Service",
-                            "days_elapsed_total": total_days_xl,
-                        },
-                        "lot_identification": {
-                            "lot_id": lot_id_xl,
-                            "batch_id": f"BATCH-{lot_id_xl}",
-                            "culture_name": fruit_key_xl,
-                            "fruit_type": fruit_key_xl,
-                            "producer": "Simulated Producer",
-                            "current_owner": "Simulated Retailer",
-                            "current_owner_type": current_owner_type,
-                            "harvest_date": (datetime.date.today() - datetime.timedelta(days=total_days_xl)).isoformat(),
-                            "initial_quantity_kg": 1000.0,
-                            "current_stock_kg": 1000.0,
-                            "delivered_quantity_kg": 0.0,
-                            "initial_metrics": {
-                                "soluble_solids_brix": float(b0_xl),
-                                "quality_score": 100,
-                                "waste_kg": 0.0,
-                                "firmness": float(f0_xl),
-                                "acidity": float(a0_xl)
-                            }
-                        },
-                        "plantation_origin": {
-                            "farm_id": "F-01",
-                            "location": "Simulated Location",
-                            "region_code": "PT-LVT",
-                            "soil_type": "Unknown",
-                            "irrigation_system": "Unknown"
-                        },
-                        "plantation_agricultural_events": [],
-                        "meteorology_and_imputation_strategy": {
-                            "json_fallback_mode": json_fallback_mode,
-                            "json_fallback_display": json_fallback_mode,
-                            "fixed_temperature_celsius": float(fixed_temp),
-                            "fixed_humidity_percent": float(fixed_rh),
-                            "ipma_region_code": "PT-LVT",
-                            "imputation_instructions": "Simulation defaults"
-                        },
-                        "blockchain_ledger": {
-                            "total_blocks_count": 0,
-                            "blocks": []
-                        },
-                        "transport_and_logistics": [],
-                        "current_warehouse": {
-                            "id": sensor_history_xl[-1]["warehouse_id"] if sensor_history_xl else None
-                        },
-                        "sensor_history_by_warehouse": sensor_history_xl,
-                        "plot_info": True
-                    }
-                    
-                    with st.spinner(SIMULATING_SPINNER.get(lang_sel, "Simulating...")):
-                        result_xl = post_simulation(payload_xl, lang_sel)
-                        if result_xl:
-                            algo = result_xl.get("algorithm", "unknown")
-                            algo_display = ALGORITHM_NAMES.get(lang_sel, {}).get(algo, algo)
-                            st.success(f"{SIMULATION_COMPLETE.get(lang_sel, 'Simulation Complete!')} {ALGORITHM_USED.get(lang_sel, 'Algorithm used')}: {algo_display}")
-                            
-                            if result_xl.get("continuous_data") and result_xl["continuous_data"].get("firmness"):
-                                final_f = result_xl["continuous_data"]["firmness"][-1]
-                                brix_list = result_xl["continuous_data"].get("brix")
-                                final_b = f"{brix_list[-1]:.1f}" if brix_list else "N/A"
-                                acidity_list = result_xl["continuous_data"].get("acidity")
-                                final_a = f"{acidity_list[-1]:.2f}" if acidity_list else "N/A"
-                                quality_list = result_xl["continuous_data"].get("quality")
-                                final_q = f"{quality_list[-1]:.1f}/100" if quality_list else "N/A"
-                                
-                                if "t" in result_xl["continuous_data"]:
-                                    days_sim = round(result_xl["continuous_data"]["t"][-1], 2)
-                                else:
-                                    days_sim = total_days_xl
-                                
-                                st.markdown(f"### {KPI_TITLE.get(lang_sel, 'Key Performance Indicators')}")
-                                m1, m2, m3, m4, m5 = st.columns(5)
-                                m1.metric(KPI_DAYS_SIM.get(lang_sel, 'Days Simulated'), days_sim)
-                                m2.metric(KPI_FINAL_QUALITY.get(lang_sel, 'Final Quality'), final_q)
-                                m3.metric(KPI_FINAL_FIRMNESS.get(lang_sel, 'Final Firmness'), f"{final_f:.1f} N")
-                                m4.metric(KPI_FINAL_BRIX.get(lang_sel, 'Final Brix'), f"{final_b} ºBrix")
-                                m5.metric(KPI_FINAL_ACIDITY.get(lang_sel, 'Final Acidity'), f"{final_a} %")
-                                st.markdown("---")
-                            
-                            try:
-                                plot_results(result_xl, lang_sel, excel_real, current_owner_type)
-                            except Exception as e:
-                                pass
-                
-            elif uploaded_file.name.endswith('.json'):
-                st.markdown(f"### {SIM_FROM_JSON_TITLE.get(lang_sel, 'Simulation from JSON')}")
-                try:
-                    payload_json = json.load(uploaded_file)
-                    # Overwrite plot_info
-                    payload_json["plot_info"] = True
-                    
-                    if st.button(RUN_SIMULATION_BTN.get(lang_sel, "Run Simulation") + " (JSON)", type="primary"):
-                        with st.spinner(SIMULATING_SPINNER.get(lang_sel, "Simulating...")):
-                            result_json = post_simulation(payload_json, lang_sel)
-                            if result_json:
-                                algo = result_json.get("algorithm", "unknown")
-                                algo_display = ALGORITHM_NAMES.get(lang_sel, {}).get(algo, algo)
-                                st.success(f"{SIMULATION_COMPLETE.get(lang_sel, 'Simulation Complete!')} {ALGORITHM_USED.get(lang_sel, 'Algorithm used')}: {algo_display}")
-                                
-                                if result_json.get("continuous_data") and result_json["continuous_data"].get("firmness"):
-                                    final_f = result_json["continuous_data"]["firmness"][-1]
-                                    brix_list = result_json["continuous_data"].get("brix")
-                                    final_b = f"{brix_list[-1]:.1f}" if brix_list else "N/A"
-                                    acidity_list = result_json["continuous_data"].get("acidity")
-                                    final_a = f"{acidity_list[-1]:.2f}" if acidity_list else "N/A"
-                                    quality_list = result_json["continuous_data"].get("quality")
-                                    final_q = f"{quality_list[-1]:.1f}/100" if quality_list else "N/A"
-                                    
-                                    if "t" in result_json["continuous_data"]:
-                                        days_sim = round(result_json["continuous_data"]["t"][-1], 2)
-                                    else:
-                                        days_sim = payload_json.get("export_metadata", {}).get("days_elapsed_total", 0)
-                                    
-                                    st.markdown(f"### {KPI_TITLE.get(lang_sel, 'Key Performance Indicators')}")
-                                    m1, m2, m3, m4, m5 = st.columns(5)
-                                    m1.metric(KPI_DAYS_SIM.get(lang_sel, 'Days Simulated'), days_sim)
-                                    m2.metric(KPI_FINAL_QUALITY.get(lang_sel, 'Final Quality'), final_q)
-                                    m3.metric(KPI_FINAL_FIRMNESS.get(lang_sel, 'Final Firmness'), f"{final_f:.1f} N")
-                                    m4.metric(KPI_FINAL_BRIX.get(lang_sel, 'Final Brix'), f"{final_b} ºBrix")
-                                    m5.metric(KPI_FINAL_ACIDITY.get(lang_sel, 'Final Acidity'), f"{final_a} %")
-                                    st.markdown("---")
-                                
-                                try:
-                                    plot_results(result_json, lang_sel, None, current_owner_type)
-                                except Exception as e:
-                                    pass
-                except Exception as e:
-                    st.error(f"Error parsing JSON: {e}")
-
-    with tab_sim:
-        # ── Fruit Selection & Initial Metrics (directly visible) ──
-        fruits_list = get_presets_from_api()
-        fruit_key = st.selectbox(
-            FRUIT_LBL.get(lang_sel, "Fruit"), 
-            fruits_list,
-            format_func=lambda x: FRUIT_NAMES.get(lang_sel, {}).get(x, x)
-        )
-        preset = PRESETS_SOFIA.get(fruit_key, PRESETS_ACADEMIC.get(fruit_key, {"firmness_0_default": 60, "brix_0_default": 10.0, "acidity_0_default": 1.0}))
+    with tab_sim_no_eth:
+        render_simulation_tab(False, lang_sel, current_owner_type, json_fallback_mode, fixed_temp, fixed_rh)
         
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            f0 = st.number_input(FIRMNESS_LBL.get(lang_sel, "Firmness (N)"), value=float(preset.get("firmness_0_default", 60)))
-        with col2:
-            b0 = st.number_input(BRIX_LBL.get(lang_sel, "Brix"), value=max(float(preset.get("brix_0_default", 10.0)), float(preset.get("brix_min", 0.0))), min_value=float(preset.get("brix_min", 0.0)))
-        with col3:
-            a0 = st.number_input(ACIDITY_LBL.get(lang_sel, "Acidity"), value=max(float(preset.get("acidity_0_default", 1.0)), float(preset.get("acidity_min", 0.0))), min_value=float(preset.get("acidity_min", 0.0)))
+    with tab_sim_eth:
+        render_simulation_tab(True, lang_sel, current_owner_type, json_fallback_mode, fixed_temp, fixed_rh)
         
-        st.markdown("---")
-        
-        # ── Real Data Comparison (collapsed, optional) ──
-        real_data_df = None
-        with st.expander(f"📊 {REAL_DATA_COMP_TITLE.get(lang_sel, 'Real Measured Data Comparison')}", expanded=False):
-            c_dl, c_up = st.columns(2)
-            with c_dl:
-                example_df = pd.DataFrame({
-                    "Day": [1, 5, 10],
-                    "Real_BRIX": [11.2, 11.5, 12.0],
-                    "Real_Acidity": [0.6, 0.55, 0.5],
-                    "Real_Firmness": [60.0, 55.0, 45.0],
-                    "Real_Quality": [90.0, 85.0, 70.0]
-                })
-                csv_data = example_df.to_csv(index=False).encode('utf-8')
-                st.download_button(
-                    label=DOWNLOAD_CSV_LBL.get(lang_sel, "Download Example CSV Template"),
-                    data=csv_data,
-                    file_name='example_real_data.csv',
-                    mime='text/csv',
-                )
-            with c_up:
-                uploaded_file = st.file_uploader(UPLOAD_DATA_LBL.get(lang_sel, "Upload Real Data (CSV or Excel)"), type=["csv", "xlsx"])
-                if uploaded_file is not None:
-                    try:
-                        if uploaded_file.name.endswith('.csv'):
-                            real_data_df = pd.read_csv(uploaded_file)
-                        elif uploaded_file.name.endswith('.xlsx'):
-                            real_data_df = pd.read_excel(uploaded_file)
-                        st.success(FILE_UPLOAD_SUCCESS.get(lang_sel, "File uploaded successfully!"))
-                    except Exception as e:
-                        st.error(f"{FILE_UPLOAD_ERROR.get(lang_sel, 'Error reading file:')} {e}")
-        
-        # ── Storage Segments ──
-        st.markdown(f"### {SEGMENTS_TITLE.get(lang_sel, 'Storage Segments')}")
-        
-        col_btn1, col_btn2, _ = st.columns([1, 1, 2])
-        with col_btn1:
-            if st.button(ADD_SEGMENT_BTN.get(lang_sel, "Add Storage Segment")):
-                st.session_state.segments.append({
-                    "duration": 5, "is_controlled": False, "start_date": datetime.date.today(),
-                    "warehouse_id": 1, "region": "PT-LVT", "packaging_method": list(PACKAGING_FACTORS.keys())[0]
-                })
-                st.rerun()
-        with col_btn2:
-            if st.button(REMOVE_SEGMENT_BTN.get(lang_sel, "Remove Storage Segment")) and len(st.session_state.segments) > 1:
-                st.session_state.segments.pop()
-                st.rerun()
-        
-        lot_id = 1
-        
-        for i, seg in enumerate(st.session_state.segments):
-            with st.expander(f"📦 {SEGMENTS_TITLE.get(lang_sel, 'Storage Segments').split(' ')[-1]} {i+1}", expanded=True):
-                seg["warehouse_id"] = i + 1
-                w_col1, w_col2 = st.columns(2)
-                with w_col1:
-                    seg["region"] = st.selectbox(REGION_LBL.get(lang_sel, "Region"), REGIONS, index=REGIONS.index(seg.get("region", "PT-LVT")) if seg.get("region", "PT-LVT") in REGIONS else 4, key=f"reg_{i}")
-                with w_col2:
-                    packaging_opts = list(PACKAGING_FACTORS.keys())
-                    seg["packaging_method"] = st.selectbox(PACKAGING_LBL.get(lang_sel, "Packaging"), packaging_opts, format_func=lambda x: PACKAGING_TRANS.get(lang_sel, {}).get(x, x), index=packaging_opts.index(seg.get("packaging_method", packaging_opts[0])) if seg.get("packaging_method") in packaging_opts else 0, key=f"pack_{i}")
-                
-                d_col1, d_col2, d_col3 = st.columns(3)
-                with d_col1:
-                    seg["duration"] = st.number_input(DURATION_DAYS.get(lang_sel, "Days"), min_value=1, value=seg["duration"], key=f"dur_{i}")
-                with d_col2:
-                    seg["start_date"] = st.date_input(START_DATE.get(lang_sel, "Start Date"), value=seg.get("start_date", datetime.date.today()), key=f"start_date_{i}")
-                with d_col3:
-                    st.write("")
-                    st.write("")
-                    seg["is_controlled"] = st.checkbox(IS_CONTROLLED.get(lang_sel, "Is the warehouse controlled?"), value=seg.get("is_controlled", False), key=f"controlled_{i}")
-                    
-                if seg.get("is_controlled"):
-                    st.markdown(f"#### {DAILY_READINGS.get(lang_sel, 'Daily Readings')}")
-                    st.caption(DAILY_READINGS_HINT.get(lang_sel, "Fill in values you have. Leave empty to let the model estimate."))
-                    # Header row
-                    hc1, hc2, hc3, hc4 = st.columns([0.5, 1, 1, 1])
-                    with hc1:
-                        st.markdown(f"**{DAY_LABEL.get(lang_sel, 'Day')}**")
-                    with hc2:
-                        st.markdown(f"**{TEMP_SHORT.get(lang_sel, 'Temp')} (°C)**")
-                    with hc3:
-                        st.markdown(f"**{RH_SHORT.get(lang_sel, 'RH')} (%)**")
-                    with hc4:
-                        st.markdown(f"**{ETH_SHORT.get(lang_sel, 'Eth')} (ppm)**")
-                    # Data rows — fill what you have, leave empty for model estimation
-                    for d in range(seg["duration"]):
-                        c1, c2, c3, c4 = st.columns([0.5, 1, 1, 1])
-                        with c1:
-                            st.markdown(f"**{d+1}**")
-                        with c2:
-                            st.number_input("t", value=None, key=f"val_t_{i}_{d}", label_visibility="collapsed", placeholder="—")
-                        with c3:
-                            st.number_input("h", value=None, key=f"val_h_{i}_{d}", label_visibility="collapsed", placeholder="—")
-                        with c4:
-                            st.number_input("e", value=None, key=f"val_e_{i}_{d}", label_visibility="collapsed", placeholder="—")
-        
-        plot_info = True
-        submitted = st.button(RUN_SIMULATION_BTN.get(lang_sel, "Run Simulation"), type="primary")
-
-        if submitted:
-            payload = build_lifecycle_payload(fruit_key, f0, b0, a0, lot_id, json_fallback_mode, fixed_temp, fixed_rh, plot_info, current_owner_type)
-            with st.spinner(SIMULATING_SPINNER.get(lang_sel, "Simulating...")):
-                result = post_simulation(payload, lang_sel)
-                if result:
-                    algo = result.get("algorithm", "unknown")
-                    algo_display = ALGORITHM_NAMES.get(lang_sel, {}).get(algo, algo)
-                    st.success(f"{SIMULATION_COMPLETE.get(lang_sel, 'Simulation Complete!')} {ALGORITHM_USED.get(lang_sel, 'Algorithm used')}: {algo_display}")
-                    
-                    if result.get("continuous_data") and result["continuous_data"].get("firmness"):
-                        final_f = result["continuous_data"]["firmness"][-1]
-                        
-                        brix_list = result["continuous_data"].get("brix")
-                        final_b = f"{brix_list[-1]:.1f}" if brix_list else "N/A"
-                        
-                        acidity_list = result["continuous_data"].get("acidity")
-                        final_a = f"{acidity_list[-1]:.2f}" if acidity_list else "N/A"
-                        
-                        quality_list = result["continuous_data"].get("quality")
-                        final_q = f"{quality_list[-1]:.1f}/100" if quality_list else "N/A"
-                        
-                        if "t" in result["continuous_data"]:
-                            days_sim = round(result["continuous_data"]["t"][-1], 2)
-                        else:
-                            days_sim = sum(seg["duration"] for seg in st.session_state.segments)
-                        
-                        st.markdown(f"### {KPI_TITLE.get(lang_sel, 'Key Performance Indicators')}")
-                        m1, m2, m3, m4, m5 = st.columns(5)
-                        m1.metric(KPI_DAYS_SIM.get(lang_sel, 'Days Simulated'), days_sim)
-                        m2.metric(KPI_FINAL_QUALITY.get(lang_sel, 'Final Quality'), final_q)
-                        m3.metric(KPI_FINAL_FIRMNESS.get(lang_sel, 'Final Firmness'), f"{final_f:.1f} N")
-                        m4.metric(KPI_FINAL_BRIX.get(lang_sel, 'Final Brix'), f"{final_b} ºBrix")
-                        m5.metric(KPI_FINAL_ACIDITY.get(lang_sel, 'Final Acidity'), f"{final_a} %")
-                        st.markdown("---")
-                    
-                    try:
-                        plot_results(result, lang_sel, real_data_df, current_owner_type)
-                    except Exception as e:
-                        pass
-                    
-
-
     with tab_presets:
+        st.header(VIEW_FRUIT_PARAMS_TITLE.get(lang_sel, "View Fruit Parameters"))
+        
+        col_v1, col_v2 = st.columns(2)
+        with col_v1:
+            view_fruit_key = st.selectbox(FRUIT_LBL.get(lang_sel, "Fruit"), get_presets_from_api(), key="view_fruit_key", format_func=lambda x: FRUIT_NAMES.get(lang_sel, {}).get(x, x))
+        with col_v2:
+            model_type = st.selectbox(SELECT_MODEL_LBL.get(lang_sel, "Select Model"), ["Academic", "New"], key="view_model_type")
+        
+        if view_fruit_key:
+            if model_type == "Academic":
+                view_preset = PRESETS_ACADEMIC.get(view_fruit_key)
+            else:
+                view_preset = PRESETS_SOFIA.get(view_fruit_key)
+                
+            if view_preset:
+                scalars = {k: v for k, v in view_preset.items() if not isinstance(v, (dict, list))}
+                complex_items = {k: v for k, v in view_preset.items() if isinstance(v, (dict, list))}
+                
+                if scalars:
+                    df_scalars = pd.DataFrame(list(scalars.items()), columns=["Parameter", "Value"]).astype(str)
+                    st.dataframe(df_scalars, width="stretch", hide_index=True)
+                
+                if complex_items:
+                    st.markdown(f"**{VIEW_COMPLEX_PARAMS_TITLE.get(lang_sel, 'View Complex Parameters:')}**")
+                    for k, v in complex_items.items():
+                        st.markdown(f"*{k}*")
+                        if isinstance(v, dict):
+                            try:
+                                df_complex = pd.DataFrame.from_dict(v, orient='index')
+                                st.dataframe(df_complex, width="stretch")
+                            except Exception:
+                                st.json(v)
+                        else:
+                            st.json(v)
+            else:
+                st.warning(NO_PARAMS_FOUND_WARN.get(lang_sel, "No parameters found for {fruit} in {model} model.").format(fruit=view_fruit_key, model=model_type))
+                
+        st.markdown("---")
+
         st.header(CREATE_NEW_PRESET_TITLE.get(lang_sel, "Create New Preset"))
         new_fruit_key = st.text_input(FRUIT_KEY_LBL.get(lang_sel, "Fruit Key (e.g., apple_gala_custom)"), "")
         
@@ -777,28 +849,50 @@ def main():
                 mold_max_penalty = st.number_input("mold_max_penalty", value=0.65)
             with m3:
                 Ea_mold_J = st.number_input("Ea_mold_J", value=43000.0)
+                
+        if not use_ethylene:
+            with st.expander(STAKEHOLDER_OVERRIDES_TITLE.get(lang_sel, "Stakeholder Overrides"), expanded=True):
+                st.caption(STAKEHOLDER_OVERRIDES_CAPTION.get(lang_sel, "Leave fields empty to use default values. Only filled rows will be saved."))
+                roles = ["Retailer (Grocery Store)", "Producer", "Exporter / Processor", "Industry (Juices/Jellies)"]
+                cols = ["weight_firmness", "weight_brix", "weight_ratio", "weight_acidity"]
+                
+                df_overrides_init = pd.DataFrame(index=roles, columns=cols, dtype=float)
+                df_overrides_init.loc["Retailer (Grocery Store)"] = [0.25, 0.40, 0.25, 0.10]
+                
+                edited_overrides_df = st.data_editor(df_overrides_init, width="stretch")
+        else:
+            edited_overrides_df = None
             
         if st.button(SAVE_PRESET_BTN.get(lang_sel, "Save Custom Preset"), type="primary"):
             if not new_fruit_key:
                 st.error(PLEASE_ENTER_KEY_ERR.get(lang_sel, "Please enter a Fruit Key."))
             else:
+                overrides_dict = None
+                if edited_overrides_df is not None:
+                    overrides_dict = {}
+                    for role in edited_overrides_df.index:
+                        row_data = edited_overrides_df.loc[role].dropna().to_dict()
+                        if row_data:
+                            overrides_dict[role] = row_data
+                    
                 preset_payload = {
-                    "fruit_key": new_fruit_key,
-                    "preset": {
-                        "Tref_C": Tref_C, "Ea_J": Ea_J, "k_firm_ref": k_firm_ref, "beta_RH": beta_RH,
-                        "RH_ref": RH_ref, "firmness_min": firmness_min, "firmness_0_default": firmness_0_default,
-                        "brix_min": brix_min, "brix_max": brix_max, "brix_g": brix_g, "brix_0_default": brix_0_default,
-                        "qual_firmness_threshold": qual_firmness_threshold, "qual_brix_target": qual_brix_target,
-                        "acidity_0_default": acidity_0_default, "acidity_min": acidity_min, "k_acidity_ref": k_acidity_ref,
-                        "Ea_acidity_J": Ea_acidity_J, "qual_acidity_target": qual_acidity_target, "SL_ref": SL_ref,
-                        "E0_int": E0_int, "Eref_prod": Eref_prod, "E_t0": E_t0, "E_g": E_g, "E_auto": E_auto,
-                        "E_decay": E_decay, "Ea_E_J": Ea_E_J, "E_ext_shift": E_ext_shift, "alpha_E": alpha_E
-                    },
-                    "mold_preset": {
-                        "RH_mold_thr": RH_mold_thr, "mold_rate_ref": mold_rate_ref, "mold_sens_RH": mold_sens_RH,
-                        "mold_max_penalty": mold_max_penalty, "Ea_mold_J": Ea_mold_J
+                        "fruit_key": new_fruit_key,
+                        "preset": {
+                            "Tref_C": Tref_C, "Ea_J": Ea_J, "k_firm_ref": k_firm_ref, "beta_RH": beta_RH,
+                            "RH_ref": RH_ref, "firmness_min": firmness_min, "firmness_0_default": firmness_0_default,
+                            "brix_min": brix_min, "brix_max": brix_max, "brix_g": brix_g, "brix_0_default": brix_0_default,
+                            "qual_firmness_threshold": qual_firmness_threshold, "qual_brix_target": qual_brix_target,
+                            "acidity_0_default": acidity_0_default, "acidity_min": acidity_min, "k_acidity_ref": k_acidity_ref,
+                            "Ea_acidity_J": Ea_acidity_J, "qual_acidity_target": qual_acidity_target, "SL_ref": SL_ref,
+                            "E0_int": E0_int, "Eref_prod": Eref_prod, "E_t0": E_t0, "E_g": E_g, "E_auto": E_auto,
+                            "E_decay": E_decay, "Ea_E_J": Ea_E_J, "E_ext_shift": E_ext_shift, "alpha_E": alpha_E,
+                            "stakeholder_overrides": overrides_dict
+                        },
+                        "mold_preset": {
+                            "RH_mold_thr": RH_mold_thr, "mold_rate_ref": mold_rate_ref, "mold_sens_RH": mold_sens_RH,
+                            "mold_max_penalty": mold_max_penalty, "Ea_mold_J": Ea_mold_J
+                        }
                     }
-                }
                 try:
                     req = PresetRequest(**preset_payload)
                     add_preset(req)

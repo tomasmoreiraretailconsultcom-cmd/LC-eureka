@@ -102,30 +102,35 @@
           "date": "2026-07-29",
           "temperature_celsius": 22.7,
           "humidity_percent": 66.0,
+          "ethylene_ppm": 0.065,
           "source": "FIXED_PRESET"
         },
         {
           "date": "2026-07-30",
           "temperature_celsius": 23.9,
           "humidity_percent": 62.6,
+          "ethylene_ppm": 0.06,
           "source": "FIXED_PRESET"
         },
         {
           "date": "2026-07-31",
           "temperature_celsius": 25.0,
           "humidity_percent": 63.2,
+          "ethylene_ppm": 0.069,
           "source": "FIXED_PRESET"
         },
         {
           "date": "2026-08-01",
           "temperature_celsius": 23.4,
           "humidity_percent": 63.4,
+          "ethylene_ppm": 0.062,
           "source": "FIXED_PRESET"
         },
         {
           "date": "2026-08-02",
           "temperature_celsius": 24.0,
           "humidity_percent": 61.8,
+          "ethylene_ppm": 0.064,
           "source": "FIXED_PRESET"
         }
       ]
@@ -141,30 +146,35 @@
           "date": "2026-07-29",
           "temperature_celsius": 3.7,
           "humidity_percent": 91.7,
+          "ethylene_ppm": 0.021,
           "source": "FIXED_PRESET"
         },
         {
           "date": "2026-07-30",
           "temperature_celsius": 3.7,
           "humidity_percent": 89.9,
+          "ethylene_ppm": 0.021,
           "source": "FIXED_PRESET"
         },
         {
           "date": "2026-07-31",
           "temperature_celsius": 3.3,
           "humidity_percent": 90.9,
+          "ethylene_ppm": 0.018,
           "source": "FIXED_PRESET"
         },
         {
           "date": "2026-08-01",
           "temperature_celsius": 3.7,
           "humidity_percent": 91.7,
+          "ethylene_ppm": 0.021,
           "source": "FIXED_PRESET"
         },
         {
           "date": "2026-08-02",
           "temperature_celsius": 3.4,
           "humidity_percent": 90.3,
+          "ethylene_ppm": 0.022,
           "source": "FIXED_PRESET"
         }
       ]

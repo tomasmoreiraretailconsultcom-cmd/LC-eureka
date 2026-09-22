@@ -1554,7 +1554,7 @@ def run_simulation_prof_luis_paulo(fruit_key, T_c, E_ext_ppm, RH_pct, days, firm
     quality = quality_base * (1.0 - mold_penalty)
 
     # Find quality at requested 'days'
-    idx_days = int(days / dt) - 1
+    idx_days = int(days / dt)
     if idx_days < 0: idx_days = 0
     if idx_days >= len(quality): idx_days = len(quality) - 1
     
@@ -1688,25 +1688,29 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
         VPD_excess = max(0, VPD[i-1] - VPD_ref)
         fator_embalagem = PACKAGING_FACTORS.get(packaging_methods_rep[i-1], 1.0)
         VPD_efetivo = VPD_excess * fator_embalagem
+        
+        # Calculate a respiration modifier based on packaging
+        resp_factor = 0.5 + 0.5 * fator_embalagem 
+        
         # Firmness ODE
         k_VPD_firm = 1 + p.get("beta_RH", 1.0) * VPD_efetivo
-        dD = (-kT_firm[i-1] * k_VPD_firm * (firmness[i-1] - firmness_min)) * dt
+        dD = (-kT_firm[i-1] * resp_factor * k_VPD_firm * (firmness[i-1] - firmness_min)) * dt
         firmness[i] = max(firmness_min, firmness[i-1] + dD)
 
         # Brix ODE
         r_VPD_brix = max(0, 1.0 - 0.2 * VPD_efetivo)
-        r_brix = r0 * rT[i-1] * r_VPD_brix
+        r_brix_mod = r0 * rT[i-1] * r_VPD_brix * resp_factor
         x = max(0.01, brix[i-1] - brix_min)
         K = max(1e-6, (brix_max - brix_min))
-        db = (r_brix * x * (1.0 - x / K)) * dt
+        db = (r_brix_mod * x * (1.0 - x / K)) * dt
         brix[i] = min(brix_max, max(brix[i-1] + db, brix_min))
 
         # Acidity ODE
-        dA = (-kT_acidity[i-1] * (acidity[i-1] - acidity_min)) * dt
+        dA = (-kT_acidity[i-1] * resp_factor * (acidity[i-1] - acidity_min)) * dt
         acidity[i] = max(acidity_min, acidity[i-1] + dA)
 
         # Shelf Life Consumption
-        r_T_SL = k_temp_scaling(55000, T_K[i-1], Tref_K)
+        r_T_SL = k_temp_scaling(55000, T_K[i-1], Tref_K) * resp_factor
         r_VPD_SL = 1 + 0.5 * VPD_efetivo
         consumed_SL[i] = consumed_SL[i-1] + (r_T_SL * r_VPD_SL) * dt
 
@@ -2079,6 +2083,7 @@ class PresetModel(BaseModel):
     Ea_E_J: Optional[float] = None
     E_ext_shift: Optional[float] = None
     alpha_E: Optional[float] = None
+    stakeholder_overrides: Optional[Dict[str, Any]] = None
 
 class MoldPresetModel(BaseModel):
     RH_mold_thr: float
