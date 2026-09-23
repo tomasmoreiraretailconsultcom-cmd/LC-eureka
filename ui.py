@@ -724,7 +724,8 @@ def main():
         fixed_rh = 90.0
     
     # ── Main Area ──
-    st.title(f"🍎 {APP_TITLE.get(lang_sel, 'Life Cycle - LC - Eureka')}")
+    st.title("🍎 Life Cycle - LC - Eureka")
+    st.markdown(APP_DESC.get(lang_sel, APP_DESC['en']))
     
 
     tab_up_no_eth, tab_up_eth, tab_sim_no_eth, tab_sim_eth, tab_presets = st.tabs([

@@ -144,12 +144,57 @@ LANGUAGE_SEL = {
     'tr': 'Dil',
 }
 
-APP_TITLE = {
-    'en': 'Life Cycle - LC - Eureka',
-    'es': 'Ciclo de Vida - LC - Eureka',
-    'pt': 'Ciclo de Vida - LC - Eureka',
-    'tr': 'Yaşam Döngüsü - LC - Eureka',
+APP_DESC = {
+    'en': (
+        "The main mission of the Life Cycle (LC) application is to predict, preserve, and optimize the post-harvest shelf life and commercial quality of fresh fruit throughout transport and storage, helping to avoid food waste.\n\n"
+        "To respond to different data realities and distribution chains, the platform provides two models with distinct approaches:\n\n"
+        "- **Academic Model**: Developed with fruit biology in mind when ethylene gas measurements are available. Ethylene acts as the natural ripening signal: the fruit can start producing this gas on its own over the days or, if ethylene is already present in the air (for example, coming from neighboring ripe fruit), it picks up that signal and triggers even more of its own production, softening and gaining sugars (Brix) faster. *(Note: Only climacteric fruits have this self-production and continue ripening on their own after harvest; non-climacteric fruits do not have this trigger).* This model uses a quality score with fixed weights.\n\n"
+        "- **New Model**: Created for the practical world of distribution where ethylene sensors are usually not available. It introduces another solution for prediction:\n"
+        "  1. **Acidity and Maturation Index**: In addition to firmness and Brix, it models acidity loss and calculates the ratio between sugars and acidity, which reflects the real flavor balance of the fruit.\n"
+        "  2. **Stakeholder Profiles**: Allows adjusting the quality evaluation to the requirements of whoever manages the product, whether Retailer, Producer, Exporter, or Juice/Jam Industry.\n"
+        "  3. **Packaging Protection**: Models the real effect of packaging type, which acts as a barrier against dehydration and slows down fruit respiration.\n"
+        "  4. **Air Physics (VPD)**: Calculates the **Vapor Pressure Deficit**, measuring accurately how strongly ambient air pulls moisture out of the fruit.\n"
+        "  5. **Commercial Rejection Criteria**: Monitors the active consumption of shelf-life days and invalidates commercialization if mold or quality loss exceeds the limits defined by the stakeholder.\n\n"
+        "Both models share the same thermal principle: warmer temperatures exponentially accelerate fruit aging. Both simulate softening and sugar (Brix) gain, and both penalize quality when excessive humidity creates a risk of mold development."
+    ),
+    'es': (
+        "La misión principal de la aplicación Life Cycle (LC) es predecir, preservar y optimizar el tiempo de vida útil poscosecha y la calidad comercial de la fruta fresca a lo largo del transporte y almacenamiento, ayudando a evitar el desperdicio alimentario.\n\n"
+        "Para responder a diferentes realidades de datos y cadenas de distribución, la plataforma ofrece dos modelos con enfoques distintos:\n\n"
+        "- **Modelo Académico**: Desarrollado pensando en la biología del fruto cuando existen mediciones del gas etileno. El etileno actúa como la señal natural de maduración: el fruto puede empezar a producir este gas por sí solo con el paso de los días o, si ya existe etileno en el aire (por ejemplo, procedente de otras frutas maduras al lado), capta esa señal y dispara aún más su propia producción, ablandándose y ganando azúcares (Brix) más rápido. *(Nota: Solo las frutas climatéricas tienen esta autoproducción y continúan madurando por sí solas tras la cosecha; las no climatéricas no tienen este disparo).* Este modelo utiliza una puntuación de calidad con pesos fijos.\n\n"
+        "- **Modelo Nuevo**: Creado para el mundo práctico de la distribución donde normalmente no hay sensores de etileno. Introduce otra solución para la predicción:\n"
+        "  1. **Acidez e Índice de Maduración**: Además de la firmeza y del Brix, modela la pérdida de acidez y calcula la relación entre los azúcares y la acidez, que refleja el equilibrio real del sabor de la fruta.\n"
+        "  2. **Perfiles de Intervinientes (Stakeholders)**: Permite ajustar la evaluación de calidad a las exigencias de quien gestiona el producto, ya sea Minorista, Productor, Exportador o Industria de zumos/mermeladas.\n"
+        "  3. **Protección del Envase**: Modela el efecto real del tipo de envase, que actúa como barrera contra la deshidratación y ralentiza la respiración de la fruta.\n"
+        "  4. **Física del Aire (VPD)**: Calcula el **Déficit de Presión de Vapor**, midiendo con exactitud la fuerza con la que el aire exterior extrae humedad del interior del fruto.\n"
+        "  5. **Criterio Comercial de Rechazo**: Monitoriza el consumo activo de días de vida útil e invalida la comercialización si el moho o la pérdida de calidad superan los límites definidos por el interviniente.\n\n"
+        "Ambos modelos comparten el mismo principio térmico: las temperaturas más cálidas aceleran exponencialmente el envejecimiento de la fruta. Ambos simulan el ablandamiento y la ganancia de azúcares (Brix), y ambos penalizan la calidad cuando la humedad excesiva genera riesgo de aparición de mohos."
+    ),
+    'pt': (
+        "A missão principal da aplicação Life Cycle (LC) é prever, preservar e otimizar o tempo de vida pós-colheita e a qualidade comercial da fruta fresca ao longo do transporte e armazenagem, ajudando a evitar o desperdício alimentar.\n\n"
+        "Para responder a diferentes realidades de dados e cadeias de distribuição, a plataforma disponibiliza dois modelos com abordagens distintas:\n\n"
+        "- **Modelo Académico**: Desenvolvido a pensar na biologia do fruto quando existem medições do gás etileno. O etileno funciona como o sinal natural de amadurecimento: o fruto pode começar a produzir este gás sozinho com o passar dos dias ou, se já existir etileno no ar (por exemplo, vindo de outras frutas maduras ao lado), apanha esse sinal e dispara ainda mais a sua própria produção, amolecendo e ganhando açúcares (Brix) mais depressa. *(Nota: Apenas as frutas climatéricas têm esta autoprodução e continuam a amadurecer sozinhas após a colheita; as não climatéricas não têm este disparo).* Este modelo usa uma pontuação de qualidade com pesos fixos.\n\n"
+        "- **Modelo Novo**: Criado para o mundo prático da distribuição onde normalmente não há sensores de etileno. Introduz outra solução para a previsão:\n"
+        "  1. **Acidez e Índice de Maturação**: Além da firmeza e do Brix, modela a perda de acidez e calcula o rácio entre os açúcares e acidez, que reflete o equilíbrio real do sabor da fruta.\n"
+        "  2. **Perfis de Intervenientes (Stakeholders)**: Permite ajustar a avaliação de qualidade às exigências de quem gere o produto, seja este Retalhista, Produtor, Exportador ou Indústria de sumos/compotas.\n"
+        "  3. **Proteção da Embalagem**: Modela o efeito real do tipo de embalagem, que atua como barreira contra a desidratação e abranda a respiração da fruta.\n"
+        "  4. **Física do Ar (VPD)**: Calcula o **Défice de Pressão de Vapor**, medindo com exatidão a força com que o ar exterior retira humidade de dentro do fruto.\n"
+        "  5. **Critério Comercial de Rejeição**: Monitoriza o consumo ativo de dias de vida útil e invalida a comercialização caso o bolor ou a perda de qualidade ultrapassem os limites definidos pelo interveniente.\n\n"
+        "Ambos os modelos partilham o mesmo princípio térmico: temperaturas mais quentes aceleram exponencialmente o envelhecimento da fruta. Ambos simulam o amolecimento e o ganho de açúcares (Brix), e ambos penalizam a qualidade quando a humidade excessiva gera risco de aparecimento de bolores."
+    ),
+    'tr': (
+        "Life Cycle (LC) uygulamasının temel misyonu, taze meyvelerin taşıma ve depolama boyunca hasat sonrası raf ömrünü ve ticari kalitesini tahmin etmek, korumak ve optimize etmek olup gıda israfını önlemeye yardımcı olmaktır.\n\n"
+        "Farklı veri gerçekliklerine ve dağıtım zincirlerine yanıt vermek için platform, iki farklı yaklaşıma sahip model sunar:\n\n"
+        "- **Akademik Model**: Etilen gazı ölçümleri mevcut olduğunda meyve biyolojisi düşünülerek geliştirilmiştir. Etilen doğal olgunlaşma sinyali olarak çalışır: meyve günler geçtikçe bu gazı kendi kendine üretmeye başlayabilir veya havada zaten etilen varsa (örneğin yanındaki olgun meyvelerden gelen), bu sinyali alarak kendi üretimini daha da tetikler; böylece daha hızlı yumuşar ve şeker (Brix) kazanır. *(Not: Yalnızca klimakterik meyveler bu kendiliğinden üretime sahiptir ve hasattan sonra kendi başlarına olgunlaşmaya devam eder; klimakterik olmayan meyvelerde bu tetiklenme yoktur).* Bu model sabit ağırlıklı bir kalite puanı kullanır.\n\n"
+        "- **Yeni Model**: Etilen sensörlerinin genellikle bulunmadığı pratik dağıtım dünyası için oluşturulmuştur. Tahmin için başka bir çözüm sunar:\n"
+        "  1. **Asitlik ve Olgunlaşma İndeksi**: Sertlik ve Brix'in yanı sıra, asitlik kaybını modeller ve meyvenin gerçek tat dengesini yansıtan şeker ve asitlik oranını hesaplar.\n"
+        "  2. **Paydaş Profilleri (Stakeholders)**: Kalite değerlendirmesini ürünü yöneten tarafın (Perakendeci, Üretici, İhracatçı veya Meyve suyu/reçel sanayisi) gereksinimlerine göre ayarlamayı sağlar.\n"
+        "  3. **Ambalaj Koruması**: Dehidrasyona karşı bir bariyer görevi gören ve meyve solunumunu yavaşlatan ambalaj türünün gerçek etkisini modeller.\n"
+        "  4. **Hava Fiziği (VPD)**: Dış havanın meyvenin içinden ne kadar güçlü nem çektiğini hassasiyetle ölçen **Buhar Basıncı Açığı**nı hesaplar.\n"
+        "  5. **Ticari Red Kriteri**: Raf ömrü günlerinin aktif tüketimini izler ve küf veya kalite kaybı paydaş tarafından belirlenen sınırları aştığında ticarileştirmeyi geçersiz kılar.\n\n"
+        "Her iki model de aynı termal ilkeyi paylaşır: daha sıcak sıcaklıklar meyvenin yaşlanmasını katlanarak hızlandırır. Her ikisi de yumuşamayı ve şeker (Brix) kazanımını simüle eder ve aşırı nem küf oluşumu riski yarattığında her ikisi de kaliteyi cezalandırır."
+    ),
 }
+
 
 VIEW_FRUIT_PARAMS_TITLE = {
     'en': 'View Fruit Parameters',
