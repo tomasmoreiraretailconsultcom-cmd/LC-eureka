@@ -40,6 +40,8 @@ def init_session_state():
             "region": "PT-LVT",
             "packaging_method": list(PACKAGING_FACTORS.keys())[0]
         }]
+    if "show_desc_details" not in st.session_state:
+        st.session_state.show_desc_details = False
 
 def build_lifecycle_payload(fruit_key, initial_firmness, initial_brix, initial_acidity, lot_id, json_fallback_mode, fixed_temp, fixed_rh, plot_info, current_owner_type, all_segment_dfs, lang_sel):
     """Build the complex LifecycleDataRequest expected by LC_model_v0_2_0 API."""
@@ -725,7 +727,17 @@ def main():
     
     # ── Main Area ──
     st.title("🍎 Life Cycle - LC - Eureka")
-    st.markdown(APP_DESC.get(lang_sel, APP_DESC['en']))
+    st.markdown(APP_DESC_INTRO.get(lang_sel, APP_DESC_INTRO['en']))
+    
+    def toggle_desc():
+        st.session_state.show_desc_details = not st.session_state.show_desc_details
+
+    if st.session_state.show_desc_details:
+        st.markdown(APP_DESC_DETAILS.get(lang_sel, APP_DESC_DETAILS['en']))
+        st.button(SHOW_LESS_DESC_BTN.get(lang_sel, "▲ Show Less"), key="btn_desc_less", on_click=toggle_desc)
+    else:
+        st.button(SHOW_MORE_DESC_BTN.get(lang_sel, "📖 Learn More"), key="btn_desc_more", on_click=toggle_desc)
+
     
 
     tab_up_no_eth, tab_up_eth, tab_sim_no_eth, tab_sim_eth, tab_presets = st.tabs([
