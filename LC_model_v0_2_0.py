@@ -1180,6 +1180,21 @@ for k in PRESETS_SOFIA:
     if k in MOLD_BY_FRUIT:
         PRESETS_SOFIA[k].update(MOLD_BY_FRUIT[k])
 
+COLD_INJURY_BY_FRUIT = {
+    "banana": {"type": "threshold", "safe_temp_C": 13.0, "chill_rate_ref": 0.05, "chill_max_penalty": 0.8},
+    "orange": {"type": "threshold", "safe_temp_C": 3.0, "chill_rate_ref": 0.05, "chill_max_penalty": 0.8},
+    "melon": {"type": "threshold", "safe_temp_C": 5.0, "chill_rate_ref": 0.05, "chill_max_penalty": 0.8},
+    "peach": {"type": "zone", "zone_min_C": 2.0, "zone_max_C": 7.0, "chill_rate_ref": 0.1, "chill_max_penalty": 0.8},
+    "plum": {"type": "zone", "zone_min_C": 2.0, "zone_max_C": 7.0, "chill_rate_ref": 0.1, "chill_max_penalty": 0.8}
+}
+
+for k in PRESETS_ACADEMIC:
+    if k in COLD_INJURY_BY_FRUIT:
+        PRESETS_ACADEMIC[k]["cold_injury"] = COLD_INJURY_BY_FRUIT[k]
+
+for k in PRESETS_SOFIA:
+    if k in COLD_INJURY_BY_FRUIT:
+        PRESETS_SOFIA[k]["cold_injury"] = COLD_INJURY_BY_FRUIT[k]
 
 # Helper to get the correct preset
 def get_preset(fruit_key):
@@ -1761,6 +1776,33 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
         dm = (rate * (1.0 - mold[i-1])) * dt
         mold[i] = min(1.0, np.max(np.append(np.array(mold[i-1] + dm), 0)))
 
+    # Cold Injury
+    has_cold_injury = "cold_injury" in p
+    chill = np.zeros_like(t)
+    chill_max_penalty = 0.0
+    if has_cold_injury:
+        ci_params = p["cold_injury"]
+        ci_type = ci_params.get("type", "threshold")
+        chill_rate_ref = float(ci_params.get("chill_rate_ref", 0.05))
+        chill_max_penalty = float(ci_params.get("chill_max_penalty", 0.8))
+        
+        for i in range(1, len(t)):
+            T_atual = T_c[i-1]
+            rate_ci = 0.0
+            
+            if ci_type == "threshold":
+                safe_temp_C = float(ci_params["safe_temp_C"])
+                if T_atual < safe_temp_C:
+                    rate_ci = chill_rate_ref * (safe_temp_C - T_atual)
+            elif ci_type == "zone":
+                zone_min = float(ci_params["zone_min_C"])
+                zone_max = float(ci_params["zone_max_C"])
+                if zone_min <= T_atual <= zone_max:
+                    rate_ci = chill_rate_ref
+                    
+            d_chill = rate_ci * dt
+            chill[i] = min(1.0, chill[i-1] + d_chill)
+
     target_brix = float(p["qual_brix_target"])
     target_acidity = float(p.get("qual_acidity_target", 1.0))
     target_ratio = target_brix / target_acidity
@@ -1778,7 +1820,8 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
             mold_threshold[i] = True
             
     mold_penalty = mold_max_penalty * mold
-    quality = quality_base * (1.0 - mold_penalty)
+    chill_penalty = chill_max_penalty * chill
+    quality = quality_base * (1.0 - mold_penalty) * (1.0 - chill_penalty)
     
     quality[~marketable] = 0
     quality[~mold_threshold] = 0
