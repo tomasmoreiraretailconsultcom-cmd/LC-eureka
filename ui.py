@@ -204,21 +204,45 @@ def plot_results(results, lang_sel="en", real_data_df=None, current_owner_type=N
                 fig_t = go.Figure(go.Scatter(x=days, y=temperature, mode='lines', name=_temperature, line=dict(color='#9467bd')))
                 if real_data_df is not None and "Temperature_C" in real_data_df.columns and "Date" in real_data_df.columns:
                     pass
-                fig_t.update_layout(title=_temperature, xaxis_title=_days, yaxis_title=f"{_temperature} (°C)", margin=dict(l=20, r=20, t=40, b=20), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+                fig_t.update_layout(
+                    title=_temperature,
+                    xaxis_title=_days,
+                    yaxis_title=f"{_temperature} (°C)",
+                    xaxis=dict(rangemode="tozero"),
+                    yaxis=dict(rangemode="tozero"),
+                    margin=dict(l=20, r=20, t=40, b=20),
+                    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+                )
                 st.plotly_chart(fig_t, width="stretch")
                 
             if firmness:
                 fig_f = go.Figure(go.Scatter(x=days, y=firmness, mode='lines', name=_firmness, line=dict(color='#1f77b4')))
                 if real_data_df is not None and "Real_Firmness" in real_data_df.columns and "Day" in real_data_df.columns:
                     fig_f.add_trace(go.Scatter(x=real_data_df["Day"], y=real_data_df["Real_Firmness"], mode='markers', name='Real', marker=dict(color='black', size=8, symbol='x')))
-                fig_f.update_layout(title=_firmness, xaxis_title=_days, yaxis_title=_firmness, margin=dict(l=20, r=20, t=40, b=20), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+                fig_f.update_layout(
+                    title=_firmness,
+                    xaxis_title=_days,
+                    yaxis_title=_firmness,
+                    xaxis=dict(rangemode="tozero"),
+                    yaxis=dict(rangemode="tozero"),
+                    margin=dict(l=20, r=20, t=40, b=20),
+                    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+                )
                 st.plotly_chart(fig_f, width="stretch")
                 
             if acidity:
                 fig_a = go.Figure(go.Scatter(x=days, y=acidity, mode='lines', name=_acidity, line=dict(color='#d62728')))
                 if real_data_df is not None and "Real_Acidity" in real_data_df.columns and "Day" in real_data_df.columns:
                     fig_a.add_trace(go.Scatter(x=real_data_df["Day"], y=real_data_df["Real_Acidity"], mode='markers', name='Real', marker=dict(color='black', size=8, symbol='x')))
-                fig_a.update_layout(title=_acidity, xaxis_title=_days, yaxis_title=_acidity, margin=dict(l=20, r=20, t=40, b=20), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+                fig_a.update_layout(
+                    title=_acidity,
+                    xaxis_title=_days,
+                    yaxis_title=_acidity,
+                    xaxis=dict(rangemode="tozero"),
+                    yaxis=dict(rangemode="tozero"),
+                    margin=dict(l=20, r=20, t=40, b=20),
+                    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+                )
                 st.plotly_chart(fig_a, width="stretch")
                 
             if quality:
@@ -228,7 +252,15 @@ def plot_results(results, lang_sel="en", real_data_df=None, current_owner_type=N
                     fig_q.add_trace(go.Scatter(x=days, y=quality_base, mode='lines', name=_base_quality, line=dict(color='#17becf', dash='dash')))
                 if real_data_df is not None and "Real_Quality" in real_data_df.columns and "Day" in real_data_df.columns:
                     fig_q.add_trace(go.Scatter(x=real_data_df["Day"], y=real_data_df["Real_Quality"], mode='markers', name='Real', marker=dict(color='black', size=8, symbol='x')))
-                fig_q.update_layout(title=_quality_idx, xaxis_title=_days, yaxis_title=_quality_base_word, margin=dict(l=20, r=20, t=40, b=20), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+                fig_q.update_layout(
+                    title=_quality_idx,
+                    xaxis_title=_days,
+                    yaxis_title=_quality_base_word,
+                    xaxis=dict(rangemode="tozero"),
+                    yaxis=dict(rangemode="tozero", range=[0, 105]),
+                    margin=dict(l=20, r=20, t=40, b=20),
+                    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+                )
                 st.plotly_chart(fig_q, width="stretch")
                 
         with c2:
@@ -236,24 +268,56 @@ def plot_results(results, lang_sel="en", real_data_df=None, current_owner_type=N
                 fig_h = go.Figure(go.Scatter(x=days, y=humidity, mode='lines', name=_humidity, line=dict(color='#8c564b')))
                 if real_data_df is not None and "Humidity_Percent" in real_data_df.columns and "Date" in real_data_df.columns:
                     pass
-                fig_h.update_layout(title=_humidity, xaxis_title=_days, yaxis_title=f"{_humidity} (%)", margin=dict(l=20, r=20, t=40, b=20), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+                fig_h.update_layout(
+                    title=_humidity,
+                    xaxis_title=_days,
+                    yaxis_title=f"{_humidity} (%)",
+                    xaxis=dict(rangemode="tozero"),
+                    yaxis=dict(rangemode="tozero", range=[0, 105]),
+                    margin=dict(l=20, r=20, t=40, b=20),
+                    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+                )
                 st.plotly_chart(fig_h, width="stretch")
 
             if brix:
                 fig_b = go.Figure(go.Scatter(x=days, y=brix, mode='lines', name='Brix', line=dict(color='#ff7f0e')))
                 if real_data_df is not None and "Real_BRIX" in real_data_df.columns and "Day" in real_data_df.columns:
                     fig_b.add_trace(go.Scatter(x=real_data_df["Day"], y=real_data_df["Real_BRIX"], mode='markers', name='Real', marker=dict(color='black', size=8, symbol='x')))
-                fig_b.update_layout(title="Brix", xaxis_title=_days, yaxis_title="Brix", margin=dict(l=20, r=20, t=40, b=20), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+                fig_b.update_layout(
+                    title="Brix",
+                    xaxis_title=_days,
+                    yaxis_title="Brix",
+                    xaxis=dict(rangemode="tozero"),
+                    yaxis=dict(rangemode="tozero"),
+                    margin=dict(l=20, r=20, t=40, b=20),
+                    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+                )
                 st.plotly_chart(fig_b, width="stretch")
                 
             if ratio:
                 fig_r = go.Figure(go.Scatter(x=days, y=ratio, mode='lines', name='Brix/Acidity Ratio', line=dict(color='#8c564b')))
-                fig_r.update_layout(title="Brix/Acidity Ratio", xaxis_title=_days, yaxis_title="Ratio", margin=dict(l=20, r=20, t=40, b=20), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+                fig_r.update_layout(
+                    title="Brix/Acidity Ratio",
+                    xaxis_title=_days,
+                    yaxis_title="Ratio",
+                    xaxis=dict(rangemode="tozero"),
+                    yaxis=dict(rangemode="tozero"),
+                    margin=dict(l=20, r=20, t=40, b=20),
+                    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+                )
                 st.plotly_chart(fig_r, width="stretch")
             
             if remaining_sl:
                 fig_sl = go.Figure(go.Scatter(x=days, y=remaining_sl, mode='lines', name='Remaining Shelf Life', line=dict(color='#e377c2')))
-                fig_sl.update_layout(title="Remaining Shelf Life", xaxis_title=_days, yaxis_title="Days", margin=dict(l=20, r=20, t=40, b=20), legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1))
+                fig_sl.update_layout(
+                    title="Remaining Shelf Life",
+                    xaxis_title=_days,
+                    yaxis_title="Days",
+                    xaxis=dict(rangemode="tozero"),
+                    yaxis=dict(rangemode="tozero"),
+                    margin=dict(l=20, r=20, t=40, b=20),
+                    legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+                )
                 st.plotly_chart(fig_sl, width="stretch")
                 
         return
@@ -273,11 +337,14 @@ def plot_results(results, lang_sel="en", real_data_df=None, current_owner_type=N
     fig.update_layout(
         title="Simulation Results",
         xaxis_title="Days",
+        xaxis=dict(rangemode="tozero"),
         yaxis_title="Firmness",
+        yaxis=dict(rangemode="tozero"),
         yaxis2=dict(
             title="Brix",
             overlaying="y",
-            side="right"
+            side="right",
+            rangemode="tozero"
         ),
         legend=dict(x=0.1, y=0.9)
     )
@@ -337,8 +404,7 @@ def render_upload_tab(with_ethylene, lang_sel, current_owner_type, json_fallback
                 format_func=lambda x: FRUIT_NAMES.get(lang_sel, {}).get(x, x),
                 key=f"fruit_xl_{with_ethylene}"
             )
-            preset_xl = PRESETS_SOFIA.get(fruit_key_xl, PRESETS_ACADEMIC.get(fruit_key_xl, {"firmness_0_default": 60, "brix_0_default": 10.0, "acidity_0_default": 1.0, "brix_min": 0.0, "acidity_min": 0.0}))
-            
+            preset_xl = (PRESETS_ACADEMIC if with_ethylene else PRESETS_SOFIA).get(fruit_key_xl, (PRESETS_SOFIA if with_ethylene else PRESETS_ACADEMIC).get(fruit_key_xl, {"firmness_0_default": 60, "brix_0_default": 10.0, "acidity_0_default": 1.0, "brix_min": 0.0, "acidity_min": 0.0}))
             col1_xl, col2_xl, col3_xl = st.columns(3)
             with col1_xl:
                 f0_xl = st.number_input(FIRMNESS_LBL.get(lang_sel, "Firmness (N)") + " (Excel)", value=float(preset_xl.get("firmness_0_default", 60)), key=f"f0_xl_{with_ethylene}")
@@ -541,7 +607,7 @@ def render_simulation_tab(with_ethylene, lang_sel, current_owner_type, json_fall
         format_func=lambda x: FRUIT_NAMES.get(lang_sel, {}).get(x, x),
         key=f"fruit_sim_{with_ethylene}"
     )
-    preset = PRESETS_SOFIA.get(fruit_key, PRESETS_ACADEMIC.get(fruit_key, {"firmness_0_default": 60, "brix_0_default": 10.0, "acidity_0_default": 1.0}))
+    preset = (PRESETS_ACADEMIC if with_ethylene else PRESETS_SOFIA).get(fruit_key, (PRESETS_SOFIA if with_ethylene else PRESETS_ACADEMIC).get(fruit_key, {"firmness_0_default": 60, "brix_0_default": 10.0, "acidity_0_default": 1.0}))
     
     col1, col2, col3 = st.columns(3)
     with col1:

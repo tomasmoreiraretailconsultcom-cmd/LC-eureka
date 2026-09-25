@@ -1653,9 +1653,11 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
 
     # Thermal Time
     TT = np.zeros_like(t)
-    T_base = 0
+    T_base = float(p.get("T_base", 0.0))
     for i in range(1, len(t)):
-        TT[i] = TT[i-1] + max(0, T_c[i-1] - T_base) * dt
+        TT[i] = TT[i-1] + max(0.0, T_c[i-1] - T_base) * dt
+
+    TT_ref = float(p.get("SL_ref", 30)) * max(1.0, float(p.get("Tref_C", 1.0)) - T_base)
 
     # VPD
     VPD = calc_vpd(T_c, RH_pct)
@@ -1690,8 +1692,10 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
         VPD_efetivo = VPD_excess * fator_embalagem
         
         # Calculate a respiration modifier based on packaging
-        resp_factor = 0.5 + 0.5 * fator_embalagem 
-        
+        resp_factor = 0.5 + 0.5 * fator_embalagem
+
+        mat_factor = 1.0 + 0.2 * min(2.0, TT[i-1] / max(1e-6, TT_ref))
+
         # Firmness ODE
         k_VPD_firm = 1 + p.get("beta_RH", 1.0) * VPD_efetivo
         dD = (-kT_firm[i-1] * resp_factor * k_VPD_firm * (firmness[i-1] - firmness_min)) * dt
@@ -1699,14 +1703,14 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
 
         # Brix ODE
         r_VPD_brix = max(0, 1.0 - 0.2 * VPD_efetivo)
-        r_brix_mod = r0 * rT[i-1] * r_VPD_brix * resp_factor
+        r_brix_mod = r0 * rT[i-1] * r_VPD_brix * resp_factor * mat_factor
         x = max(0.01, brix[i-1] - brix_min)
         K = max(1e-6, (brix_max - brix_min))
         db = (r_brix_mod * x * (1.0 - x / K)) * dt
         brix[i] = min(brix_max, max(brix[i-1] + db, brix_min))
 
         # Acidity ODE
-        dA = (-kT_acidity[i-1] * resp_factor * (acidity[i-1] - acidity_min)) * dt
+        dA = (-kT_acidity[i-1] * resp_factor * mat_factor * (acidity[i-1] - acidity_min)) * dt
         acidity[i] = max(acidity_min, acidity[i-1] + dA)
 
         # Shelf Life Consumption
@@ -1714,7 +1718,7 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
         r_VPD_SL = 1 + 0.5 * VPD_efetivo
         consumed_SL[i] = consumed_SL[i-1] + (r_T_SL * r_VPD_SL) * dt
 
-    remaining_SL = np.maximum(0, SL_ref - consumed_SL)
+    remaining_SL_fisica = np.maximum(0, SL_ref - consumed_SL)
 
     # Quality
     firm_score = 1 / (1 + np.exp(-0.35 * (firmness - float(p["qual_firmness_threshold"]))))
@@ -1765,19 +1769,29 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
     min_quality = profile["min_quality"]
     
     marketable = np.zeros_like(t, dtype=bool)
+    mold_threshold = np.zeros_like(t, dtype=bool)
     
     for i in range(len(t)):
-        if (quality_base[i] >= min_quality and 
-            mold[i] <= mold_limit):
-            
+        if (quality_base[i] >= min_quality):
             marketable[i] = True
+        if (mold[i] <= mold_limit):
+            mold_threshold[i] = True
             
     mold_penalty = mold_max_penalty * mold
     quality = quality_base * (1.0 - mold_penalty)
     
     quality[~marketable] = 0
+    quality[~mold_threshold] = 0
 
-    remaining_SL = np.where(mold_penalty > 0, 0, remaining_SL)
+    unacceptable_mold = np.where(~mold_threshold)[0]
+    if len(unacceptable_mold) > 0:
+        idx_fail = unacceptable_mold[0]
+        t_fail = t[idx_fail]
+        remaining_SL_by_stakeholder = np.maximum(0.0, t_fail - t)
+    else:
+        remaining_SL_by_stakeholder = remaining_SL_fisica
+
+    remaining_SL = np.minimum(remaining_SL_by_stakeholder, remaining_SL_fisica)
 
     arrays_dict = {"quality": quality.tolist(), "quality_base": quality_base.tolist(), "firmness": firmness.tolist(), "brix": brix.tolist(), "acidity": acidity.tolist(), "ratio": maturation_index.tolist(), "temperature": T_c.tolist(), "humidity": RH_pct.tolist(), "t": t.tolist(), "remaining_SL": remaining_SL.tolist()}
     return quality[len(quality) - 1], remaining_SL[len(remaining_SL) - 1], firmness[len(firmness) - 1], brix[len(brix) - 1], arrays_dict
