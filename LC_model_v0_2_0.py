@@ -1196,6 +1196,13 @@ for k in PRESETS_SOFIA:
     if k in COLD_INJURY_BY_FRUIT:
         PRESETS_SOFIA[k]["cold_injury"] = COLD_INJURY_BY_FRUIT[k]
 
+GENERIC_WEIGHTS = {
+    "weight_firmness": 0.50,
+    "weight_ratio":    0.30,
+    "weight_brix":     0.10,
+    "weight_acidity":  0.10,
+}
+
 # Helper to get the correct preset
 def get_preset(fruit_key):
     if fruit_key in PRESETS_ACADEMIC:
@@ -1755,7 +1762,7 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
     w_ratio = profile.get("weight_ratio", 0.20)
     w_acid = profile.get("weight_acidity", 0.15)
     
-    quality_base_raw = 100 * (0.25 * firm_score + 0.25 * ratio_score + 0.25 * brix_score + 0.25 * acidity_score)
+    quality_base_raw = 100 * (GENERIC_WEIGHTS["weight_firmness"] * firm_score + GENERIC_WEIGHTS["weight_ratio"] * ratio_score + GENERIC_WEIGHTS["weight_brix"] * brix_score + GENERIC_WEIGHTS["weight_acidity"] * acidity_score)
     quality_stakeholder_raw = 100 * (w_firm * firm_score + w_ratio * ratio_score + w_brix * brix_score + w_acid * acidity_score)
 
     # Mold
