@@ -1755,7 +1755,8 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
     w_ratio = profile.get("weight_ratio", 0.20)
     w_acid = profile.get("weight_acidity", 0.15)
     
-    quality_base = 100 * (w_firm * firm_score + w_ratio * ratio_score + w_brix * brix_score + w_acid * acidity_score)
+    quality_base_raw = 100 * (0.25 * firm_score + 0.25 * ratio_score + 0.25 * brix_score + 0.25 * acidity_score)
+    quality_stakeholder_raw = 100 * (w_firm * firm_score + w_ratio * ratio_score + w_brix * brix_score + w_acid * acidity_score)
 
     # Mold
     RH_mold_thr = float(p["RH_mold_thr"])
@@ -1813,16 +1814,18 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
     marketable = np.zeros_like(t, dtype=bool)
     mold_threshold = np.zeros_like(t, dtype=bool)
     
+    mold_penalty = mold_max_penalty * mold
+    chill_penalty = chill_max_penalty * chill
+    
+    quality_base = quality_base_raw * (1.0 - mold_penalty) * (1.0 - chill_penalty)
+    quality = quality_stakeholder_raw * (1.0 - mold_penalty) * (1.0 - chill_penalty)
+    
     for i in range(len(t)):
-        if (quality_base[i] >= min_quality):
+        if (quality_stakeholder_raw[i] >= min_quality):
             marketable[i] = True
         if (mold[i] <= mold_limit):
             mold_threshold[i] = True
             
-    mold_penalty = mold_max_penalty * mold
-    chill_penalty = chill_max_penalty * chill
-    quality = quality_base * (1.0 - mold_penalty) * (1.0 - chill_penalty)
-    
     quality[~marketable] = 0
     quality[~mold_threshold] = 0
 

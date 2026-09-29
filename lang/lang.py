@@ -678,3 +678,260 @@ UPLOAD_DATA_EXCEL_JSON = {
     'es': 'Subir Datos (Excel o JSON)',
     'tr': 'Veri Yükle (Excel veya JSON)'
 }
+
+
+PARAM_HELP = {
+    'Tref_C': {
+        'en': 'Reference Temperature (°C).',
+        'pt': 'Temperatura de Referência (°C).',
+        'es': 'Temperatura de Referencia (°C).',
+        'tr': 'Referans Sıcaklık (°C).'
+    },
+    'Ea_J': {
+        'en': 'Activation Energy (J/mol).',
+        'pt': 'Energia de Ativação (J/mol).',
+        'es': 'Energía de Activación (J/mol).',
+        'tr': 'Aktivasyon Enerjisi (J/mol).'
+    },
+    'k_firm_ref': {
+        'en': 'Reference firmness degradation rate.',
+        'pt': 'Taxa de degradação de firmeza de referência.',
+        'es': 'Tasa de degradación de firmeza de referencia.',
+        'tr': 'Referans sertlik bozulma oranı.'
+    },
+    'beta_RH': {
+        'en': 'Humidity impact factor on firmness.',
+        'pt': 'Fator de impacto da humidade na firmeza.',
+        'es': 'Factor de impacto de humedad en la firmeza.',
+        'tr': 'Nemin sertlik üzerindeki etki faktörü.'
+    },
+    'RH_ref': {
+        'en': 'Reference Relative Humidity (%).',
+        'pt': 'Humidade Relativa de Referência (%).',
+        'es': 'Humedad Relativa de Referencia (%).',
+        'tr': 'Referans Bağıl Nem (%).'
+    },
+    'firmness_min': {
+        'en': 'Minimum possible firmness.',
+        'pt': 'Firmeza mínima possível.',
+        'es': 'Firmeza mínima posible.',
+        'tr': 'Minimum olası sertlik.'
+    },
+    'firmness_0_default': {
+        'en': 'Default initial firmness.',
+        'pt': 'Firmeza inicial padrão.',
+        'es': 'Firmeza inicial por defecto.',
+        'tr': 'Varsayılan başlangıç sertliği.'
+    },
+    'brix_min': {
+        'en': 'Minimum Brix value.',
+        'pt': 'Valor mínimo de Brix.',
+        'es': 'Valor mínimo de Brix.',
+        'tr': 'Minimum Brix değeri.'
+    },
+    'brix_max': {
+        'en': 'Maximum Brix value.',
+        'pt': 'Valor máximo de Brix.',
+        'es': 'Valor máximo de Brix.',
+        'tr': 'Maksimum Brix değeri.'
+    },
+    'brix_g': {
+        'en': 'Brix growth rate.',
+        'pt': 'Taxa de crescimento de Brix.',
+        'es': 'Tasa de crecimiento de Brix.',
+        'tr': 'Brix büyüme oranı.'
+    },
+    'brix_0_default': {
+        'en': 'Default initial Brix.',
+        'pt': 'Brix inicial padrão.',
+        'es': 'Brix inicial por defecto.',
+        'tr': 'Varsayılan başlangıç Brix değeri.'
+    },
+    'qual_firmness_threshold': {
+        'en': 'Firmness threshold for quality drop.',
+        'pt': 'Limite de firmeza para queda de qualidade.',
+        'es': 'Umbral de firmeza para caída de calidad.',
+        'tr': 'Kalite düşüşü için sertlik eşiği.'
+    },
+    'qual_brix_target': {
+        'en': 'Target Brix for optimal quality.',
+        'pt': 'Brix alvo para qualidade ótima.',
+        'es': 'Brix objetivo para calidad óptima.',
+        'tr': 'Optimum kalite için hedef Brix.'
+    },
+    'acidity_0_default': {
+        'en': 'Default initial acidity.',
+        'pt': 'Acidez inicial padrão.',
+        'es': 'Acidez inicial por defecto.',
+        'tr': 'Varsayılan başlangıç asiditesi.'
+    },
+    'acidity_min': {
+        'en': 'Minimum acidity value.',
+        'pt': 'Valor mínimo de acidez.',
+        'es': 'Valor mínimo de acidez.',
+        'tr': 'Minimum asidite değeri.'
+    },
+    'k_acidity_ref': {
+        'en': 'Reference acidity degradation rate.',
+        'pt': 'Taxa de degradação de acidez de referência.',
+        'es': 'Tasa de degradación de acidez de referencia.',
+        'tr': 'Referans asidite bozulma oranı.'
+    },
+    'Ea_acidity_J': {
+        'en': 'Activation energy for acidity (J/mol).',
+        'pt': 'Energia de ativação para acidez (J/mol).',
+        'es': 'Energía de activación para acidez (J/mol).',
+        'tr': 'Asidite için aktivasyon enerjisi (J/mol).'
+    },
+    'qual_acidity_target': {
+        'en': 'Target acidity for optimal quality.',
+        'pt': 'Acidez alvo para qualidade ótima.',
+        'es': 'Acidez objetivo para calidad óptima.',
+        'tr': 'Optimum kalite için hedef asidite.'
+    },
+    'SL_ref': {
+        'en': 'Reference Shelf Life (days).',
+        'pt': 'Tempo de Prateleira de Referência (dias).',
+        'es': 'Vida Útil de Referencia (días).',
+        'tr': 'Referans Raf Ömrü (gün).'
+    },
+    'E0_int': {
+        'en': 'Initial internal ethylene production.',
+        'pt': 'Produção inicial de etileno interno.',
+        'es': 'Producción inicial de etileno interno.',
+        'tr': 'Başlangıç iç etilen üretimi.'
+    },
+    'Eref_prod': {
+        'en': 'Reference ethylene production rate.',
+        'pt': 'Taxa de produção de etileno de referência.',
+        'es': 'Tasa de producción de etileno de referencia.',
+        'tr': 'Referans etilen üretim hızı.'
+    },
+    'E_t0': {
+        'en': 'Time to peak ethylene production.',
+        'pt': 'Tempo para o pico de produção de etileno.',
+        'es': 'Tiempo para el pico de producción de etileno.',
+        'tr': 'En yüksek etilen üretim zamanı.'
+    },
+    'E_g': {
+        'en': 'Ethylene growth shape factor.',
+        'pt': 'Fator de forma do crescimento de etileno.',
+        'es': 'Factor de forma del crecimiento de etileno.',
+        'tr': 'Etilen büyüme şekil faktörü.'
+    },
+    'E_auto': {
+        'en': 'Autocatalytic ethylene production factor.',
+        'pt': 'Fator de produção de etileno autocatalítico.',
+        'es': 'Factor de producción de etileno autocatalítico.',
+        'tr': 'Otokatalitik etilen üretim faktörü.'
+    },
+    'E_decay': {
+        'en': 'Ethylene decay rate after peak.',
+        'pt': 'Taxa de decaimento de etileno após o pico.',
+        'es': 'Tasa de decaimiento de etileno después del pico.',
+        'tr': 'Zirveden sonra etilen bozulma hızı.'
+    },
+    'Ea_E_J': {
+        'en': 'Activation energy for ethylene (J/mol).',
+        'pt': 'Energia de ativação para etileno (J/mol).',
+        'es': 'Energía de activación para etileno (J/mol).',
+        'tr': 'Etilen için aktivasyon enerjisi (J/mol).'
+    },
+    'E_ext_shift': {
+        'en': 'External ethylene sensitivity shift.',
+        'pt': 'Deslocamento de sensibilidade ao etileno externo.',
+        'es': 'Desplazamiento de sensibilidad al etileno externo.',
+        'tr': 'Dış etilen duyarlılığı değişimi.'
+    },
+    'alpha_E': {
+        'en': 'Ethylene impact factor on degradation.',
+        'pt': 'Fator de impacto do etileno na degradação.',
+        'es': 'Factor de impacto del etileno en la degradación.',
+        'tr': 'Bozulmada etilen etki faktörü.'
+    },
+    'RH_mold_thr': {
+        'en': 'Relative humidity threshold for mold (%).',
+        'pt': 'Limite de humidade relativa para bolor (%).',
+        'es': 'Umbral de humedad relativa para moho (%).',
+        'tr': 'Küf için bağıl nem eşiği (%).'
+    },
+    'mold_rate_ref': {
+        'en': 'Reference mold growth rate.',
+        'pt': 'Taxa de crescimento de bolor de referência.',
+        'es': 'Tasa de crecimiento de moho de referencia.',
+        'tr': 'Referans küf büyüme hızı.'
+    },
+    'mold_sens_RH': {
+        'en': 'Mold sensitivity to relative humidity.',
+        'pt': 'Sensibilidade do bolor à humidade relativa.',
+        'es': 'Sensibilidad del moho a la humedad relativa.',
+        'tr': 'Küfün bağıl neme duyarlılığı.'
+    },
+    'mold_max_penalty': {
+        'en': 'Maximum quality penalty from mold.',
+        'pt': 'Penalização máxima de qualidade por bolor.',
+        'es': 'Penalización máxima de calidad por moho.',
+        'tr': 'Küften kaynaklanan maksimum kalite cezası.'
+    },
+    'Ea_mold_J': {
+        'en': 'Activation energy for mold growth (J/mol).',
+        'pt': 'Energia de ativação para o crescimento de bolor (J/mol).',
+        'es': 'Energía de activación para crecimiento de moho (J/mol).',
+        'tr': 'Küf büyümesi için aktivasyon enerjisi (J/mol).'
+    }
+}
+
+
+STAKEHOLDER_ROLE_NAMES = {
+    "Producer": {
+        'en': 'Producer',
+        'pt': 'Produtor',
+        'es': 'Productor',
+        'tr': 'Üretici'
+    },
+    "Exporter / Processor": {
+        'en': 'Exporter / Processor',
+        'pt': 'Exportador / Processador',
+        'es': 'Exportador / Procesador',
+        'tr': 'İhracatçı / İşlemci'
+    },
+    "Retailer (Grocery Store)": {
+        'en': 'Retailer (Grocery Store)',
+        'pt': 'Retalhista (Supermercado)',
+        'es': 'Minorista (Supermercado)',
+        'tr': 'Perakendeci (Market)'
+    },
+    "Industry (Juices/Jellies)": {
+        'en': 'Industry (Juices/Jellies)',
+        'pt': 'Indústria (Sumos/Compotas)',
+        'es': 'Industria (Zumos/Mermeladas)',
+        'tr': 'Sanayi (Meyve Suyu/Reçel)'
+    }
+}
+
+STAKEHOLDER_COL_NAMES = {
+    "weight_firmness": {
+        'en': 'Weight Firmness',
+        'pt': 'Peso Firmeza',
+        'es': 'Peso Firmeza',
+        'tr': 'Ağırlık Sertlik'
+    },
+    "weight_brix": {
+        'en': 'Weight Brix',
+        'pt': 'Peso Brix',
+        'es': 'Peso Brix',
+        'tr': 'Ağırlık Brix'
+    },
+    "weight_ratio": {
+        'en': 'Weight Ratio',
+        'pt': 'Peso Rácio',
+        'es': 'Peso Ratio',
+        'tr': 'Ağırlık Oranı'
+    },
+    "weight_acidity": {
+        'en': 'Weight Acidity',
+        'pt': 'Peso Acidez',
+        'es': 'Peso Acidez',
+        'tr': 'Ağırlık Asidite'
+    }
+}

@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 import streamlit as st
 import datetime
 
-from LC_model_v0_2_0 import PRESETS_ACADEMIC, PRESETS_SOFIA, PACKAGING_FACTORS
+from LC_model_v0_2_0 import PRESETS_ACADEMIC, PRESETS_SOFIA, PACKAGING_FACTORS, STAKEHOLDER_PROFILES
 from LC_model_v0_2_0 import forecast, add_preset, LifecycleDataRequest, PresetRequest
 
 from lang.lang import *
@@ -842,25 +842,14 @@ def main():
                 view_preset = PRESETS_SOFIA.get(view_fruit_key)
                 
             if view_preset:
-                scalars = {k: v for k, v in view_preset.items() if not isinstance(v, (dict, list))}
-                complex_items = {k: v for k, v in view_preset.items() if isinstance(v, (dict, list))}
-                
+                scalars = {k: v for k, v in view_preset.items() if not isinstance(v, (dict, list)) and k != "label"}
                 if scalars:
-                    df_scalars = pd.DataFrame(list(scalars.items()), columns=["Parameter", "Value"]).astype(str)
-                    st.dataframe(df_scalars, width="stretch", hide_index=True)
+                    cols = st.columns(3)
+                    for i, (k, v) in enumerate(scalars.items()):
+                        label = PARAM_HELP.get(k, {}).get(lang_sel, k)
+                        cols[i % 3].text_input(label, value=str(v), disabled=True, key=f"view_{view_fruit_key}_{k}")
                 
-                if complex_items:
-                    st.markdown(f"**{VIEW_COMPLEX_PARAMS_TITLE.get(lang_sel, 'View Complex Parameters:')}**")
-                    for k, v in complex_items.items():
-                        st.markdown(f"*{k}*")
-                        if isinstance(v, dict):
-                            try:
-                                df_complex = pd.DataFrame.from_dict(v, orient='index')
-                                st.dataframe(df_complex, width="stretch")
-                            except Exception:
-                                st.json(v)
-                        else:
-                            st.json(v)
+
             else:
                 st.warning(NO_PARAMS_FOUND_WARN.get(lang_sel, "No parameters found for {fruit} in {model} model.").format(fruit=view_fruit_key, model=model_type))
                 
@@ -874,29 +863,29 @@ def main():
         with st.expander(GENERAL_KINETICS_TITLE.get(lang_sel, "General / Kinetics"), expanded=True):
             c1, c2, c3 = st.columns(3)
             with c1:
-                Tref_C = st.number_input("Tref_C", value=0.0)
-                Ea_J = st.number_input("Ea_J", value=40000.0)
-                k_firm_ref = st.number_input("k_firm_ref", value=0.015)
-                beta_RH = st.number_input("beta_RH", value=1.2)
-                RH_ref = st.number_input("RH_ref", value=90.0)
-                firmness_min = st.number_input("firmness_min", value=2.0)
-                firmness_0_default = st.number_input("firmness_0_default", value=65.0)
+                Tref_C = st.number_input(PARAM_HELP.get("Tref_C", {}).get(lang_sel, "Tref_C"), value=0.0, key="create_Tref_C")
+                Ea_J = st.number_input(PARAM_HELP.get("Ea_J", {}).get(lang_sel, "Ea_J"), value=40000.0, key="create_Ea_J")
+                k_firm_ref = st.number_input(PARAM_HELP.get("k_firm_ref", {}).get(lang_sel, "k_firm_ref"), value=0.015, key="create_k_firm_ref")
+                beta_RH = st.number_input(PARAM_HELP.get("beta_RH", {}).get(lang_sel, "beta_RH"), value=1.2, key="create_beta_RH")
+                RH_ref = st.number_input(PARAM_HELP.get("RH_ref", {}).get(lang_sel, "RH_ref"), value=90.0, key="create_RH_ref")
+                firmness_min = st.number_input(PARAM_HELP.get("firmness_min", {}).get(lang_sel, "firmness_min"), value=2.0, key="create_firmness_min")
+                firmness_0_default = st.number_input(PARAM_HELP.get("firmness_0_default", {}).get(lang_sel, "firmness_0_default"), value=65.0, key="create_firmness_0_default")
             with c2:
-                brix_min = st.number_input("brix_min", value=6.0)
-                brix_max = st.number_input("brix_max", value=15.0)
-                brix_g = st.number_input("brix_g", value=0.35)
-                brix_0_default = st.number_input("brix_0_default", value=6.5)
-                qual_firmness_threshold = st.number_input("qual_firmness_threshold", value=8.0)
-                qual_brix_target = st.number_input("qual_brix_target", value=14.0)
+                brix_min = st.number_input(PARAM_HELP.get("brix_min", {}).get(lang_sel, "brix_min"), value=6.0, key="create_brix_min")
+                brix_max = st.number_input(PARAM_HELP.get("brix_max", {}).get(lang_sel, "brix_max"), value=15.0, key="create_brix_max")
+                brix_g = st.number_input(PARAM_HELP.get("brix_g", {}).get(lang_sel, "brix_g"), value=0.35, key="create_brix_g")
+                brix_0_default = st.number_input(PARAM_HELP.get("brix_0_default", {}).get(lang_sel, "brix_0_default"), value=6.5, key="create_brix_0_default")
+                qual_firmness_threshold = st.number_input(PARAM_HELP.get("qual_firmness_threshold", {}).get(lang_sel, "qual_firmness_threshold"), value=8.0, key="create_qual_firmness_threshold")
+                qual_brix_target = st.number_input(PARAM_HELP.get("qual_brix_target", {}).get(lang_sel, "qual_brix_target"), value=14.0, key="create_qual_brix_target")
                 if not use_ethylene:
-                    acidity_0_default = st.number_input("acidity_0_default", value=1.2)
+                    acidity_0_default = st.number_input(PARAM_HELP.get("acidity_0_default", {}).get(lang_sel, "acidity_0_default"), value=1.2, key="create_acidity_0_default")
             with c3:
                 if not use_ethylene:
-                    acidity_min = st.number_input("acidity_min", value=0.5)
-                    k_acidity_ref = st.number_input("k_acidity_ref", value=0.02)
-                    Ea_acidity_J = st.number_input("Ea_acidity_J", value=55000.0)
-                    qual_acidity_target = st.number_input("qual_acidity_target", value=1.0)
-                    SL_ref = st.number_input("SL_ref", value=120.0)
+                    acidity_min = st.number_input(PARAM_HELP.get("acidity_min", {}).get(lang_sel, "acidity_min"), value=0.5, key="create_acidity_min")
+                    k_acidity_ref = st.number_input(PARAM_HELP.get("k_acidity_ref", {}).get(lang_sel, "k_acidity_ref"), value=0.02, key="create_k_acidity_ref")
+                    Ea_acidity_J = st.number_input(PARAM_HELP.get("Ea_acidity_J", {}).get(lang_sel, "Ea_acidity_J"), value=55000.0, key="create_Ea_acidity_J")
+                    qual_acidity_target = st.number_input(PARAM_HELP.get("qual_acidity_target", {}).get(lang_sel, "qual_acidity_target"), value=1.0, key="create_qual_acidity_target")
+                    SL_ref = st.number_input(PARAM_HELP.get("SL_ref", {}).get(lang_sel, "SL_ref"), value=120.0, key="create_SL_ref")
                 else:
                     acidity_0_default = acidity_min = k_acidity_ref = Ea_acidity_J = qual_acidity_target = SL_ref = None
             
@@ -904,30 +893,30 @@ def main():
             with st.expander(ETHYLENE_PROP_TITLE.get(lang_sel, "Ethylene Properties"), expanded=True):
                 e1, e2, e3 = st.columns(3)
                 with e1:
-                    E0_int = st.number_input("E0_int", value=0.02)
-                    Eref_prod = st.number_input("Eref_prod", value=0.15)
-                    E_t0 = st.number_input("E_t0", value=9.0)
+                    E0_int = st.number_input(PARAM_HELP.get("E0_int", {}).get(lang_sel, "E0_int"), value=0.02, key="create_E0_int")
+                    Eref_prod = st.number_input(PARAM_HELP.get("Eref_prod", {}).get(lang_sel, "Eref_prod"), value=0.15, key="create_Eref_prod")
+                    E_t0 = st.number_input(PARAM_HELP.get("E_t0", {}).get(lang_sel, "E_t0"), value=9.0, key="create_E_t0")
                 with e2:
-                    E_g = st.number_input("E_g", value=0.9)
-                    E_auto = st.number_input("E_auto", value=0.4)
-                    E_decay = st.number_input("E_decay", value=0.7)
+                    E_g = st.number_input(PARAM_HELP.get("E_g", {}).get(lang_sel, "E_g"), value=0.9, key="create_E_g")
+                    E_auto = st.number_input(PARAM_HELP.get("E_auto", {}).get(lang_sel, "E_auto"), value=0.4, key="create_E_auto")
+                    E_decay = st.number_input(PARAM_HELP.get("E_decay", {}).get(lang_sel, "E_decay"), value=0.7, key="create_E_decay")
                 with e3:
-                    Ea_E_J = st.number_input("Ea_E_J", value=52000.0)
-                    E_ext_shift = st.number_input("E_ext_shift", value=2.0)
-                    alpha_E = st.number_input("alpha_E", value=2.0)
+                    Ea_E_J = st.number_input(PARAM_HELP.get("Ea_E_J", {}).get(lang_sel, "Ea_E_J"), value=52000.0, key="create_Ea_E_J")
+                    E_ext_shift = st.number_input(PARAM_HELP.get("E_ext_shift", {}).get(lang_sel, "E_ext_shift"), value=2.0, key="create_E_ext_shift")
+                    alpha_E = st.number_input(PARAM_HELP.get("alpha_E", {}).get(lang_sel, "alpha_E"), value=2.0, key="create_alpha_E")
         else:
             E0_int = Eref_prod = E_t0 = E_g = E_auto = E_decay = Ea_E_J = E_ext_shift = alpha_E = None
             
         with st.expander(MOLD_PROP_TITLE.get(lang_sel, "Mold Properties"), expanded=True):
             m1, m2, m3 = st.columns(3)
             with m1:
-                RH_mold_thr = st.number_input("RH_mold_thr", value=95.0)
-                mold_rate_ref = st.number_input("mold_rate_ref", value=0.05)
+                RH_mold_thr = st.number_input(PARAM_HELP.get("RH_mold_thr", {}).get(lang_sel, "RH_mold_thr"), value=95.0, key="create_RH_mold_thr")
+                mold_rate_ref = st.number_input(PARAM_HELP.get("mold_rate_ref", {}).get(lang_sel, "mold_rate_ref"), value=0.05, key="create_mold_rate_ref")
             with m2:
-                mold_sens_RH = st.number_input("mold_sens_RH", value=9.0)
-                mold_max_penalty = st.number_input("mold_max_penalty", value=0.65)
+                mold_sens_RH = st.number_input(PARAM_HELP.get("mold_sens_RH", {}).get(lang_sel, "mold_sens_RH"), value=9.0, key="create_mold_sens_RH")
+                mold_max_penalty = st.number_input(PARAM_HELP.get("mold_max_penalty", {}).get(lang_sel, "mold_max_penalty"), value=0.65, key="create_mold_max_penalty")
             with m3:
-                Ea_mold_J = st.number_input("Ea_mold_J", value=43000.0)
+                Ea_mold_J = st.number_input(PARAM_HELP.get("Ea_mold_J", {}).get(lang_sel, "Ea_mold_J"), value=43000.0, key="create_Ea_mold_J")
                 
         if not use_ethylene:
             with st.expander(STAKEHOLDER_OVERRIDES_TITLE.get(lang_sel, "Stakeholder Overrides"), expanded=True):
@@ -935,8 +924,13 @@ def main():
                 roles = ["Retailer (Grocery Store)", "Producer", "Exporter / Processor", "Industry (Juices/Jellies)"]
                 cols = ["weight_firmness", "weight_brix", "weight_ratio", "weight_acidity"]
                 
-                df_overrides_init = pd.DataFrame(index=roles, columns=cols, dtype=float)
-                df_overrides_init.loc["Retailer (Grocery Store)"] = [0.25, 0.40, 0.25, 0.10]
+                translated_roles = [STAKEHOLDER_ROLE_NAMES.get(r, {}).get(lang_sel, r) for r in roles]
+                translated_cols = [STAKEHOLDER_COL_NAMES.get(c, {}).get(lang_sel, c) for c in cols]
+                
+                df_overrides_init = pd.DataFrame(index=translated_roles, columns=translated_cols, dtype=float)
+                for role, t_role in zip(roles, translated_roles):
+                    profile = STAKEHOLDER_PROFILES.get(role, {})
+                    df_overrides_init.loc[t_role] = [profile.get(c, None) for c in cols]
                 
                 edited_overrides_df = st.data_editor(df_overrides_init, width="stretch")
         else:
@@ -949,10 +943,15 @@ def main():
                 overrides_dict = None
                 if edited_overrides_df is not None:
                     overrides_dict = {}
-                    for role in edited_overrides_df.index:
-                        row_data = edited_overrides_df.loc[role].dropna().to_dict()
-                        if row_data:
-                            overrides_dict[role] = row_data
+                    for role, t_role in zip(roles, translated_roles):
+                        if t_role in edited_overrides_df.index:
+                            row_data = edited_overrides_df.loc[t_role].dropna().to_dict()
+                            mapped_row_data = {}
+                            for c, t_c in zip(cols, translated_cols):
+                                if t_c in row_data:
+                                    mapped_row_data[c] = row_data[t_c]
+                            if mapped_row_data:
+                                overrides_dict[role] = mapped_row_data
                     
                 preset_payload = {
                         "fruit_key": new_fruit_key,
