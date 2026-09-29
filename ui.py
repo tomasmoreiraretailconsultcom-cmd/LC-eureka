@@ -182,6 +182,7 @@ def plot_results(results, lang_sel="en", real_data_df=None, current_owner_type=N
         temperature = cdata.get("temperature", [])
         humidity = cdata.get("humidity", [])
         remaining_sl = cdata.get("remaining_SL", [])
+        remaining_sl_base = cdata.get("remaining_SL_base", [])
         days = cdata.get("t", list(range(len(firmness))))
         st.markdown(f"### {CONT_SIM_RESULTS_TITLE.get(lang_sel, 'Continuous Simulation Results')}")
         
@@ -307,12 +308,25 @@ def plot_results(results, lang_sel="en", real_data_df=None, current_owner_type=N
                 )
                 st.plotly_chart(fig_r, width="stretch")
             
-            if remaining_sl:
-                fig_sl = go.Figure(go.Scatter(x=days, y=remaining_sl, mode='lines', name='Remaining Shelf Life', line=dict(color='#e377c2')))
+            if remaining_sl or remaining_sl_base:
+                _sl_title = CHART_REMAINING_SL.get(lang_sel, 'Remaining Life')
+                if current_owner_type:
+                    short_owner = current_owner_type.split(" ")[0]
+                    _sl_stakeholder = f"{short_owner} - {_sl_title}"
+                else:
+                    _sl_stakeholder = _sl_title
+                _sl_base = CHART_BASE_SL.get(lang_sel, 'Base Life')
+
+                fig_sl = go.Figure()
+                if remaining_sl:
+                    fig_sl.add_trace(go.Scatter(x=days, y=remaining_sl, mode='lines', name=_sl_stakeholder, line=dict(color='#e377c2')))
+                if remaining_sl_base:
+                    fig_sl.add_trace(go.Scatter(x=days, y=remaining_sl_base, mode='lines', name=_sl_base, line=dict(color='#17becf', dash='dash')))
+
                 fig_sl.update_layout(
-                    title="Remaining Shelf Life",
+                    title=_sl_title,
                     xaxis_title=_days,
-                    yaxis_title="Days",
+                    yaxis_title=_days,
                     xaxis=dict(rangemode="tozero"),
                     yaxis=dict(rangemode="tozero"),
                     margin=dict(l=20, r=20, t=40, b=20),
@@ -533,6 +547,12 @@ def render_upload_tab(with_ethylene, lang_sel, current_owner_type, json_fallback
                             final_a = f"{acidity_list[-1]:.2f}" if acidity_list else "N/A"
                             quality_list = result_xl["continuous_data"].get("quality")
                             final_q = f"{quality_list[-1]:.1f}/100" if quality_list else "N/A"
+                            sl_list = result_xl["continuous_data"].get("remaining_SL")
+                            final_sl = f"{sl_list[-1]:.1f} d" if sl_list else "N/A"
+                            sl_base_list = result_xl["continuous_data"].get("remaining_SL_base")
+                            final_sl_base = f"{sl_base_list[-1]:.1f} d" if sl_base_list else "N/A"
+                            short_owner = current_owner_type.split(" ")[0] if current_owner_type else None
+                            _sl_kpi_name = f"{short_owner} - {KPI_REMAINING_SL.get(lang_sel, 'Remaining Life')}" if short_owner else KPI_REMAINING_SL.get(lang_sel, 'Remaining Life')
                             
                             if "t" in result_xl["continuous_data"]:
                                 days_sim = round(result_xl["continuous_data"]["t"][-1], 2)
@@ -540,12 +560,22 @@ def render_upload_tab(with_ethylene, lang_sel, current_owner_type, json_fallback
                                 days_sim = total_days_xl
                             
                             st.markdown(f"### {KPI_TITLE.get(lang_sel, 'Key Performance Indicators')}")
-                            m1, m2, m3, m4, m5 = st.columns(5)
-                            m1.metric(KPI_DAYS_SIM.get(lang_sel, 'Days Simulated'), days_sim)
-                            m2.metric(KPI_FINAL_QUALITY.get(lang_sel, 'Final Quality'), final_q)
-                            m3.metric(KPI_FINAL_FIRMNESS.get(lang_sel, 'Final Firmness'), f"{final_f:.1f} N")
-                            m4.metric(KPI_FINAL_BRIX.get(lang_sel, 'Final Brix'), f"{final_b} ºBrix")
-                            m5.metric(KPI_FINAL_ACIDITY.get(lang_sel, 'Final Acidity'), f"{final_a} %")
+                            if not with_ethylene and sl_base_list:
+                                m1, m2, m3, m4, m5, m6, m7 = st.columns(7)
+                                m1.metric(KPI_DAYS_SIM.get(lang_sel, 'Days Simulated'), days_sim)
+                                m2.metric(KPI_FINAL_QUALITY.get(lang_sel, 'Final Quality'), final_q)
+                                m3.metric(_sl_kpi_name, final_sl)
+                                m4.metric(KPI_BASE_SL.get(lang_sel, 'Base Life'), final_sl_base)
+                                m5.metric(KPI_FINAL_FIRMNESS.get(lang_sel, 'Final Firmness'), f"{final_f:.1f} N")
+                                m6.metric(KPI_FINAL_BRIX.get(lang_sel, 'Final Brix'), f"{final_b} ºBrix")
+                                m7.metric(KPI_FINAL_ACIDITY.get(lang_sel, 'Final Acidity'), f"{final_a} %")
+                            else:
+                                m1, m2, m3, m4, m5 = st.columns(5)
+                                m1.metric(KPI_DAYS_SIM.get(lang_sel, 'Days Simulated'), days_sim)
+                                m2.metric(KPI_FINAL_QUALITY.get(lang_sel, 'Final Quality'), final_q)
+                                m3.metric(KPI_FINAL_FIRMNESS.get(lang_sel, 'Final Firmness'), f"{final_f:.1f} N")
+                                m4.metric(KPI_FINAL_BRIX.get(lang_sel, 'Final Brix'), f"{final_b} ºBrix")
+                                m5.metric(KPI_FINAL_ACIDITY.get(lang_sel, 'Final Acidity'), f"{final_a} %")
                             st.markdown("---")
                         
                         try:
@@ -576,6 +606,12 @@ def render_upload_tab(with_ethylene, lang_sel, current_owner_type, json_fallback
                                 final_a = f"{acidity_list[-1]:.2f}" if acidity_list else "N/A"
                                 quality_list = result_json["continuous_data"].get("quality")
                                 final_q = f"{quality_list[-1]:.1f}/100" if quality_list else "N/A"
+                                sl_list = result_json["continuous_data"].get("remaining_SL")
+                                final_sl = f"{sl_list[-1]:.1f} d" if sl_list else "N/A"
+                                sl_base_list = result_json["continuous_data"].get("remaining_SL_base")
+                                final_sl_base = f"{sl_base_list[-1]:.1f} d" if sl_base_list else "N/A"
+                                short_owner = current_owner_type.split(" ")[0] if current_owner_type else None
+                                _sl_kpi_name = f"{short_owner} - {KPI_REMAINING_SL.get(lang_sel, 'Remaining Life')}" if short_owner else KPI_REMAINING_SL.get(lang_sel, 'Remaining Life')
                                 
                                 if "t" in result_json["continuous_data"]:
                                     days_sim = round(result_json["continuous_data"]["t"][-1], 2)
@@ -583,12 +619,22 @@ def render_upload_tab(with_ethylene, lang_sel, current_owner_type, json_fallback
                                     days_sim = payload_json.get("export_metadata", {}).get("days_elapsed_total", 0)
                                 
                                 st.markdown(f"### {KPI_TITLE.get(lang_sel, 'Key Performance Indicators')}")
-                                m1, m2, m3, m4, m5 = st.columns(5)
-                                m1.metric(KPI_DAYS_SIM.get(lang_sel, 'Days Simulated'), days_sim)
-                                m2.metric(KPI_FINAL_QUALITY.get(lang_sel, 'Final Quality'), final_q)
-                                m3.metric(KPI_FINAL_FIRMNESS.get(lang_sel, 'Final Firmness'), f"{final_f:.1f} N")
-                                m4.metric(KPI_FINAL_BRIX.get(lang_sel, 'Final Brix'), f"{final_b} ºBrix")
-                                m5.metric(KPI_FINAL_ACIDITY.get(lang_sel, 'Final Acidity'), f"{final_a} %")
+                                if not with_ethylene and sl_base_list:
+                                    m1, m2, m3, m4, m5, m6, m7 = st.columns(7)
+                                    m1.metric(KPI_DAYS_SIM.get(lang_sel, 'Days Simulated'), days_sim)
+                                    m2.metric(KPI_FINAL_QUALITY.get(lang_sel, 'Final Quality'), final_q)
+                                    m3.metric(_sl_kpi_name, final_sl)
+                                    m4.metric(KPI_BASE_SL.get(lang_sel, 'Base Life'), final_sl_base)
+                                    m5.metric(KPI_FINAL_FIRMNESS.get(lang_sel, 'Final Firmness'), f"{final_f:.1f} N")
+                                    m6.metric(KPI_FINAL_BRIX.get(lang_sel, 'Final Brix'), f"{final_b} ºBrix")
+                                    m7.metric(KPI_FINAL_ACIDITY.get(lang_sel, 'Final Acidity'), f"{final_a} %")
+                                else:
+                                    m1, m2, m3, m4, m5 = st.columns(5)
+                                    m1.metric(KPI_DAYS_SIM.get(lang_sel, 'Days Simulated'), days_sim)
+                                    m2.metric(KPI_FINAL_QUALITY.get(lang_sel, 'Final Quality'), final_q)
+                                    m3.metric(KPI_FINAL_FIRMNESS.get(lang_sel, 'Final Firmness'), f"{final_f:.1f} N")
+                                    m4.metric(KPI_FINAL_BRIX.get(lang_sel, 'Final Brix'), f"{final_b} ºBrix")
+                                    m5.metric(KPI_FINAL_ACIDITY.get(lang_sel, 'Final Acidity'), f"{final_a} %")
                                 st.markdown("---")
                             
                             try:
@@ -742,6 +788,12 @@ def render_simulation_tab(with_ethylene, lang_sel, current_owner_type, json_fall
                     
                     quality_list = result["continuous_data"].get("quality")
                     final_q = f"{quality_list[-1]:.1f}/100" if quality_list else "N/A"
+                    sl_list = result["continuous_data"].get("remaining_SL")
+                    final_sl = f"{sl_list[-1]:.1f} d" if sl_list else "N/A"
+                    sl_base_list = result["continuous_data"].get("remaining_SL_base")
+                    final_sl_base = f"{sl_base_list[-1]:.1f} d" if sl_base_list else "N/A"
+                    short_owner = current_owner_type.split(" ")[0] if current_owner_type else None
+                    _sl_kpi_name = f"{short_owner} - {KPI_REMAINING_SL.get(lang_sel, 'Remaining Life')}" if short_owner else KPI_REMAINING_SL.get(lang_sel, 'Remaining Life')
                     
                     if "t" in result["continuous_data"]:
                         days_sim = round(result["continuous_data"]["t"][-1], 2)
@@ -749,12 +801,22 @@ def render_simulation_tab(with_ethylene, lang_sel, current_owner_type, json_fall
                         days_sim = sum(seg["duration"] for seg in st.session_state.segments)
                     
                     st.markdown(f"### {KPI_TITLE.get(lang_sel, 'Key Performance Indicators')}")
-                    m1, m2, m3, m4, m5 = st.columns(5)
-                    m1.metric(KPI_DAYS_SIM.get(lang_sel, 'Days Simulated'), days_sim)
-                    m2.metric(KPI_FINAL_QUALITY.get(lang_sel, 'Final Quality'), final_q)
-                    m3.metric(KPI_FINAL_FIRMNESS.get(lang_sel, 'Final Firmness'), f"{final_f:.1f} N")
-                    m4.metric(KPI_FINAL_BRIX.get(lang_sel, 'Final Brix'), f"{final_b} ºBrix")
-                    m5.metric(KPI_FINAL_ACIDITY.get(lang_sel, 'Final Acidity'), f"{final_a} %")
+                    if not with_ethylene and sl_base_list:
+                        m1, m2, m3, m4, m5, m6, m7 = st.columns(7)
+                        m1.metric(KPI_DAYS_SIM.get(lang_sel, 'Days Simulated'), days_sim)
+                        m2.metric(KPI_FINAL_QUALITY.get(lang_sel, 'Final Quality'), final_q)
+                        m3.metric(_sl_kpi_name, final_sl)
+                        m4.metric(KPI_BASE_SL.get(lang_sel, 'Base Life'), final_sl_base)
+                        m5.metric(KPI_FINAL_FIRMNESS.get(lang_sel, 'Final Firmness'), f"{final_f:.1f} N")
+                        m6.metric(KPI_FINAL_BRIX.get(lang_sel, 'Final Brix'), f"{final_b} ºBrix")
+                        m7.metric(KPI_FINAL_ACIDITY.get(lang_sel, 'Final Acidity'), f"{final_a} %")
+                    else:
+                        m1, m2, m3, m4, m5 = st.columns(5)
+                        m1.metric(KPI_DAYS_SIM.get(lang_sel, 'Days Simulated'), days_sim)
+                        m2.metric(KPI_FINAL_QUALITY.get(lang_sel, 'Final Quality'), final_q)
+                        m3.metric(KPI_FINAL_FIRMNESS.get(lang_sel, 'Final Firmness'), f"{final_f:.1f} N")
+                        m4.metric(KPI_FINAL_BRIX.get(lang_sel, 'Final Brix'), f"{final_b} ºBrix")
+                        m5.metric(KPI_FINAL_ACIDITY.get(lang_sel, 'Final Acidity'), f"{final_a} %")
                     st.markdown("---")
                 
                 try:

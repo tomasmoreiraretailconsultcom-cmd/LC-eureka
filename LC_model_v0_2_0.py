@@ -1874,7 +1874,19 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
 
     remaining_SL = np.minimum(remaining_SL_by_stakeholder, remaining_SL_fisica)
 
-    arrays_dict = {"quality": quality.tolist(), "quality_base": quality_base.tolist(), "firmness": firmness.tolist(), "brix": brix.tolist(), "acidity": acidity.tolist(), "ratio": maturation_index.tolist(), "temperature": T_c.tolist(), "humidity": RH_pct.tolist(), "t": t.tolist(), "remaining_SL": remaining_SL.tolist()}
+    arrays_dict = {
+        "quality": quality.tolist(),
+        "quality_base": quality_base.tolist(),
+        "firmness": firmness.tolist(),
+        "brix": brix.tolist(),
+        "acidity": acidity.tolist(),
+        "ratio": maturation_index.tolist(),
+        "temperature": T_c.tolist(),
+        "humidity": RH_pct.tolist(),
+        "t": t.tolist(),
+        "remaining_SL": remaining_SL.tolist(),
+        "remaining_SL_base": remaining_SL_fisica.tolist()
+    }
     return quality[len(quality) - 1], remaining_SL[len(remaining_SL) - 1], firmness[len(firmness) - 1], brix[len(brix) - 1], arrays_dict
 
 # FORECAST API ENDPOINT
@@ -1953,6 +1965,7 @@ class ForecastResponse(BaseModel):
     product_id: str
     quality_index: float
     remaining_lifetime: float
+    remaining_lifetime_base: Optional[float] = None
     firmness: float
     brix: float
     continuous_data: Optional[Dict[str, List[float]]] = None
@@ -2111,6 +2124,7 @@ def forecast(request: LifecycleDataRequest, client_id: str = "dummy_client", sto
             product_id=fruit_key,
             quality_index=quality,
             remaining_lifetime=lifetime,
+            remaining_lifetime_base=arrays_dict.get("remaining_SL_base", [lifetime])[-1] if not use_academic and arrays_dict and "remaining_SL_base" in arrays_dict else None,
             firmness=final_f,
             brix=final_b,
             continuous_data=arrays_dict if request.plot_info else None

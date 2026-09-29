@@ -428,6 +428,20 @@ KPI_FINAL_ACIDITY = {
     'tr': 'Son Asidite',
 }
 
+KPI_REMAINING_SL = {
+    'en': 'Remaining Life',
+    'es': 'Vida Restante',
+    'pt': 'Tempo de Vida Restante',
+    'tr': 'Kalan Ömür',
+}
+
+KPI_BASE_SL = {
+    'en': 'Base Life',
+    'es': 'Vida Base',
+    'pt': 'Tempo de Vida Base',
+    'tr': 'Temel Ömür',
+}
+
 CONT_SIM_RESULTS_TITLE = {
     'en': 'Continuous Simulation Results',
     'es': 'Resultados de Simulación Continua',
@@ -496,6 +510,20 @@ CHART_BASE_QUALITY = {
     'es': 'Calidad Base',
     'pt': 'Qualidade Base',
     'tr': 'Temel Kalite',
+}
+
+CHART_REMAINING_SL = {
+    'en': 'Remaining Life',
+    'es': 'Vida Restante',
+    'pt': 'Tempo de Vida Restante',
+    'tr': 'Kalan Ömür',
+}
+
+CHART_BASE_SL = {
+    'en': 'Base Life',
+    'es': 'Vida Base',
+    'pt': 'Tempo de Vida Base',
+    'tr': 'Temel Ömür',
 }
 
 
@@ -790,10 +818,10 @@ PARAM_HELP = {
         'tr': 'Optimum kalite için hedef asidite'
     },
     'SL_ref': {
-        'en': 'Reference Shelf Life (days)',
-        'pt': 'Tempo de Prateleira de Referência (dias)',
-        'es': 'Vida Útil de Referencia (días)',
-        'tr': 'Referans Raf Ömrü (gün)'
+        'en': 'Reference Life (days)',
+        'pt': 'Tempo de Vida de Referência (dias)',
+        'es': 'Vida de Referencia (días)',
+        'tr': 'Referans Ömrü (gün)'
     },
     'E0_int': {
         'en': 'Initial internal ethylene production',
