@@ -1196,12 +1196,31 @@ for k in PRESETS_SOFIA:
     if k in COLD_INJURY_BY_FRUIT:
         PRESETS_SOFIA[k]["cold_injury"] = COLD_INJURY_BY_FRUIT[k]
 
-GENERIC_WEIGHTS = {
-    "weight_firmness": 0.50,
-    "weight_ratio":    0.30,
-    "weight_brix":     0.10,
-    "weight_acidity":  0.10,
+BASELINE_WEIGHTS_BY_FRUIT = {
+    "strawberry":    {"weight_firmness": 0.60, "weight_ratio": 0.24, "weight_brix": 0.08, "weight_acidity": 0.08},
+    "raspberry":     {"weight_firmness": 0.60, "weight_ratio": 0.24, "weight_brix": 0.08, "weight_acidity": 0.08},
+    "fig":           {"weight_firmness": 0.60, "weight_ratio": 0.24, "weight_brix": 0.08, "weight_acidity": 0.08},
+    "blueberry":     {"weight_firmness": 0.55, "weight_ratio": 0.27, "weight_brix": 0.09, "weight_acidity": 0.09},
+    "cherry":        {"weight_firmness": 0.55, "weight_ratio": 0.27, "weight_brix": 0.09, "weight_acidity": 0.09},
+    "banana":        {"weight_firmness": 0.55, "weight_ratio": 0.27, "weight_brix": 0.09, "weight_acidity": 0.09},
+    "kiwi_hayward":  {"weight_firmness": 0.50, "weight_ratio": 0.30, "weight_brix": 0.10, "weight_acidity": 0.10},
+    "kiwi_baby":     {"weight_firmness": 0.50, "weight_ratio": 0.30, "weight_brix": 0.10, "weight_acidity": 0.10},
+    "apple_golden":  {"weight_firmness": 0.50, "weight_ratio": 0.30, "weight_brix": 0.10, "weight_acidity": 0.10},
+    "apple_reineta": {"weight_firmness": 0.50, "weight_ratio": 0.30, "weight_brix": 0.10, "weight_acidity": 0.10},
+    "apple_gala":    {"weight_firmness": 0.50, "weight_ratio": 0.30, "weight_brix": 0.10, "weight_acidity": 0.10},
+    "apple_fuji":    {"weight_firmness": 0.50, "weight_ratio": 0.30, "weight_brix": 0.10, "weight_acidity": 0.10},
+    "pear":          {"weight_firmness": 0.50, "weight_ratio": 0.30, "weight_brix": 0.10, "weight_acidity": 0.10},
+    "plum":          {"weight_firmness": 0.45, "weight_ratio": 0.33, "weight_brix": 0.11, "weight_acidity": 0.11},
+    "peach":         {"weight_firmness": 0.45, "weight_ratio": 0.33, "weight_brix": 0.11, "weight_acidity": 0.11},
+    "melon":         {"weight_firmness": 0.45, "weight_ratio": 0.33, "weight_brix": 0.11, "weight_acidity": 0.11},
+    "grape":         {"weight_firmness": 0.40, "weight_ratio": 0.36, "weight_brix": 0.12, "weight_acidity": 0.12},
+    "orange":        {"weight_firmness": 0.35, "weight_ratio": 0.39, "weight_brix": 0.13, "weight_acidity": 0.13},
 }
+
+GENERIC_QUALITY_WEIGHTS = {"weight_firmness": 0.50, "weight_ratio": 0.30, "weight_brix": 0.10, "weight_acidity": 0.10}
+
+for k in PRESETS_SOFIA:
+    PRESETS_SOFIA[k]["baseline_weights"] = BASELINE_WEIGHTS_BY_FRUIT.get(k, GENERIC_QUALITY_WEIGHTS).copy()
 
 # Helper to get the correct preset
 def get_preset(fruit_key):
@@ -1762,7 +1781,16 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
     w_ratio = profile.get("weight_ratio", 0.20)
     w_acid = profile.get("weight_acidity", 0.15)
     
-    quality_base_raw = 100 * (GENERIC_WEIGHTS["weight_firmness"] * firm_score + GENERIC_WEIGHTS["weight_ratio"] * ratio_score + GENERIC_WEIGHTS["weight_brix"] * brix_score + GENERIC_WEIGHTS["weight_acidity"] * acidity_score)
+    bw = GENERIC_QUALITY_WEIGHTS.copy()
+    if "baseline_weights" in p and isinstance(p["baseline_weights"], dict):
+        bw.update(p["baseline_weights"])
+
+    quality_base_raw = 100 * (
+        bw["weight_firmness"] * firm_score
+        + bw["weight_ratio"] * ratio_score
+        + bw["weight_brix"] * brix_score
+        + bw["weight_acidity"] * acidity_score
+    )
     quality_stakeholder_raw = 100 * (w_firm * firm_score + w_ratio * ratio_score + w_brix * brix_score + w_acid * acidity_score)
 
     # Mold
@@ -1836,9 +1864,9 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
     quality[~marketable] = 0
     quality[~mold_threshold] = 0
 
-    unacceptable_mold = np.where(~mold_threshold)[0]
-    if len(unacceptable_mold) > 0:
-        idx_fail = unacceptable_mold[0]
+    unacceptable = np.where(quality == 0)[0]
+    if len(unacceptable) > 0:
+        idx_fail = unacceptable[0]
         t_fail = t[idx_fail]
         remaining_SL_by_stakeholder = np.maximum(0.0, t_fail - t)
     else:
@@ -2151,6 +2179,7 @@ class PresetModel(BaseModel):
     E_ext_shift: Optional[float] = None
     alpha_E: Optional[float] = None
     stakeholder_overrides: Optional[Dict[str, Any]] = None
+    baseline_weights: Optional[Dict[str, float]] = None
 
 class MoldPresetModel(BaseModel):
     RH_mold_thr: float
@@ -2170,6 +2199,8 @@ def add_preset(request: PresetRequest):
     if "E0_int" in pdump:
         PRESETS_ACADEMIC[request.fruit_key] = pdump
     else:
+        if "baseline_weights" not in pdump:
+            pdump["baseline_weights"] = BASELINE_WEIGHTS_BY_FRUIT.get(request.fruit_key, GENERIC_QUALITY_WEIGHTS).copy()
         PRESETS_SOFIA[request.fruit_key] = pdump
     MOLD_BY_FRUIT[request.fruit_key] = request.mold_preset.model_dump()
     return {"message": "Preset added successfully", "fruit_key": request.fruit_key}
