@@ -1127,10 +1127,10 @@ MOLD_BY_FRUIT = {
 }
 
 PACKAGING_FACTORS = {
-   "Granel (Sem embalagem)": 1.0,
-   "Caixa de Cartão Aberta": 0.85,
-   "Saco Plástico Perfurado": 0.45,
-   "MAP (Atmosfera Modificada) / Plástico Selado": 0.10
+   "bulk": 1.0,
+   "open_box": 0.85,
+   "perforated_bag": 0.45,
+   "map_sealed": 0.10
 }
 
 STAKEHOLDER_PROFILES = {
@@ -1729,7 +1729,12 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
 
     for i in range(1, len(t)):
         VPD_excess = max(0, VPD[i-1] - VPD_ref)
-        fator_embalagem = PACKAGING_FACTORS.get(packaging_methods_rep[i-1], 1.0)
+        pkg_method = packaging_methods_rep[i-1]
+        if pkg_method not in PACKAGING_FACTORS:
+            logger.warning(f"Unrecognized packaging method '{pkg_method}'. Falling back to default packaging factor 1.0.")
+            fator_embalagem = 1.0
+        else:
+            fator_embalagem = PACKAGING_FACTORS[pkg_method]
         VPD_efetivo = VPD_excess * fator_embalagem
         
         # Calculate a respiration modifier based on packaging
@@ -1864,13 +1869,17 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
     quality[~marketable] = 0
     quality[~mold_threshold] = 0
 
-    unacceptable = np.where(quality == 0)[0]
-    if len(unacceptable) > 0:
-        idx_fail = unacceptable[0]
-        t_fail = t[idx_fail]
-        remaining_SL_by_stakeholder = np.maximum(0.0, t_fail - t)
+    nonzero_idx = np.where(quality > 0)[0]
+    if len(nonzero_idx) > 0:
+        last_ok_idx = nonzero_idx[-1]
+        idx_fail = last_ok_idx + 1
+        if idx_fail < len(t):
+            t_fail = t[idx_fail]
+            remaining_SL_by_stakeholder = np.maximum(0.0, t_fail - t)
+        else:
+            remaining_SL_by_stakeholder = remaining_SL_fisica
     else:
-        remaining_SL_by_stakeholder = remaining_SL_fisica
+        remaining_SL_by_stakeholder = np.zeros_like(t)
 
     remaining_SL = np.minimum(remaining_SL_by_stakeholder, remaining_SL_fisica)
 

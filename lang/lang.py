@@ -354,28 +354,28 @@ PRESET_SAVE_ERR = {
 
 PACKAGING_TRANS = {
     'en': {
-        "Granel (Sem embalagem)": "Bulk (No packaging)",
-        "Caixa de Cartão Aberta": "Open Cardboard Box",
-        "Saco Plástico Perfurado": "Perforated Plastic Bag",
-        "MAP (Atmosfera Modificada) / Plástico Selado": "MAP / Sealed Plastic"
+        "bulk": "Bulk (No packaging)",
+        "open_box": "Open Cardboard Box",
+        "perforated_bag": "Perforated Plastic Bag",
+        "map_sealed": "MAP / Sealed Plastic"
     },
     'es': {
-        "Granel (Sem embalagem)": "A Granel (Sin envase)",
-        "Caixa de Cartão Aberta": "Caja de Cartón Abierta",
-        "Saco Plástico Perfurado": "Bolsa de Plástico Perforada",
-        "MAP (Atmosfera Modificada) / Plástico Selado": "EAM / Plástico Sellado"
+        "bulk": "A Granel (Sin envase)",
+        "open_box": "Caja de Cartón Abierta",
+        "perforated_bag": "Bolsa de Plástico Perforada",
+        "map_sealed": "EAM / Plástico Sellado"
     },
     'pt': {
-        "Granel (Sem embalagem)": "Granel (Sem embalagem)",
-        "Caixa de Cartão Aberta": "Caixa de Cartão Aberta",
-        "Saco Plástico Perfurado": "Saco Plástico Perfurado",
-        "MAP (Atmosfera Modificada) / Plástico Selado": "MAP (Atmosfera Modificada) / Plástico Selado"
+        "bulk": "Granel (Sem embalagem)",
+        "open_box": "Caixa de Cartão Aberta",
+        "perforated_bag": "Saco Plástico Perfurado",
+        "map_sealed": "MAP (Atmosfera Modificada) / Plástico Selado"
     },
     'tr': {
-        "Granel (Sem embalagem)": "Dökme (Ambalajsız)",
-        "Caixa de Cartão Aberta": "Açık Karton Kutu",
-        "Saco Plástico Perfurado": "Delikli Plastik Torba",
-        "MAP (Atmosfera Modificada) / Plástico Selado": "MAP / Sızdırmaz Plastik"
+        "bulk": "Dökme (Ambalajsız)",
+        "open_box": "Açık Karton Kutu",
+        "perforated_bag": "Delikli Plastik Torba",
+        "map_sealed": "MAP / Sızdırmaz Plastik"
     }
 }
 
@@ -542,10 +542,10 @@ EXCEL_TIPS_TITLE = {
 }
 
 EXCEL_TIPS_TEXT = {
-    'en': "- Add daily inputs for environment conditions (e.g., `Temperature_C`, `Humidity_Percent`).\n- **Real data is completely optional.** If you have real measurements to compare, add them directly on the same row using columns like `Real_Firmness`, `Real_BRIX`, `Real_Acidity`, or `Real_Quality`.\n- **Regions:** `PT-NL`, `PT-NI`, `PT-CL`, `PT-CI`, `PT-LVT`, `PT-AL`, `PT-ALG`, `PT-SM`, `PT-MAD`, `PT-ACO`\n- **Packaging:** `Granel (Sem embalagem)`, `Caixa de Cartao Aberta`, `Saco Plástico Perfurado`, `MAP (Atmosfera Modificada) / Plástico Selado`",
-    'es': "- Añada entradas diarias para las condiciones ambientales (ej., `Temperature_C`, `Humidity_Percent`).\n- **Los datos reales son completamente opcionales.** Si tiene medidas reales para comparar, añádalas directamente en la misma fila utilizando columnas como `Real_Firmness`, `Real_BRIX`, `Real_Acidity` o `Real_Quality`.\n- **Regiones:** `PT-NL`, `PT-NI`, `PT-CL`, `PT-CI`, `PT-LVT`, `PT-AL`, `PT-ALG`, `PT-SM`, `PT-MAD`, `PT-ACO`\n- **Embalaje:** `Granel (Sem embalagem)`, `Caixa de Cartao Aberta`, `Saco Plástico Perfurado`, `MAP (Atmosfera Modificada) / Plástico Selado`",
-    'pt': "- Adicione dados diários para condições ambientais (ex., `Temperature_C`, `Humidity_Percent`).\n- **Dados reais são completamente opcionais.** Se tem medições reais para comparar, adicione-as diretamente na mesma linha usando colunas como `Real_Firmness`, `Real_BRIX`, `Real_Acidity` ou `Real_Quality`.\n- **Regiões:** `PT-NL`, `PT-NI`, `PT-CL`, `PT-CI`, `PT-LVT`, `PT-AL`, `PT-ALG`, `PT-SM`, `PT-MAD`, `PT-ACO`\n- **Embalagem:** `Granel (Sem embalagem)`, `Caixa de Cartao Aberta`, `Saco Plástico Perfurado`, `MAP (Atmosfera Modificada) / Plástico Selado`",
-    'tr': "- Çevre koşulları için günlük girdiler ekleyin (örn., `Temperature_C`, `Humidity_Percent`).\n- **Gerçek veriler tamamen isteğe bağlıdır.** Karşılaştırılacak gerçek ölçümleriniz varsa, bunları `Real_Firmness`, `Real_BRIX`, `Real_Acidity` veya `Real_Quality` gibi sütunlar kullanarak aynı satıra ekleyin.\n- **Bölgeler:** `PT-NL`, `PT-NI`, `PT-CL`, `PT-CI`, `PT-LVT`, `PT-AL`, `PT-ALG`, `PT-SM`, `PT-MAD`, `PT-ACO`\n- **Paketleme:** `Granel (Sem embalagem)`, `Caixa de Cartao Aberta`, `Saco Plástico Perfurado`, `MAP (Atmosfera Modificada) / Plástico Selado`",
+    'en': "- Add daily inputs for environment conditions (e.g., `Temperature_C`, `Humidity_Percent`).\n- **Blank values:** You can leave `Temperature_C` and `Humidity_Percent` empty. The model will fill them automatically based on the selected Fallback Mode (Fixed or IPMA).\n- **Real data is completely optional.** If you have real measurements to compare, add them directly on the same row using columns like `Real_Firmness`, `Real_BRIX`, `Real_Acidity`, or `Real_Quality`.\n- **Regions:** `PT-NL`, `PT-NI`, `PT-CL`, `PT-CI`, `PT-LVT`, `PT-AL`, `PT-ALG`, `PT-SM`, `PT-MAD`, `PT-ACO`\n- **Packaging:** `bulk`, `open_box`, `perforated_bag`, `map_sealed`",
+    'es': "- Añada entradas diarias para las condiciones ambientales (ej., `Temperature_C`, `Humidity_Percent`).\n- **Valores en blanco:** Puede dejar `Temperature_C` y `Humidity_Percent` en blanco. El modelo los completará automáticamente según el Modo de Respaldo seleccionado (Fijo o IPMA).\n- **Los datos reales son completamente opcionales.** Si tiene medidas reales para comparar, añádalas directamente en la misma fila utilizando columnas como `Real_Firmness`, `Real_BRIX`, `Real_Acidity` o `Real_Quality`.\n- **Regiones:** `PT-NL`, `PT-NI`, `PT-CL`, `PT-CI`, `PT-LVT`, `PT-AL`, `PT-ALG`, `PT-SM`, `PT-MAD`, `PT-ACO`\n- **Embalaje:** `bulk`, `open_box`, `perforated_bag`, `map_sealed`",
+    'pt': "- Adicione dados diários para condições ambientais (ex., `Temperature_C`, `Humidity_Percent`).\n- **Valores em branco:** Pode deixar `Temperature_C` e `Humidity_Percent` em branco. O modelo irá preenchê-los automaticamente com base no Modo de Fallback selecionado (Fixo ou IPMA).\n- **Dados reais são completamente opcionais.** Se tem medições reais para comparar, adicione-as diretamente na mesma linha usando colunas como `Real_Firmness`, `Real_BRIX`, `Real_Acidity` ou `Real_Quality`.\n- **Regiões:** `PT-NL`, `PT-NI`, `PT-CL`, `PT-CI`, `PT-LVT`, `PT-AL`, `PT-ALG`, `PT-SM`, `PT-MAD`, `PT-ACO`\n- **Embalagem:** `bulk`, `open_box`, `perforated_bag`, `map_sealed`",
+    'tr': "- Çevre koşulları için günlük girdiler ekleyin (örn., `Temperature_C`, `Humidity_Percent`).\n- **Boş değerler:** `Temperature_C` ve `Humidity_Percent` alanlarını boş bırakabilirsiniz. Model, seçilen Yedek Moduna (Sabit veya IPMA) göre bunları otomatik olarak dolduracaktır.\n- **Gerçek veriler tamamen isteğe bağlıdır.** Karşılaştırılacak gerçek ölçümleriniz varsa, bunları `Real_Firmness`, `Real_BRIX`, `Real_Acidity` veya `Real_Quality` gibi sütunlar kullanarak aynı satıra ekleyin.\n- **Bölgeler:** `PT-NL`, `PT-NI`, `PT-CL`, `PT-CI`, `PT-LVT`, `PT-AL`, `PT-ALG`, `PT-SM`, `PT-MAD`, `PT-ACO`\n- **Paketleme:** `bulk`, `open_box`, `perforated_bag`, `map_sealed`",
 }
 
 SIM_FROM_EXCEL_TITLE = {
