@@ -1668,31 +1668,38 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
         p = PRESETS_SOFIA[fruit_key]
         
     if packaging_methods is None:
-        packaging_methods = ["Granel (Sem embalagem)"] * days
+        packaging_methods = ['bulk'] * days
     else:
-        packaging_methods = [pm if pm is not None else "Granel (Sem embalagem)" for pm in packaging_methods]
+        packaging_methods = [pm if pm is not None else 'bulk' for pm in packaging_methods]
         
-    t = np.arange(0, days + dt*0.5, dt)
+    # ---------------------------------------------------------
+    # 1. Time Array & Projection Window
+    # We simulate extra days (projection_days) beyond what the user requested
+    # to accurately find the exact day the fruit fails, even if it happens later.
+    # ---------------------------------------------------------
+    projection_days = 200
+    max_sim_days = days + projection_days
+    t = np.arange(0, max_sim_days + dt*0.5, dt)
     
-    T_c = np.repeat(np.array(T_c), int(1/dt))
-    if len(T_c) < len(t):
-        T_c = np.append(T_c, [T_c[-1]] * (len(t) - len(T_c)))
-    T_c = T_c[:len(t)]
-    
-    RH_pct = np.repeat(np.array(RH_pct), int(1/dt))
-    if len(RH_pct) < len(t):
-        RH_pct = np.append(RH_pct, [RH_pct[-1]] * (len(t) - len(RH_pct)))
-    RH_pct = RH_pct[:len(t)]
-    
-    packaging_methods_rep = np.repeat(np.array(packaging_methods), int(1/dt))
-    if len(packaging_methods_rep) < len(t):
-        packaging_methods_rep = np.append(packaging_methods_rep, [packaging_methods_rep[-1]] * (len(t) - len(packaging_methods_rep)))
-    packaging_methods_rep = packaging_methods_rep[:len(t)]
+    # Helper to stretch daily inputs (like Temperature) to match the detailed time array (t).
+    # It repeats elements for sub-daily steps (dt) and pads the projection window with the last known value.
+    def stretch_array(arr):
+        arr_rep = np.repeat(np.array(arr), int(1/dt))
+        if len(arr_rep) < len(t):
+            arr_rep = np.append(arr_rep, [arr_rep[-1]] * (len(t) - len(arr_rep)))
+        return arr_rep[:len(t)]
+        
+    T_c = stretch_array(T_c)
+    RH_pct = stretch_array(RH_pct)
+    packaging_methods_rep = stretch_array(packaging_methods)
 
     T_K = T_c + 273.15
     Tref_K = p["Tref_C"] + 273.15
 
-    # Thermal Time
+    # ---------------------------------------------------------
+    # 2. ODE Initialization
+    # Initialize variables for the biological equations (Thermal Time, VPD, etc.)
+    # ---------------------------------------------------------
     TT = np.zeros_like(t)
     T_base = float(p.get("T_base", 0.0))
     for i in range(1, len(t)):
@@ -1727,6 +1734,10 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
     SL_ref = float(p.get("SL_ref", 30))
     consumed_SL = np.zeros_like(t)
 
+    # ---------------------------------------------------------
+    # 3. Main Integration Loop
+    # Calculate physical degradation step-by-step (Firmness, Brix, Acidity, SL)
+    # ---------------------------------------------------------
     for i in range(1, len(t)):
         VPD_excess = max(0, VPD[i-1] - VPD_ref)
         pkg_method = packaging_methods_rep[i-1]
@@ -1764,9 +1775,12 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
         r_VPD_SL = 1 + 0.5 * VPD_efetivo
         consumed_SL[i] = consumed_SL[i-1] + (r_T_SL * r_VPD_SL) * dt
 
-    remaining_SL_fisica = np.maximum(0, SL_ref - consumed_SL)
+    remaining_SL_fisica_cap = np.maximum(0, SL_ref - consumed_SL)
 
-    # Quality
+    # ---------------------------------------------------------
+    # 4. Quality Index Calculation
+    # Map the simulated physical properties to human-perceived quality scores (0-100)
+    # ---------------------------------------------------------
     firm_score = 1 / (1 + np.exp(-0.35 * (firmness - float(p["qual_firmness_threshold"]))))
     brix_score = np.exp(-((brix - float(p["qual_brix_target"]))**2) / 2.0)
     acidity_score = np.exp(-((acidity - float(p.get("qual_acidity_target", 1.0)))**2) / 0.5)
@@ -1869,6 +1883,10 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
     quality[~marketable] = 0
     quality[~mold_threshold] = 0
 
+    # ---------------------------------------------------------
+    # 6. Remaining Shelf Life (Stakeholder & Baseline)
+    # Find the exact day the quality fails commercial limits or baseline thresholds
+    # ---------------------------------------------------------
     nonzero_idx = np.where(quality > 0)[0]
     if len(nonzero_idx) > 0:
         last_ok_idx = nonzero_idx[-1]
@@ -1877,11 +1895,39 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
             t_fail = t[idx_fail]
             remaining_SL_by_stakeholder = np.maximum(0.0, t_fail - t)
         else:
-            remaining_SL_by_stakeholder = remaining_SL_fisica
+            remaining_SL_by_stakeholder = np.full_like(t, float(projection_days))
     else:
         remaining_SL_by_stakeholder = np.zeros_like(t)
 
-    remaining_SL = np.minimum(remaining_SL_by_stakeholder, remaining_SL_fisica)
+    # Baseline Remaining SL
+    BASELINE_QUALITY_CUTOFF = 30.0
+    below_base_cutoff = np.where(quality_base <= BASELINE_QUALITY_CUTOFF)[0]
+    if len(below_base_cutoff) > 0:
+        idx_base_fail = below_base_cutoff[0]
+        t_base_fail = t[idx_base_fail]
+        remaining_SL_base = np.maximum(0.0, t_base_fail - t)
+    else:
+        remaining_SL_base = np.full_like(t, float(projection_days))
+
+    remaining_SL_base = np.minimum(remaining_SL_base, remaining_SL_fisica_cap)
+    remaining_SL = np.minimum(remaining_SL_by_stakeholder, remaining_SL_fisica_cap)
+
+    # ---------------------------------------------------------
+    # 7. Formatting and Output
+    # Truncate arrays back to originally requested days and build dictionary
+    # ---------------------------------------------------------
+    req_len = int(days/dt) + 1
+    t = t[:req_len]
+    quality = quality[:req_len]
+    quality_base = quality_base[:req_len]
+    firmness = firmness[:req_len]
+    brix = brix[:req_len]
+    acidity = acidity[:req_len]
+    maturation_index = maturation_index[:req_len]
+    T_c = T_c[:req_len]
+    RH_pct = RH_pct[:req_len]
+    remaining_SL = remaining_SL[:req_len]
+    remaining_SL_base = remaining_SL_base[:req_len]
 
     arrays_dict = {
         "quality": quality.tolist(),
@@ -1894,9 +1940,9 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
         "humidity": RH_pct.tolist(),
         "t": t.tolist(),
         "remaining_SL": remaining_SL.tolist(),
-        "remaining_SL_base": remaining_SL_fisica.tolist()
+        "remaining_SL_base": remaining_SL_base.tolist()
     }
-    return quality[len(quality) - 1], remaining_SL[len(remaining_SL) - 1], firmness[len(firmness) - 1], brix[len(brix) - 1], arrays_dict
+    return quality[-1], remaining_SL[-1], firmness[-1], brix[-1], arrays_dict
 
 # FORECAST API ENDPOINT
 # ========================================================================
