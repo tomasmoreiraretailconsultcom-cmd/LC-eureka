@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  lc-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lc-eureka-api
+    command: uvicorn LC_model_v0_2_0:app --host 0.0.0.0 --port 8181
+    ports:
+      - "8181:8181"
+    restart: always
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  lc-ui:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lc-eureka-ui
+    command: streamlit run ui.py --server.port=8501 --server.address=0.0.0.0 --server.headless=true
+    ports:
+      - "8501:8501"
+    restart: always
+    environment:
+      - PYTHONUNBUFFERED=1
+      - STREAMLIT_SERVER_HEADLESS=true
