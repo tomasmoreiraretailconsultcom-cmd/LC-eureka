@@ -1,1 +1,0 @@
-> http://ref.scielo.org/t979dw
