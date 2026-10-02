@@ -667,7 +667,7 @@ with col_right:
 
             # Marker Point A (Commercial Life Limit)
             if pt_a <= t_arr[-1]:
-                idx_a = min(int(pt_a / 0.05), len(q_arr) - 1)
+                idx_a = min(int(round(pt_a / 0.05)), len(q_arr) - 1)
                 fig_q.add_trace(go.Scatter(
                     x=[pt_a],
                     y=[q_arr[idx_a]],
@@ -676,7 +676,8 @@ with col_right:
                     text=[f"🟢 Ponto A (Dia {int(round(pt_a))})"],
                     textposition="top center",
                     textfont=dict(family="Plus Jakarta Sans", size=11, color="#065F46"),
-                    marker=dict(color='#059669', size=14, symbol='circle', line=dict(color='#FFFFFF', width=2.5))
+                    marker=dict(color='#059669', size=14, symbol='circle', line=dict(color='#FFFFFF', width=2.5)),
+                    hovertemplate=f"<b>🟢 Ponto A: Fim Vida Comercial</b><br>Dia: <b>{pt_a:.1f}</b> (Dia {int(round(pt_a))})<br>Qualidade: <b>%{{y:.1f}}%</b><extra></extra>"
                 ))
 
             # Marker Point B (Biological Decay / 0%)
@@ -689,7 +690,8 @@ with col_right:
                     text=[f"🔴 Ponto B (Dia {int(round(pt_b))})"],
                     textposition="bottom center",
                     textfont=dict(family="Plus Jakarta Sans", size=11, color="#991B1B"),
-                    marker=dict(color='#DC2626', size=14, symbol='diamond', line=dict(color='#FFFFFF', width=2.5))
+                    marker=dict(color='#DC2626', size=14, symbol='diamond', line=dict(color='#FFFFFF', width=2.5)),
+                    hovertemplate=f"<b>🔴 Ponto B: Fim Biológico</b><br>Dia: <b>{pt_b:.1f}</b> (Dia {int(round(pt_b))})<br>Qualidade: <b>0.0%</b><extra></extra>"
                 ))
 
             fig_q.update_layout(

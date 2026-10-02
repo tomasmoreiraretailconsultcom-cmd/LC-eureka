@@ -474,14 +474,20 @@ def run_simulation_prof_luis_paulo(fruit_key: str, T_c: list[float], E_ext_ppm: 
         consumed_SL[i] = consumed_SL[i-1] + (r_T_SL * r_RH_SL) * dt
 
     remaining_SL_fisica_cap = np.maximum(0, SL_ref - consumed_SL)
-    mold_penalty = mold_max_penalty * mold
 
-    # 5. Continuous Smooth Quality (0-100)
+    # 5. Continuous Smooth Quality (0-100) & Biological Sanity Synchronization
     firm_score = 1.0 / (1.0 + np.exp(-0.35 * (firmness - float(p["qual_firmness_threshold"]))))
     brix_score = np.exp(-((brix - float(p["qual_brix_target"]))**2) / 2.0)
     quality_raw = 100.0 * (w_firm * firm_score + w_brix * brix_score)
-    cap_decay = np.clip(remaining_SL_fisica_cap / max(1.0, SL_ref * 0.15), 0.0, 1.0)
-    quality = np.maximum(0.0, quality_raw * (1.0 - mold_penalty) * cap_decay)
+    
+    # Fator de Sanidade Biológica: atinge 0.0 quando o bolor atinge o limiar crítico de 50%
+    sanity_factor = np.maximum(0.0, 1.0 - (mold / 0.50))
+    
+    # Fator de Senescência Fisiológica: atinge 0.0 quando a shelf-life física de referência é esgotada
+    cap_decay = np.clip(remaining_SL_fisica_cap / max(1.0, SL_ref * 0.10), 0.0, 1.0)
+    
+    # Qualidade Global Integrada
+    quality = np.maximum(0.0, np.minimum(100.0, quality_raw * sanity_factor * cap_decay))
 
     # 6. Milestone Points Calculation
     # Point A: Commercial Life Limit (The last day the fruit meets commercial standards before permanent expiration)
@@ -493,8 +499,8 @@ def run_simulation_prof_luis_paulo(fruit_key: str, T_c: list[float], E_ext_ppm: 
     else:
         point_a_day = 0.0
 
-    # Point B: Biological Decay / Rotting (First day where Quality <= 1% or mold >= 50% or Physical Cap exhausted)
-    below_zero = np.where((quality <= 1.0) | (mold >= 0.50) | (remaining_SL_fisica_cap <= 0))[0]
+    # Point B: Biological Decay / Rotting (Exatamente o dia onde a Qualidade atinge 0.0%)
+    below_zero = np.where(quality <= 0.01)[0]
     if len(below_zero) > 0:
         point_b_day = float(t[below_zero[0]])
     else:
@@ -518,13 +524,15 @@ def run_simulation_prof_luis_paulo(fruit_key: str, T_c: list[float], E_ext_ppm: 
         "ethylene": E_total[:plot_len].tolist(),
         "temperature": T_c_ext[:plot_len].tolist(),
         "humidity": RH_pct_ext[:plot_len].tolist(),
-        "point_a_day": point_a_day_int,
-        "point_b_day": point_b_day_int,
+        "point_a_day": float(point_a_day),
+        "point_b_day": float(point_b_day),
+        "point_a_day_int": point_a_day_int,
+        "point_b_day_int": point_b_day_int,
         "min_quality_threshold": min_quality,
         "mold_limit_threshold": mold_limit
     }
 
-    return final_quality, commercial_remaining, biological_remaining, float(firmness[req_len - 1]), float(brix[req_len - 1]), point_a_day_int, point_b_day_int, arrays_dict
+    return final_quality, commercial_remaining, biological_remaining, float(firmness[req_len - 1]), float(brix[req_len - 1]), float(point_a_day), float(point_b_day), arrays_dict
 
 # =============================================================================
 # 4. MODEL 2: WITHOUT ETHYLENE (Sofia Machado - 4D Stakeholder Quality)
@@ -658,7 +666,7 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
 
     mold_penalty = mold_max_penalty * mold
 
-    # 5. Continuous Smooth Quality (0-100)
+    # 5. Continuous Smooth Quality (0-100) & Biological Sanity Synchronization
     firm_score = 1.0 / (1.0 + np.exp(-0.35 * (firmness - float(p["qual_firmness_threshold"]))))
     brix_score = np.exp(-((brix - float(p["qual_brix_target"]))**2) / 2.0)
     acidity_score = np.exp(-((acidity - float(p.get("qual_acidity_target", 1.0)))**2) / 0.5)
@@ -667,8 +675,15 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
     ratio_score = np.exp(-((maturation_index - target_ratio)**2) / 10.0)
 
     quality_raw = 100.0 * (w_firm * firm_score + w_ratio * ratio_score + w_brix * brix_score + w_acid * acidity_score)
-    cap_decay = np.clip(remaining_SL_fisica_cap / max(1.0, SL_ref * 0.15), 0.0, 1.0)
-    quality = np.maximum(0.0, quality_raw * (1.0 - mold_penalty) * cap_decay)
+    
+    # Fator de Sanidade Biológica: atinge 0.0 quando o bolor atinge o limiar crítico de 50%
+    sanity_factor = np.maximum(0.0, 1.0 - (mold / 0.50))
+    
+    # Fator de Senescência Fisiológica: atinge 0.0 quando a shelf-life física de referência é esgotada
+    cap_decay = np.clip(remaining_SL_fisica_cap / max(1.0, SL_ref * 0.10), 0.0, 1.0)
+    
+    # Qualidade Global Integrada
+    quality = np.maximum(0.0, np.minimum(100.0, quality_raw * sanity_factor * cap_decay))
 
     # 6. Milestone Points Calculation
     # Point A: Commercial Life Limit (The last day the fruit meets commercial standards before permanent expiration)
@@ -680,8 +695,8 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
     else:
         point_a_day = 0.0
 
-    # Point B: Biological Decay / Rotting (First day where Quality <= 1% or mold >= 50% or Physical Cap exhausted)
-    below_zero = np.where((quality <= 1.0) | (mold >= 0.50) | (remaining_SL_fisica_cap <= 0))[0]
+    # Point B: Biological Decay / Rotting (Exatamente o dia onde a Qualidade atinge 0.0%)
+    below_zero = np.where(quality <= 0.01)[0]
     if len(below_zero) > 0:
         point_b_day = float(t[below_zero[0]])
     else:
@@ -706,13 +721,15 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
         "mold": mold[:plot_len].tolist(),
         "temperature": T_c_ext[:plot_len].tolist(),
         "humidity": RH_pct_ext[:plot_len].tolist(),
-        "point_a_day": point_a_day_int,
-        "point_b_day": point_b_day_int,
+        "point_a_day": float(point_a_day),
+        "point_b_day": float(point_b_day),
+        "point_a_day_int": point_a_day_int,
+        "point_b_day_int": point_b_day_int,
         "min_quality_threshold": min_quality,
         "mold_limit_threshold": mold_limit
     }
 
-    return final_quality, commercial_remaining, biological_remaining, float(firmness[req_len - 1]), float(brix[req_len - 1]), point_a_day_int, point_b_day_int, arrays_dict
+    return final_quality, commercial_remaining, biological_remaining, float(firmness[req_len - 1]), float(brix[req_len - 1]), float(point_a_day), float(point_b_day), arrays_dict
 
 # =============================================================================
 # 5. FASTAPI SCHEMAS & ENDPOINTS
