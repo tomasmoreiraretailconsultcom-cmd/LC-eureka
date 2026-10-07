@@ -1,4 +1,4 @@
-import math
+﻿import math
 import random
 import datetime
 import numpy as np
@@ -487,7 +487,8 @@ def run_simulation_prof_luis_paulo(fruit_key: str, T_c: list[float], E_ext_ppm: 
     cap_decay = np.clip(remaining_SL_fisica_cap / max(1.0, SL_ref * 0.10), 0.0, 1.0)
     
     # Qualidade Global Integrada
-    quality = np.maximum(0.0, np.minimum(100.0, quality_raw * sanity_factor * cap_decay))
+    structural_factor = np.clip((firmness - firmness_min) / 5.0, 0.0, 1.0)
+    quality = np.maximum(0.0, np.minimum(100.0, quality_raw * sanity_factor * cap_decay * structural_factor))
 
     # 6. Milestone Points Calculation
     # Point A: Commercial Life Limit (The last day the fruit meets commercial standards before permanent expiration)
@@ -683,7 +684,8 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
     cap_decay = np.clip(remaining_SL_fisica_cap / max(1.0, SL_ref * 0.10), 0.0, 1.0)
     
     # Qualidade Global Integrada
-    quality = np.maximum(0.0, np.minimum(100.0, quality_raw * sanity_factor * cap_decay))
+    structural_factor = np.clip((firmness - firmness_min) / 5.0, 0.0, 1.0)
+    quality = np.maximum(0.0, np.minimum(100.0, quality_raw * sanity_factor * cap_decay * structural_factor))
 
     # 6. Milestone Points Calculation
     # Point A: Commercial Life Limit (The last day the fruit meets commercial standards before permanent expiration)
