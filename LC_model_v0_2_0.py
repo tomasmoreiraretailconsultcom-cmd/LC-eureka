@@ -103,7 +103,7 @@ PRESETS = {
         "brix_min": 8.36, "brix_max": 15.08, "brix_g": 0.32, "brix_0_default": 11.0, "qual_brix_target": 15.0,
         "firmness_min": 5.24, "firmness_0_default": 45.0, "qual_firmness_threshold": 8.0,
         "acidity_0_default": 1.5, "acidity_min": 0.31, "k_acidity_ref": 0.013, "Ea_acidity_J": 55000, "qual_acidity_target": 1.0,
-        "SL_ref": 50.0, "E0_int": 0.02, "Eref_prod": 0.12, "E_t0": 10, "E_g": 0.9, "E_auto": 0.35, "E_decay": 0.7, "Ea_E_J": 52000, "E_ext_shift": 3.0, "alpha_E": 6.0,
+        "SL_ref": 80.0, "E0_int": 0.02, "Eref_prod": 0.12, "E_t0": 10, "E_g": 0.9, "E_auto": 0.35, "E_decay": 0.7, "Ea_E_J": 52000, "E_ext_shift": 3.0, "alpha_E": 6.0,
         "RH_mold_thr": 95.0, "mold_rate_ref": 0.05, "mold_sens_RH": 9.0, "mold_max_penalty": 0.65, "Ea_mold_J": 43000.0
     },
     "kiwi_baby": {
@@ -111,7 +111,7 @@ PRESETS = {
         "brix_min": 8.0, "brix_max": 18.0, "brix_g": 0.5, "brix_0_default": 14.5, "qual_brix_target": 17.0,
         "firmness_min": 2.0, "firmness_0_default": 28.0, "qual_firmness_threshold": 6.0,
         "acidity_0_default": 1.1, "acidity_min": 0.5, "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 1.0,
-        "SL_ref": 25.0, "E0_int": 0.03, "Eref_prod": 0.22, "E_t0": 5, "E_g": 1.2, "E_auto": 0.55, "E_decay": 0.75, "Ea_E_J": 52000, "E_ext_shift": 2.6, "alpha_E": 3.2,
+        "SL_ref": 45.0, "E0_int": 0.03, "Eref_prod": 0.22, "E_t0": 5, "E_g": 1.2, "E_auto": 0.55, "E_decay": 0.75, "Ea_E_J": 52000, "E_ext_shift": 2.6, "alpha_E": 3.2,
         "RH_mold_thr": 95.0, "mold_rate_ref": 0.07, "mold_sens_RH": 10.0, "mold_max_penalty": 0.75, "Ea_mold_J": 45000.0
     },
     "apple_gala": {
@@ -127,7 +127,7 @@ PRESETS = {
         "brix_min": 11.5, "brix_max": 15.5, "brix_g": 0.18, "brix_0_default": 12.0, "qual_brix_target": 13.5,
         "firmness_min": 12.0, "firmness_0_default": 72.0, "qual_firmness_threshold": 50.0,
         "acidity_0_default": 0.5, "acidity_min": 0.25, "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.6,
-        "SL_ref": 80.0, "E0_int": 0.01, "Eref_prod": 0.10, "E_t0": 18, "E_g": 0.6, "E_auto": 0.35, "E_decay": 0.55, "Ea_E_J": 52000, "E_ext_shift": 1.8, "alpha_E": 0.8,
+        "SL_ref": 120.0, "E0_int": 0.01, "Eref_prod": 0.10, "E_t0": 18, "E_g": 0.6, "E_auto": 0.35, "E_decay": 0.55, "Ea_E_J": 52000, "E_ext_shift": 1.8, "alpha_E": 0.8,
         "RH_mold_thr": 95.0, "mold_rate_ref": 0.04, "mold_sens_RH": 8.0, "mold_max_penalty": 0.60, "Ea_mold_J": 42000.0
     },
     "apple_fuji": {
@@ -135,7 +135,7 @@ PRESETS = {
         "brix_min": 13.0, "brix_max": 19.0, "brix_g": 0.15, "brix_0_default": 14.0, "qual_brix_target": 16.0,
         "firmness_min": 15.0, "firmness_0_default": 80.0, "qual_firmness_threshold": 50.0,
         "acidity_0_default": 0.4, "acidity_min": 0.2, "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.5,
-        "SL_ref": 120.0, "E0_int": 0.008, "Eref_prod": 0.06, "E_t0": 25, "E_g": 0.5, "E_auto": 0.25, "E_decay": 0.45, "Ea_E_J": 52000, "E_ext_shift": 1.4, "alpha_E": 0.6,
+        "SL_ref": 180.0, "E0_int": 0.008, "Eref_prod": 0.06, "E_t0": 25, "E_g": 0.5, "E_auto": 0.25, "E_decay": 0.45, "Ea_E_J": 52000, "E_ext_shift": 1.4, "alpha_E": 0.6,
         "RH_mold_thr": 95.0, "mold_rate_ref": 0.035, "mold_sens_RH": 8.0, "mold_max_penalty": 0.55, "Ea_mold_J": 42000.0
     },
     "apple_reineta": {
@@ -151,7 +151,7 @@ PRESETS = {
         "brix_min": 10.5, "brix_max": 16.5, "brix_g": 0.28, "brix_0_default": 11.5, "qual_brix_target": 14.0,
         "firmness_min": 4.0, "firmness_0_default": 55.0, "qual_firmness_threshold": 25.0,
         "acidity_0_default": 0.3, "acidity_min": 0.15, "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.4,
-        "SL_ref": 65.0, "E0_int": 0.01, "Eref_prod": 0.22, "E_t0": 10, "E_g": 1.0, "E_auto": 0.6, "E_decay": 0.75, "Ea_E_J": 56000, "E_ext_shift": 2.3, "alpha_E": 1.6,
+        "SL_ref": 90.0, "E0_int": 0.01, "Eref_prod": 0.22, "E_t0": 10, "E_g": 1.0, "E_auto": 0.6, "E_decay": 0.75, "Ea_E_J": 56000, "E_ext_shift": 2.3, "alpha_E": 1.6,
         "RH_mold_thr": 95.0, "mold_rate_ref": 0.07, "mold_sens_RH": 10.0, "mold_max_penalty": 0.75, "Ea_mold_J": 45000.0
     },
     "strawberry": {
