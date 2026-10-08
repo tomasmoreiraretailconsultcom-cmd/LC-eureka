@@ -1,4 +1,4 @@
-﻿import math
+import math
 import random
 import datetime
 import numpy as np
@@ -99,11 +99,11 @@ PACKAGING_FACTORS = {
 # Unified Physical Presets per Fruit
 PRESETS = {
     "kiwi_hayward": {
-        "label": "Kiwi (Hayward)", "Tref_C": 5.0, "Ea_J": 60000, "k_firm_ref": 0.045, "beta_RH": 1.15, "RH_ref": 90,
+        "label": "Kiwi (Hayward)", "Tref_C": 5.0, "Ea_J": 60000, "k_firm_ref": 0.025, "beta_RH": 1.15, "RH_ref": 90,
         "brix_min": 8.36, "brix_max": 15.08, "brix_g": 0.32, "brix_0_default": 11.0, "qual_brix_target": 15.0,
         "firmness_min": 5.24, "firmness_0_default": 45.0, "qual_firmness_threshold": 8.0,
         "acidity_0_default": 1.5, "acidity_min": 0.31, "k_acidity_ref": 0.013, "Ea_acidity_J": 55000, "qual_acidity_target": 1.0,
-        "SL_ref": 50.0, "E0_int": 0.02, "Eref_prod": 0.12, "E_t0": 10, "E_g": 0.9, "E_auto": 0.35, "E_decay": 0.7, "Ea_E_J": 52000, "E_ext_shift": 3.0, "alpha_E": 3.5,
+        "SL_ref": 80.0, "E0_int": 0.02, "Eref_prod": 0.12, "E_t0": 10, "E_g": 0.9, "E_auto": 0.35, "E_decay": 0.7, "Ea_E_J": 52000, "E_ext_shift": 2.0, "alpha_E": 1.8,
         "RH_mold_thr": 95.0, "mold_rate_ref": 0.05, "mold_sens_RH": 9.0, "mold_max_penalty": 0.65, "Ea_mold_J": 43000.0
     },
     "kiwi_baby": {
@@ -127,7 +127,7 @@ PRESETS = {
         "brix_min": 11.5, "brix_max": 15.5, "brix_g": 0.18, "brix_0_default": 12.0, "qual_brix_target": 13.5,
         "firmness_min": 12.0, "firmness_0_default": 72.0, "qual_firmness_threshold": 35.0,
         "acidity_0_default": 0.5, "acidity_min": 0.25, "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.6,
-        "SL_ref": 165.0, "E0_int": 0.01, "Eref_prod": 0.10, "E_t0": 18, "E_g": 0.6, "E_auto": 0.35, "E_decay": 0.55, "Ea_E_J": 52000, "E_ext_shift": 1.8, "alpha_E": 0.8,
+        "SL_ref": 120.0, "E0_int": 0.01, "Eref_prod": 0.10, "E_t0": 18, "E_g": 0.6, "E_auto": 0.35, "E_decay": 0.55, "Ea_E_J": 52000, "E_ext_shift": 1.8, "alpha_E": 0.8,
         "RH_mold_thr": 95.0, "mold_rate_ref": 0.04, "mold_sens_RH": 8.0, "mold_max_penalty": 0.60, "Ea_mold_J": 42000.0
     },
     "apple_fuji": {
