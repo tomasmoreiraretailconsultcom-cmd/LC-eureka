@@ -152,8 +152,9 @@ PRESETS = {
         "mold_max_penalty": 0.70,
         "Ea_mold_J": 43000.0,
         "is_climacteric": True,
-        "CI_thr": 1.0,
-        "CI_rate": 0.010,
+        "CI_type": "threshold",
+        "CI_thr": 1.2,
+        "CI_rate": 0.012,
         "CI_sl_stress": 1.5,
         "CI_max_penalty": 0.35,
     },
@@ -286,7 +287,7 @@ PRESETS = {
         "acidity_0_default": 0.4, "acidity_min": 0.2, "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.4,
         "SL_ref": 10.0, "E0_int": 0.02, "Eref_prod": 0.35, "E_t0": 4, "E_g": 1.4, "E_auto": 0.7, "E_decay": 0.9, "Ea_E_J": 60000, "E_ext_shift": 3.0, "alpha_E": 2.2,
         "RH_mold_thr": 95.0, "mold_rate_ref": 0.06, "mold_sens_RH": 10.0, "mold_max_penalty": 0.80, "Ea_mold_J": 45000.0,
-        "is_climacteric": True, "CI_thr": 12.0, "CI_rate": 0.04, "CI_sl_stress": 3.5, "CI_max_penalty": 0.95
+        "is_climacteric": True, "CI_type": "threshold", "CI_thr": 12.5, "CI_rate": 0.04, "CI_sl_stress": 3.5, "CI_max_penalty": 0.95
     },
     "peach": {
         "label": "Peach", "Tref_C": 2.0, "Ea_J": 56000, "k_firm_ref": 0.08, "beta_RH": 1.1, "RH_ref": 92,
@@ -295,7 +296,9 @@ PRESETS = {
         "acidity_0_default": 0.6, "acidity_min": 0.3, "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.6,
         "SL_ref": 14.0, "E0_int": 0.012, "Eref_prod": 0.22, "E_t0": 6, "E_g": 1.0, "E_auto": 0.55, "E_decay": 0.8, "Ea_E_J": 56000, "E_ext_shift": 2.4, "alpha_E": 1.4,
         "RH_mold_thr": 94.0, "mold_rate_ref": 0.10, "mold_sens_RH": 12.0, "mold_max_penalty": 0.85, "Ea_mold_J": 48000.0,
-        "is_climacteric": True, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0
+        "is_climacteric": True,
+        "CI_type": "zone", "CI_zone_min": 2.0, "CI_zone_max": 7.0, "CI_zone_peak": 5.0,
+        "CI_thr": 7.0, "CI_rate": 0.025, "CI_sl_stress": 2.0, "CI_max_penalty": 0.65
     },
     "plum": {
         "label": "Plum", "Tref_C": 2.0, "Ea_J": 52000, "k_firm_ref": 0.06, "beta_RH": 1.0, "RH_ref": 92,
@@ -304,7 +307,9 @@ PRESETS = {
         "acidity_0_default": 0.8, "acidity_min": 0.3, "k_acidity_ref": 0.016, "Ea_acidity_J": 55000, "qual_acidity_target": 0.8,
         "SL_ref": 21.0, "E0_int": 0.01, "Eref_prod": 0.14, "E_t0": 8, "E_g": 0.8, "E_auto": 0.45, "E_decay": 0.7, "Ea_E_J": 54000, "E_ext_shift": 2.0, "alpha_E": 1.0,
         "RH_mold_thr": 94.0, "mold_rate_ref": 0.09, "mold_sens_RH": 12.0, "mold_max_penalty": 0.82, "Ea_mold_J": 47000.0,
-        "is_climacteric": True, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0
+        "is_climacteric": True,
+        "CI_type": "zone", "CI_zone_min": 2.0, "CI_zone_max": 7.0, "CI_zone_peak": 5.0,
+        "CI_thr": 7.0, "CI_rate": 0.022, "CI_sl_stress": 1.8, "CI_max_penalty": 0.60
     },
     "fig": {
         "label": "Fig", "Tref_C": 2.0, "Ea_J": 52000, "k_firm_ref": 0.11, "beta_RH": 1.8, "RH_ref": 95,
@@ -454,6 +459,10 @@ def run_simulation_prof_luis_paulo(fruit_key: str, T_c: list[float], E_ext_ppm: 
 
     p = custom_preset if custom_preset is not None else PRESETS[fruit_key]
     is_climacteric = bool(p.get("is_climacteric", True))
+    CI_type = p.get("CI_type", "threshold")
+    CI_zone_min = float(p.get("CI_zone_min", 2.0))
+    CI_zone_max = float(p.get("CI_zone_max", 7.0))
+    CI_zone_peak = float(p.get("CI_zone_peak", 5.0))
     CI_thr = float(p.get("CI_thr", 0.0))
     CI_rate = float(p.get("CI_rate", 0.0))
     CI_sl_stress = float(p.get("CI_sl_stress", 1.0))
@@ -572,7 +581,18 @@ def run_simulation_prof_luis_paulo(fruit_key: str, T_c: list[float], E_ext_ppm: 
     cold_injury = np.zeros_like(t)
     for i in range(1, len(t)):
         # Acumulação de Dano por Frio (Cold Injury)
-        delta_T_cold = max(0.0, CI_thr - T_c_ext[i-1])
+        if CI_type == "zone":
+            curr_T = T_c_ext[i-1]
+            if CI_zone_min <= curr_T <= CI_zone_max:
+                if curr_T <= CI_zone_peak:
+                    ratio = (curr_T - CI_zone_min) / max(1e-3, (CI_zone_peak - CI_zone_min))
+                else:
+                    ratio = (CI_zone_max - curr_T) / max(1e-3, (CI_zone_max - CI_zone_peak))
+                delta_T_cold = max(0.0, ratio) * (CI_zone_max - CI_zone_min) * 0.5
+            else:
+                delta_T_cold = 0.0
+        else:
+            delta_T_cold = max(0.0, CI_thr - T_c_ext[i-1])
         dCI = CI_rate * delta_T_cold * dt
         cold_injury[i] = min(1.0, cold_injury[i-1] + dCI)
 
@@ -677,6 +697,10 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
 
     p = custom_preset if custom_preset is not None else PRESETS[fruit_key]
     is_climacteric = bool(p.get("is_climacteric", True))
+    CI_type = p.get("CI_type", "threshold")
+    CI_zone_min = float(p.get("CI_zone_min", 2.0))
+    CI_zone_max = float(p.get("CI_zone_max", 7.0))
+    CI_zone_peak = float(p.get("CI_zone_peak", 5.0))
     CI_thr = float(p.get("CI_thr", 0.0))
     CI_rate = float(p.get("CI_rate", 0.0))
     CI_sl_stress = float(p.get("CI_sl_stress", 1.0))
@@ -746,7 +770,18 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
 
     for i in range(1, len(t)):
         # Acumulação de Dano por Frio (Cold Injury)
-        delta_T_cold = max(0.0, CI_thr - T_c_ext[i-1])
+        if CI_type == "zone":
+            curr_T = T_c_ext[i-1]
+            if CI_zone_min <= curr_T <= CI_zone_max:
+                if curr_T <= CI_zone_peak:
+                    ratio = (curr_T - CI_zone_min) / max(1e-3, (CI_zone_peak - CI_zone_min))
+                else:
+                    ratio = (CI_zone_max - curr_T) / max(1e-3, (CI_zone_max - CI_zone_peak))
+                delta_T_cold = max(0.0, ratio) * (CI_zone_max - CI_zone_min) * 0.5
+            else:
+                delta_T_cold = 0.0
+        else:
+            delta_T_cold = max(0.0, CI_thr - T_c_ext[i-1])
         dCI = CI_rate * delta_T_cold * dt
         cold_injury[i] = min(1.0, cold_injury[i-1] + dCI)
 

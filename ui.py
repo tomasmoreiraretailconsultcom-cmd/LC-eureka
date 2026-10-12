@@ -264,8 +264,14 @@ with st.container():
         preset_data = PRESETS[selected_fruit]
         fruit_group = get_fruit_group(selected_fruit)
         is_clim = preset_data.get("is_climacteric", True)
+        ci_type = preset_data.get("CI_type", "threshold")
         ci_thr_val = float(preset_data.get("CI_thr", 0.0))
-        ci_txt = f"Limiar Frio: {ci_thr_val:.1f}°C" if ci_thr_val > 0 else "Tolerante a Frio Normal"
+        if ci_type == "zone":
+            ci_zmin = float(preset_data.get("CI_zone_min", 2.0))
+            ci_zmax = float(preset_data.get("CI_zone_max", 7.0))
+            ci_txt = f"Zona de Risco Frio: {ci_zmin:.0f}–{ci_zmax:.0f}°C (Lanosidade)"
+        else:
+            ci_txt = f"Limiar Frio: {ci_thr_val:.1f}°C" if ci_thr_val > 0 else "Tolerante a Frio Normal"
         st.caption(f"{'🍐 Fruto Climatérico' if is_clim else '🍓 Fruto Não Climatérico'} • {ci_txt}")
 
     with c_cfg2:
@@ -576,7 +582,13 @@ with col_right:
         ci_arr = cdata.get("cold_injury", [])
         ci_max = max(ci_arr) if ci_arr else 0.0
         if ci_max > 0.05:
-            st.warning(f"⚠️ **Alerta Fisiológico (Cold Injury Ativo):** Dano por frio acumulado detetado (máx. {ci_max*100:.1f}%). O lote esteve exposto a temperaturas inferiores ao limiar de segurança ({preset_data.get('CI_thr', 0.0):.1f} °C), acelerando a perda de vida útil e a degradação da qualidade estética.")
+            ci_type = preset_data.get("CI_type", "threshold")
+            if ci_type == "zone":
+                z_min = float(preset_data.get("CI_zone_min", 2.0))
+                z_max = float(preset_data.get("CI_zone_max", 7.0))
+                st.warning(f"⚠️ **Alerta Fisiológico (Cold Injury Ativo - Lanosidade):** Dano por frio acumulado detetado (máx. {ci_max*100:.1f}%). O lote esteve exposto à zona de risco térmico ({z_min:.0f} a {z_max:.0f} °C, com pico a 5 °C), desencadeando polpa lanosa/farinhenta e perda acelerada de valor comercial.")
+            else:
+                st.warning(f"⚠️ **Alerta Fisiológico (Cold Injury Ativo):** Dano por frio acumulado detetado (máx. {ci_max*100:.1f}%). O lote esteve exposto a temperaturas inferiores ao limiar de segurança ({preset_data.get('CI_thr', 0.0):.1f} °C), acelerando a perda de vida útil e a degradação da qualidade estética.")
 
         # -------------------------------------------------------------
         # EXECUTIVE KPI TILES
@@ -826,9 +838,10 @@ with col_right:
                     line=dict(color='#475569', width=2.5)
                 ), secondary_y=False)
             if "cold_injury" in cdata and any(ci > 0.001 for ci in cdata["cold_injury"]):
+                label_ci = "Dano por Frio / Lanosidade (%)" if preset_data.get("CI_type") == "zone" else "Dano por Frio / Chilling (%)"
                 fig_bio.add_trace(go.Scatter(
                     x=t_arr, y=[ci*100 for ci in cdata["cold_injury"]],
-                    mode='lines', name='Dano por Frio / Chilling (%)',
+                    mode='lines', name=label_ci,
                     line=dict(color='#0284C7', width=2.5, dash='dot')
                 ), secondary_y=False)
             if "ethylene" in cdata:
