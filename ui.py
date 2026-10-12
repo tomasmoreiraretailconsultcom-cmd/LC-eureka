@@ -263,6 +263,10 @@ with st.container():
         )
         preset_data = PRESETS[selected_fruit]
         fruit_group = get_fruit_group(selected_fruit)
+        is_clim = preset_data.get("is_climacteric", True)
+        ci_thr_val = float(preset_data.get("CI_thr", 0.0))
+        ci_txt = f"Limiar Frio: {ci_thr_val:.1f}°C" if ci_thr_val > 0 else "Tolerante a Frio Normal"
+        st.caption(f"{'🍐 Fruto Climatérico' if is_clim else '🍓 Fruto Não Climatérico'} • {ci_txt}")
 
     with c_cfg2:
         stakeholder_options = [
@@ -569,6 +573,11 @@ with col_right:
         pt_a = result.get("point_a_day", 0.0)
         pt_b = result.get("point_b_day", 0.0)
 
+        ci_arr = cdata.get("cold_injury", [])
+        ci_max = max(ci_arr) if ci_arr else 0.0
+        if ci_max > 0.05:
+            st.warning(f"⚠️ **Alerta Fisiológico (Cold Injury Ativo):** Dano por frio acumulado detetado (máx. {ci_max*100:.1f}%). O lote esteve exposto a temperaturas inferiores ao limiar de segurança ({preset_data.get('CI_thr', 0.0):.1f} °C), acelerando a perda de vida útil e a degradação da qualidade estética.")
+
         # -------------------------------------------------------------
         # EXECUTIVE KPI TILES
         # -------------------------------------------------------------
@@ -816,6 +825,12 @@ with col_right:
                     mode='lines', name='Incidência de Bolor (%)',
                     line=dict(color='#475569', width=2.5)
                 ), secondary_y=False)
+            if "cold_injury" in cdata and any(ci > 0.001 for ci in cdata["cold_injury"]):
+                fig_bio.add_trace(go.Scatter(
+                    x=t_arr, y=[ci*100 for ci in cdata["cold_injury"]],
+                    mode='lines', name='Dano por Frio / Chilling (%)',
+                    line=dict(color='#0284C7', width=2.5, dash='dot')
+                ), secondary_y=False)
             if "ethylene" in cdata:
                 fig_bio.add_trace(go.Scatter(
                     x=t_arr, y=cdata["ethylene"],
@@ -827,7 +842,7 @@ with col_right:
                 margin=dict(l=20, r=20, t=25, b=20),
                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
             )
-            fig_bio.update_yaxes(title_text="Bolor (%)", secondary_y=False, rangemode="tozero")
+            fig_bio.update_yaxes(title_text="Bolor / Chilling (%)", secondary_y=False, rangemode="tozero")
             fig_bio.update_yaxes(title_text="Etileno (ppm)", secondary_y=True, rangemode="tozero")
             st.plotly_chart(fig_bio, use_container_width=True)
 
