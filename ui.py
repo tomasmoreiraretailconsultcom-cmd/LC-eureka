@@ -266,10 +266,14 @@ with st.container():
         is_clim = preset_data.get("is_climacteric", True)
         ci_type = preset_data.get("CI_type", "threshold")
         ci_thr_val = float(preset_data.get("CI_thr", 0.0))
+        ci_min = preset_data.get("CI_thr_min")
+        ci_max_val = preset_data.get("CI_thr_max")
         if ci_type == "zone":
             ci_zmin = float(preset_data.get("CI_zone_min", 2.0))
             ci_zmax = float(preset_data.get("CI_zone_max", 7.0))
             ci_txt = f"Zona de Risco Frio: {ci_zmin:.0f}–{ci_zmax:.0f}°C (Lanosidade)"
+        elif ci_min is not None and ci_max_val is not None:
+            ci_txt = f"Limiar Frio: {float(ci_min):.1f}–{float(ci_max_val):.1f}°C"
         else:
             ci_txt = f"Limiar Frio: {ci_thr_val:.1f}°C" if ci_thr_val > 0 else "Tolerante a Frio Normal"
         st.caption(f"{'🍐 Fruto Climatérico' if is_clim else '🍓 Fruto Não Climatérico'} • {ci_txt}")
@@ -588,7 +592,13 @@ with col_right:
                 z_max = float(preset_data.get("CI_zone_max", 7.0))
                 st.warning(f"⚠️ **Alerta Fisiológico (Cold Injury Ativo - Lanosidade):** Dano por frio acumulado detetado (máx. {ci_max*100:.1f}%). O lote esteve exposto à zona de risco térmico ({z_min:.0f} a {z_max:.0f} °C, com pico a 5 °C), desencadeando polpa lanosa/farinhenta e perda acelerada de valor comercial.")
             else:
-                st.warning(f"⚠️ **Alerta Fisiológico (Cold Injury Ativo):** Dano por frio acumulado detetado (máx. {ci_max*100:.1f}%). O lote esteve exposto a temperaturas inferiores ao limiar de segurança ({preset_data.get('CI_thr', 0.0):.1f} °C), acelerando a perda de vida útil e a degradação da qualidade estética.")
+                ci_min = preset_data.get("CI_thr_min")
+                ci_max_val = preset_data.get("CI_thr_max")
+                if ci_min is not None and ci_max_val is not None:
+                    thr_str = f"{float(ci_min):.1f}–{float(ci_max_val):.1f} °C"
+                else:
+                    thr_str = f"{preset_data.get('CI_thr', 0.0):.1f} °C"
+                st.warning(f"⚠️ **Alerta Fisiológico (Cold Injury Ativo):** Dano por frio acumulado detetado (máx. {ci_max*100:.1f}%). O lote esteve exposto a temperaturas inferiores ao limiar de segurança ({thr_str}), acelerando a perda de vida útil e a degradação da qualidade estética.")
 
         # -------------------------------------------------------------
         # EXECUTIVE KPI TILES

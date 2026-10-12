@@ -153,7 +153,9 @@ PRESETS = {
         "Ea_mold_J": 43000.0,
         "is_climacteric": True,
         "CI_type": "threshold",
-        "CI_thr": 1.2,
+        "CI_thr": 1.5,
+        "CI_thr_min": 1.0,
+        "CI_thr_max": 1.5,
         "CI_rate": 0.012,
         "CI_sl_stress": 1.5,
         "CI_max_penalty": 0.35,
@@ -287,7 +289,7 @@ PRESETS = {
         "acidity_0_default": 0.4, "acidity_min": 0.2, "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.4,
         "SL_ref": 10.0, "E0_int": 0.02, "Eref_prod": 0.35, "E_t0": 4, "E_g": 1.4, "E_auto": 0.7, "E_decay": 0.9, "Ea_E_J": 60000, "E_ext_shift": 3.0, "alpha_E": 2.2,
         "RH_mold_thr": 95.0, "mold_rate_ref": 0.06, "mold_sens_RH": 10.0, "mold_max_penalty": 0.80, "Ea_mold_J": 45000.0,
-        "is_climacteric": True, "CI_type": "threshold", "CI_thr": 12.5, "CI_rate": 0.04, "CI_sl_stress": 3.5, "CI_max_penalty": 0.95
+        "is_climacteric": True, "CI_type": "threshold", "CI_thr": 13.0, "CI_thr_min": 11.5, "CI_thr_max": 13.0, "CI_rate": 0.04, "CI_sl_stress": 3.5, "CI_max_penalty": 0.95
     },
     "peach": {
         "label": "Peach", "Tref_C": 2.0, "Ea_J": 56000, "k_firm_ref": 0.08, "beta_RH": 1.1, "RH_ref": 92,
@@ -327,7 +329,7 @@ PRESETS = {
         "acidity_0_default": 0.2, "acidity_min": 0.1, "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.2,
         "SL_ref": 21.0, "E0_int": 0.01, "Eref_prod": 0.10, "E_t0": 10, "E_g": 0.7, "E_auto": 0.35, "E_decay": 0.7, "Ea_E_J": 52000, "E_ext_shift": 1.8, "alpha_E": 0.9,
         "RH_mold_thr": 95.0, "mold_rate_ref": 0.08, "mold_sens_RH": 10.0, "mold_max_penalty": 0.78, "Ea_mold_J": 45000.0,
-        "is_climacteric": True, "CI_thr": 5.0, "CI_rate": 0.015, "CI_sl_stress": 1.8, "CI_max_penalty": 0.50
+        "is_climacteric": True, "CI_type": "threshold", "CI_thr": 5.0, "CI_thr_min": 2.0, "CI_thr_max": 5.0, "CI_rate": 0.015, "CI_sl_stress": 1.8, "CI_max_penalty": 0.50
     },
     "grape": {
         "label": "Grape", "Tref_C": 2.0, "Ea_J": 45000, "k_firm_ref": 0.02, "beta_RH": 1.8, "RH_ref": 92,
@@ -345,7 +347,7 @@ PRESETS = {
         "acidity_0_default": 1.0, "acidity_min": 0.3, "k_acidity_ref": 0.005, "Ea_acidity_J": 55000, "qual_acidity_target": 1.0,
         "SL_ref": 30.0, "E0_int": 0.002, "Eref_prod": 0.01, "E_t0": 999, "E_g": 0.2, "E_auto": 0.0, "E_decay": 0.8, "Ea_E_J": 40000, "E_ext_shift": 0.5, "alpha_E": 0.15,
         "RH_mold_thr": 96.0, "mold_rate_ref": 0.03, "mold_sens_RH": 8.0, "mold_max_penalty": 0.50, "Ea_mold_J": 42000.0,
-        "is_climacteric": False, "CI_thr": 3.5, "CI_rate": 0.012, "CI_sl_stress": 1.5, "CI_max_penalty": 0.40
+        "is_climacteric": False, "CI_type": "threshold", "CI_thr": 3.0, "CI_rate": 0.012, "CI_sl_stress": 1.5, "CI_max_penalty": 0.40
     }
 }
 
