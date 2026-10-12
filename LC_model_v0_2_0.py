@@ -48,43 +48,43 @@ STAKEHOLDER_CONFIG_BY_GROUP = {
     "very_fragile": {
         "Producer":  {"w_4d": (0.50, 0.20, 0.20, 0.10), "w_2d": (0.50, 0.50), "min_quality": 70.0, "mold_limit": 0.01},
         "Processor": {"w_4d": (0.75, 0.10, 0.10, 0.05), "w_2d": (0.75, 0.25), "min_quality": 65.0, "mold_limit": 0.00},
-        "Retailer":  {"w_4d": (0.60, 0.20, 0.15, 0.05), "w_2d": (0.60, 0.40), "min_quality": 50.0, "mold_limit": 0.00},
+        "Retailer":  {"w_4d": (0.60, 0.20, 0.15, 0.05), "w_2d": (0.60, 0.40), "min_quality": 50.0, "mold_limit": 0.02},
         "Industry":  {"w_4d": (0.05, 0.30, 0.50, 0.15), "w_2d": (0.05, 0.95), "min_quality": 35.0, "mold_limit": 0.00},
     },
     "fragile_tough_skin": {
         "Producer":  {"w_4d": (0.45, 0.25, 0.20, 0.10), "w_2d": (0.45, 0.55), "min_quality": 70.0, "mold_limit": 0.01},
         "Processor": {"w_4d": (0.70, 0.15, 0.10, 0.05), "w_2d": (0.70, 0.30), "min_quality": 65.0, "mold_limit": 0.00},
-        "Retailer":  {"w_4d": (0.55, 0.30, 0.10, 0.05), "w_2d": (0.55, 0.45), "min_quality": 50.0, "mold_limit": 0.00},
+        "Retailer":  {"w_4d": (0.55, 0.30, 0.10, 0.05), "w_2d": (0.55, 0.45), "min_quality": 50.0, "mold_limit": 0.015},
         "Industry":  {"w_4d": (0.10, 0.30, 0.45, 0.15), "w_2d": (0.10, 0.90), "min_quality": 35.0, "mold_limit": 0.01},
     },
     "climacteric_tactile": {
         "Producer":  {"w_4d": (0.65, 0.15, 0.10, 0.10), "w_2d": (0.65, 0.35), "min_quality": 70.0, "mold_limit": 0.01},
         "Processor": {"w_4d": (0.75, 0.10, 0.10, 0.05), "w_2d": (0.75, 0.25), "min_quality": 65.0, "mold_limit": 0.00},
-        "Retailer":  {"w_4d": (0.45, 0.30, 0.15, 0.10), "w_2d": (0.45, 0.55), "min_quality": 50.0, "mold_limit": 0.00},
+        "Retailer":  {"w_4d": (0.45, 0.30, 0.15, 0.10), "w_2d": (0.45, 0.55), "min_quality": 50.0, "mold_limit": 0.015},
         "Industry":  {"w_4d": (0.05, 0.30, 0.50, 0.15), "w_2d": (0.05, 0.95), "min_quality": 35.0, "mold_limit": 0.02},
     },
     "crunchy_texture": {
         "Producer":  {"w_4d": (0.55, 0.15, 0.20, 0.10), "w_2d": (0.55, 0.45), "min_quality": 70.0, "mold_limit": 0.01},
         "Processor": {"w_4d": (0.65, 0.15, 0.10, 0.10), "w_2d": (0.65, 0.35), "min_quality": 65.0, "mold_limit": 0.00},
-        "Retailer":  {"w_4d": (0.45, 0.30, 0.15, 0.10), "w_2d": (0.45, 0.55), "min_quality": 50.0, "mold_limit": 0.00},
+        "Retailer":  {"w_4d": (0.45, 0.30, 0.15, 0.10), "w_2d": (0.45, 0.55), "min_quality": 50.0, "mold_limit": 0.01},
         "Industry":  {"w_4d": (0.10, 0.25, 0.45, 0.20), "w_2d": (0.10, 0.90), "min_quality": 35.0, "mold_limit": 0.00},
     },
     "juicy_flavor": {
         "Producer":  {"w_4d": (0.50, 0.20, 0.20, 0.10), "w_2d": (0.50, 0.50), "min_quality": 70.0, "mold_limit": 0.02},
         "Processor": {"w_4d": (0.60, 0.15, 0.15, 0.10), "w_2d": (0.60, 0.40), "min_quality": 65.0, "mold_limit": 0.00},
-        "Retailer":  {"w_4d": (0.35, 0.40, 0.15, 0.10), "w_2d": (0.35, 0.65), "min_quality": 50.0, "mold_limit": 0.00},
+        "Retailer":  {"w_4d": (0.35, 0.40, 0.15, 0.10), "w_2d": (0.35, 0.65), "min_quality": 50.0, "mold_limit": 0.01},
         "Industry":  {"w_4d": (0.05, 0.35, 0.45, 0.15), "w_2d": (0.05, 0.95), "min_quality": 35.0, "mold_limit": 0.01},
     },
     "pure_non_climacteric": {
         "Producer":  {"w_4d": (0.30, 0.30, 0.30, 0.10), "w_2d": (0.30, 0.70), "min_quality": 70.0, "mold_limit": 0.02},
         "Processor": {"w_4d": (0.50, 0.20, 0.20, 0.10), "w_2d": (0.50, 0.50), "min_quality": 65.0, "mold_limit": 0.00},
-        "Retailer":  {"w_4d": (0.35, 0.40, 0.15, 0.10), "w_2d": (0.35, 0.65), "min_quality": 50.0, "mold_limit": 0.00},
+        "Retailer":  {"w_4d": (0.35, 0.40, 0.15, 0.10), "w_2d": (0.35, 0.65), "min_quality": 50.0, "mold_limit": 0.015},
         "Industry":  {"w_4d": (0.05, 0.35, 0.45, 0.15), "w_2d": (0.05, 0.95), "min_quality": 35.0, "mold_limit": 0.05},
     },
     "citrus": {
         "Producer":  {"w_4d": (0.20, 0.35, 0.30, 0.15), "w_2d": (0.20, 0.80), "min_quality": 70.0, "mold_limit": 0.01},
         "Processor": {"w_4d": (0.40, 0.30, 0.20, 0.10), "w_2d": (0.40, 0.60), "min_quality": 65.0, "mold_limit": 0.00},
-        "Retailer":  {"w_4d": (0.25, 0.45, 0.20, 0.10), "w_2d": (0.25, 0.75), "min_quality": 50.0, "mold_limit": 0.00},
+        "Retailer":  {"w_4d": (0.25, 0.45, 0.20, 0.10), "w_2d": (0.25, 0.75), "min_quality": 50.0, "mold_limit": 0.01},
         "Industry":  {"w_4d": (0.05, 0.45, 0.35, 0.15), "w_2d": (0.05, 0.95), "min_quality": 35.0, "mold_limit": 0.01},
     }
 }
