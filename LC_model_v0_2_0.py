@@ -161,34 +161,34 @@ PRESETS = {
         "CI_max_penalty": 0.35,
     },
     "apple_gala": {
-        "label": "Apple (Gala)", "Tref_C": 5.0, "Ea_J": 48000, "k_firm_ref": 0.035, "beta_RH": 0.9, "RH_ref": 90,
+        "label": "Apple (Gala)", "Tref_C": 5.0, "Ea_J": 64000, "k_firm_ref": 0.0085, "beta_RH": 0.9, "RH_ref": 90,
         "brix_min": 12.0, "brix_max": 17.0, "brix_g": 0.25, "brix_0_default": 13.0, "qual_brix_target": 14.5,
         "firmness_min": 9.0, "firmness_0_default": 60.0, "qual_firmness_threshold": 28.0,
         "acidity_0_default": 0.4, "acidity_min": 0.2, "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.5,
-        "SL_ref": 60.0, "E0_int": 0.015, "Eref_prod": 0.18, "E_t0": 10, "E_g": 0.9, "E_auto": 0.5, "E_decay": 0.65, "Ea_E_J": 52000, "E_ext_shift": 2.2, "alpha_E": 1.3,
+        "SL_ref": 75.0, "Ea_SL_J": 42000.0, "E0_int": 0.015, "Eref_prod": 0.18, "E_t0": 10, "E_g": 0.9, "E_auto": 0.5, "E_decay": 0.65, "Ea_E_J": 52000, "E_ext_shift": 2.2, "alpha_E": 1.3,
         "RH_mold_thr": 95.0, "mold_rate_ref": 0.05, "mold_sens_RH": 9.0, "mold_max_penalty": 0.65, "Ea_mold_J": 43000.0,
         "is_climacteric": True, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0
     },
     "apple_golden": {
-        "label": "Apple (Golden)", "Tref_C": 5.0, "Ea_J": 50000, "k_firm_ref": 0.025, "beta_RH": 0.8, "RH_ref": 90,
+        "label": "Apple (Golden)", "Tref_C": 5.0, "Ea_J": 75000, "k_firm_ref": 0.012, "beta_RH": 0.8, "RH_ref": 90,
         "brix_min": 11.5, "brix_max": 15.5, "brix_g": 0.18, "brix_0_default": 12.0, "qual_brix_target": 13.5,
         "firmness_min": 12.0, "firmness_0_default": 72.0, "qual_firmness_threshold": 35.0,
         "acidity_0_default": 0.5, "acidity_min": 0.25, "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.6,
-        "SL_ref": 120.0, "E0_int": 0.01, "Eref_prod": 0.10, "E_t0": 18, "E_g": 0.6, "E_auto": 0.35, "E_decay": 0.55, "Ea_E_J": 52000, "E_ext_shift": 1.8, "alpha_E": 0.8,
+        "SL_ref": 120.0, "Ea_SL_J": 45000.0, "E0_int": 0.01, "Eref_prod": 0.10, "E_t0": 18, "E_g": 0.6, "E_auto": 0.35, "E_decay": 0.55, "Ea_E_J": 52000, "E_ext_shift": 1.8, "alpha_E": 0.8,
         "RH_mold_thr": 95.0, "mold_rate_ref": 0.04, "mold_sens_RH": 8.0, "mold_max_penalty": 0.60, "Ea_mold_J": 42000.0,
         "is_climacteric": True, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0
     },
     "apple_fuji": {
-        "label": "Apple (Fuji)", "Tref_C": 5.0, "Ea_J": 47000, "k_firm_ref": 0.018, "beta_RH": 0.7, "RH_ref": 90,
+        "label": "Apple (Fuji)", "Tref_C": 5.0, "Ea_J": 85000, "k_firm_ref": 0.008, "beta_RH": 0.7, "RH_ref": 90,
         "brix_min": 13.0, "brix_max": 19.0, "brix_g": 0.15, "brix_0_default": 14.0, "qual_brix_target": 16.0,
-        "firmness_min": 15.0, "firmness_0_default": 80.0, "qual_firmness_threshold": 40.0,
+        "firmness_min": 15.0, "firmness_0_default": 80.0, "qual_firmness_threshold": 32.0,
         "acidity_0_default": 0.4, "acidity_min": 0.2, "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.5,
         "SL_ref": 180.0, "E0_int": 0.008, "Eref_prod": 0.06, "E_t0": 25, "E_g": 0.5, "E_auto": 0.25, "E_decay": 0.45, "Ea_E_J": 52000, "E_ext_shift": 1.4, "alpha_E": 0.6,
         "RH_mold_thr": 95.0, "mold_rate_ref": 0.035, "mold_sens_RH": 8.0, "mold_max_penalty": 0.55, "Ea_mold_J": 42000.0,
         "is_climacteric": True, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0
     },
     "apple_reineta": {
-        "label": "Apple (Reineta)", "Tref_C": 5.0, "Ea_J": 52000, "k_firm_ref": 0.035, "beta_RH": 1.0, "RH_ref": 90,
+        "label": "Apple (Reineta)", "Tref_C": 5.0, "Ea_J": 80000, "k_firm_ref": 0.018, "beta_RH": 1.0, "RH_ref": 90,
         "brix_min": 11.0, "brix_max": 14.0, "brix_g": 0.16, "brix_0_default": 11.5, "qual_brix_target": 12.5,
         "firmness_min": 10.0, "firmness_0_default": 65.0, "qual_firmness_threshold": 30.0,
         "acidity_0_default": 0.8, "acidity_min": 0.3, "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.7,
@@ -216,7 +216,7 @@ PRESETS = {
         "k_acidity_ref": 0.015,
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 0.30,
-        "SL_ref": 100.0,
+        "SL_ref": 160.0,
         "E0_int": 0.012,
         "Eref_prod": 0.14,
         "E_t0": 14,
@@ -238,11 +238,11 @@ PRESETS = {
         "CI_max_penalty": 0.0,
     },
     "pear": {
-        "label": "Pear (Rocha)", "Tref_C": 2.0, "Ea_J": 54000, "k_firm_ref": 0.05, "beta_RH": 1.2, "RH_ref": 92,
+        "label": "Pear (Rocha)", "Tref_C": 0.0, "Ea_J": 80000, "k_firm_ref": 0.0080, "beta_RH": 1.2, "RH_ref": 92,
         "brix_min": 10.5, "brix_max": 16.5, "brix_g": 0.28, "brix_0_default": 11.5, "qual_brix_target": 14.0,
-        "firmness_min": 4.0, "firmness_0_default": 55.0, "qual_firmness_threshold": 10.0,
+        "firmness_min": 4.0, "firmness_0_default": 55.0, "qual_firmness_threshold": 20.0,
         "acidity_0_default": 0.3, "acidity_min": 0.15, "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.4,
-        "SL_ref": 90.0, "E0_int": 0.01, "Eref_prod": 0.22, "E_t0": 10, "E_g": 1.0, "E_auto": 0.6, "E_decay": 0.75, "Ea_E_J": 56000, "E_ext_shift": 2.3, "alpha_E": 1.6,
+        "SL_ref": 180.0, "Ea_SL_J": 45000.0, "E0_int": 0.01, "Eref_prod": 0.22, "E_t0": 10, "E_g": 1.0, "E_auto": 0.6, "E_decay": 0.75, "Ea_E_J": 56000, "E_ext_shift": 2.3, "alpha_E": 1.6,
         "RH_mold_thr": 95.0, "mold_rate_ref": 0.07, "mold_sens_RH": 10.0, "mold_max_penalty": 0.75, "Ea_mold_J": 45000.0,
         "is_climacteric": True, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0
     },
@@ -252,7 +252,7 @@ PRESETS = {
         "firmness_min": 1.5, "firmness_0_default": 12.0, "qual_firmness_threshold": 4.5,
         "acidity_0_default": 0.8, "acidity_min": 0.25, "k_acidity_ref": 0.025, "Ea_acidity_J": 55000, "qual_acidity_target": 0.8,
         "SL_ref": 7.0, "E0_int": 0.002, "Eref_prod": 0.01, "E_t0": 999, "E_g": 0.2, "E_auto": 0.0, "E_decay": 0.9, "Ea_E_J": 42000, "E_ext_shift": 0.4, "alpha_E": 0.05,
-        "RH_mold_thr": 93.0, "mold_rate_ref": 0.22, "mold_sens_RH": 16.0, "mold_max_penalty": 0.95, "Ea_mold_J": 52000.0,
+        "RH_mold_thr": 95.0, "mold_rate_ref": 0.22, "mold_sens_RH": 16.0, "mold_max_penalty": 0.95, "Ea_mold_J": 52000.0,
         "is_climacteric": False, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0
     },
     "raspberry": {
@@ -296,11 +296,11 @@ PRESETS = {
         "brix_min": 9.5, "brix_max": 18.0, "brix_g": 0.35, "brix_0_default": 11.0, "qual_brix_target": 15.0,
         "firmness_min": 2.0, "firmness_0_default": 35.0, "qual_firmness_threshold": 6.0,
         "acidity_0_default": 0.6, "acidity_min": 0.3, "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.6,
-        "SL_ref": 14.0, "E0_int": 0.012, "Eref_prod": 0.22, "E_t0": 6, "E_g": 1.0, "E_auto": 0.55, "E_decay": 0.8, "Ea_E_J": 56000, "E_ext_shift": 2.4, "alpha_E": 1.4,
+        "SL_ref": 21.0, "E0_int": 0.012, "Eref_prod": 0.22, "E_t0": 6, "E_g": 1.0, "E_auto": 0.55, "E_decay": 0.8, "Ea_E_J": 56000, "E_ext_shift": 2.4, "alpha_E": 1.4,
         "RH_mold_thr": 94.0, "mold_rate_ref": 0.10, "mold_sens_RH": 12.0, "mold_max_penalty": 0.85, "Ea_mold_J": 48000.0,
         "is_climacteric": True,
         "CI_type": "zone", "CI_zone_min": 2.0, "CI_zone_max": 7.0, "CI_zone_peak": 5.0,
-        "CI_thr": 7.0, "CI_rate": 0.025, "CI_sl_stress": 2.0, "CI_max_penalty": 0.65
+        "CI_thr": 7.0, "CI_rate": 0.035, "CI_sl_stress": 1.1, "CI_max_penalty": 0.65
     },
     "plum": {
         "label": "Plum", "Tref_C": 2.0, "Ea_J": 52000, "k_firm_ref": 0.06, "beta_RH": 1.0, "RH_ref": 92,
@@ -341,11 +341,11 @@ PRESETS = {
         "is_climacteric": False, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0
     },
     "orange": {
-        "label": "Orange", "Tref_C": 5.0, "Ea_J": 42000, "k_firm_ref": 0.01, "beta_RH": 0.35, "RH_ref": 90,
+        "label": "Orange", "Tref_C": 5.0, "Ea_J": 40000, "k_firm_ref": 0.012, "beta_RH": 1.0, "RH_ref": 90,
         "brix_min": 10.5, "brix_max": 13.5, "brix_g": 0.1, "brix_0_default": 11.5, "qual_brix_target": 12.2,
-        "firmness_min": 35.0, "firmness_0_default": 55.0, "qual_firmness_threshold": 42.0,
+        "firmness_min": 35.0, "firmness_0_default": 55.0, "qual_firmness_threshold": 46.0,
         "acidity_0_default": 1.0, "acidity_min": 0.3, "k_acidity_ref": 0.005, "Ea_acidity_J": 55000, "qual_acidity_target": 1.0,
-        "SL_ref": 30.0, "E0_int": 0.002, "Eref_prod": 0.01, "E_t0": 999, "E_g": 0.2, "E_auto": 0.0, "E_decay": 0.8, "Ea_E_J": 40000, "E_ext_shift": 0.5, "alpha_E": 0.15,
+        "SL_ref": 120.0, "Ea_SL_J": 42000.0, "E0_int": 0.002, "Eref_prod": 0.01, "E_t0": 999, "E_g": 0.2, "E_auto": 0.0, "E_decay": 0.8, "Ea_E_J": 40000, "E_ext_shift": 0.5, "alpha_E": 0.15,
         "RH_mold_thr": 96.0, "mold_rate_ref": 0.03, "mold_sens_RH": 8.0, "mold_max_penalty": 0.50, "Ea_mold_J": 42000.0,
         "is_climacteric": False, "CI_type": "threshold", "CI_thr": 3.0, "CI_rate": 0.012, "CI_sl_stress": 1.5, "CI_max_penalty": 0.40
     }
@@ -600,7 +600,8 @@ def run_simulation_prof_luis_paulo(fruit_key: str, T_c: list[float], E_ext_ppm: 
 
         RH_excess = max(0.0, (RH_pct_ext[i-1] - RH_mold_thr) / 100.0)
         RH_factor = 1.0 - np.exp(-mold_sens_RH * RH_excess)
-        rate = mold_rate_ref * mold_T[i-1] * RH_factor
+        cold_mold_inhibition = np.clip((T_c_ext[i-1] - (-1.0)) / 10.0, 0.05, 1.0)
+        rate = mold_rate_ref * mold_T[i-1] * RH_factor * cold_mold_inhibition
         dm = (rate * (1.0 - mold[i-1])) * dt
         mold[i] = min(1.0, max(0.0, mold[i-1] + dm))
 
@@ -608,7 +609,7 @@ def run_simulation_prof_luis_paulo(fruit_key: str, T_c: list[float], E_ext_ppm: 
         fator_embalagem = PACKAGING_FACTORS.get(pkg_method, 1.0)
         resp_factor = 0.5 + 0.5 * fator_embalagem
         RH_deficit = max(0.0, (RH_ref - RH_pct_ext[i-1]) / 100.0)
-        r_T_SL = k_temp_scaling(55000, T_K[i-1], Tref_K) * resp_factor
+        r_T_SL = k_temp_scaling(float(p.get("Ea_SL_J", 45000)), T_K[i-1], Tref_K) * resp_factor
         r_RH_SL = 1.0 + 0.5 * RH_deficit * fator_embalagem
         ci_stress_factor = 1.0 + (CI_sl_stress - 1.0) * cold_injury[i-1]
         consumed_SL[i] = consumed_SL[i-1] + (r_T_SL * r_RH_SL * ci_stress_factor) * dt
@@ -617,8 +618,14 @@ def run_simulation_prof_luis_paulo(fruit_key: str, T_c: list[float], E_ext_ppm: 
 
     # 5. Continuous Smooth Quality (0-100) & Biological Sanity Synchronization
     firm_score = 1.0 / (1.0 + np.exp(-0.35 * (firmness - float(p["qual_firmness_threshold"]))))
-    brix_score = np.exp(-((brix - float(p["qual_brix_target"]))**2) / 2.0)
-    quality_raw = 100.0 * (w_firm * firm_score + w_brix * brix_score)
+    target_b = float(p["qual_brix_target"])
+    brix_score = np.where(brix >= target_b, 1.0, np.exp(-((brix - target_b)**2) / 8.0))
+    group = get_fruit_group(fruit_key)
+    if group in ["crunchy_texture", "climacteric_tactile", "juicy_flavor", "citrus"]:
+        texture_factor = np.minimum(1.0, 2.0 * firm_score)
+    else:
+        texture_factor = 1.0
+    quality_raw = 100.0 * (w_firm * firm_score + w_brix * brix_score) * texture_factor
     
     # Fator de Sanidade Biológica: atinge 0.0 quando o bolor atinge o limiar crítico de 50%
     sanity_factor = np.maximum(0.0, 1.0 - (mold / 0.50))
@@ -642,8 +649,13 @@ def run_simulation_prof_luis_paulo(fruit_key: str, T_c: list[float], E_ext_ppm: 
     else:
         point_a_day = 0.0
 
-    # Point B: Biological Decay / Rotting (Exatamente o dia onde a Qualidade atinge 0.0%)
-    below_zero = np.where(quality <= 0.01)[0]
+    # Point B: Biological Decay / Rotting (Senescência celular, bolor crítico ou colapso interno)
+    bio_decay_factor = sanity_factor * cap_decay * ci_factor
+    if fruit_key == "pear":
+        # Pera Rocha: acastanhamento interno senescente quando a polpa atinge perda total de estrutura (<= 8.5 N)
+        below_zero = np.where((bio_decay_factor <= 0.01) | (firmness <= 8.5))[0]
+    else:
+        below_zero = np.where(bio_decay_factor <= 0.01)[0]
     if len(below_zero) > 0:
         point_b_day = float(t[below_zero[0]])
     else:
@@ -817,7 +829,7 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
         acidity[i] = max(acidity_min, acidity[i-1] + dA)
 
         # Physical Shelf Life Cap (with Cold Stress Factor)
-        r_T_SL = k_temp_scaling(55000, T_K[i-1], Tref_K) * resp_factor
+        r_T_SL = k_temp_scaling(float(p.get("Ea_SL_J", 45000)), T_K[i-1], Tref_K) * resp_factor
         r_VPD_SL = 1.0 + 0.5 * VPD_efetivo
         ci_stress_factor = 1.0 + (CI_sl_stress - 1.0) * cold_injury[i-1]
         consumed_SL[i] = consumed_SL[i-1] + (r_T_SL * r_VPD_SL * ci_stress_factor) * dt
@@ -837,7 +849,8 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
         VPD_thr = calc_vpd(T_c_ext[i-1], RH_mold_thr)
         VPD_deficit = max(VPD_thr - VPD[i-1], 0)
         VPD_factor = 1.0 - np.exp(-mold_sens_RH * VPD_deficit * 5.0)
-        rate = mold_rate_ref * mold_T[i-1] * VPD_factor
+        cold_mold_inhibition = np.clip((T_c_ext[i-1] - (-1.0)) / 10.0, 0.05, 1.0)
+        rate = mold_rate_ref * mold_T[i-1] * VPD_factor * cold_mold_inhibition
         dm = (rate * (1.0 - mold[i-1])) * dt
         mold[i] = min(1.0, max(0.0, mold[i-1] + dm))
 
@@ -845,13 +858,20 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
 
     # 5. Continuous Smooth Quality (0-100) & Biological Sanity Synchronization
     firm_score = 1.0 / (1.0 + np.exp(-0.35 * (firmness - float(p["qual_firmness_threshold"]))))
-    brix_score = np.exp(-((brix - float(p["qual_brix_target"]))**2) / 2.0)
-    acidity_score = np.exp(-((acidity - float(p.get("qual_acidity_target", 1.0)))**2) / 0.5)
+    target_b = float(p["qual_brix_target"])
+    brix_score = np.where(brix >= target_b, 1.0, np.exp(-((brix - target_b)**2) / 8.0))
+    target_a = float(p.get("qual_acidity_target", 1.0))
+    acidity_score = np.exp(-((acidity - target_a)**2) / 0.5)
     maturation_index = brix / np.maximum(1e-4, acidity)
-    target_ratio = float(p["qual_brix_target"]) / float(p.get("qual_acidity_target", 1.0))
-    ratio_score = np.exp(-((maturation_index - target_ratio)**2) / 10.0)
+    target_ratio = target_b / target_a
+    ratio_score = np.where(maturation_index >= target_ratio, 1.0, np.exp(-((maturation_index - target_ratio)**2) / 50.0))
 
-    quality_raw = 100.0 * (w_firm * firm_score + w_ratio * ratio_score + w_brix * brix_score + w_acid * acidity_score)
+    group = get_fruit_group(fruit_key)
+    if group in ["crunchy_texture", "climacteric_tactile", "juicy_flavor", "citrus"]:
+        texture_factor = np.minimum(1.0, 2.0 * firm_score)
+    else:
+        texture_factor = 1.0
+    quality_raw = 100.0 * (w_firm * firm_score + w_ratio * ratio_score + w_brix * brix_score + w_acid * acidity_score) * texture_factor
     
     # Fator de Sanidade Biológica: atinge 0.0 quando o bolor atinge o limiar crítico de 50%
     sanity_factor = np.maximum(0.0, 1.0 - (mold / 0.50))
@@ -875,8 +895,13 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
     else:
         point_a_day = 0.0
 
-    # Point B: Biological Decay / Rotting (Exatamente o dia onde a Qualidade atinge 0.0%)
-    below_zero = np.where(quality <= 0.01)[0]
+    # Point B: Biological Decay / Rotting (Senescência celular, bolor crítico ou colapso interno)
+    bio_decay_factor = sanity_factor * cap_decay * ci_factor
+    if fruit_key == "pear":
+        # Pera Rocha: acastanhamento interno senescente quando a polpa atinge perda total de estrutura (<= 8.5 N)
+        below_zero = np.where((bio_decay_factor <= 0.01) | (firmness <= 8.5))[0]
+    else:
+        below_zero = np.where(bio_decay_factor <= 0.01)[0]
     if len(below_zero) > 0:
         point_b_day = float(t[below_zero[0]])
     else:
