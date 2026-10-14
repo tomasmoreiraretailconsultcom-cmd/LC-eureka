@@ -67,3 +67,4 @@
 | 63 | Melao | Bancada Loja: 15C / 70% HR | 15.0°C | 70.0% | - | `bulk` | 10 a 14 dias | [`63_melao_bancada_loja_15c_70_hr.xlsx`](./63_melao_bancada_loja_15c_70_hr.xlsx) |
 | 64 | Melao | Consumidor Ambiente: 20C / 60% HR | 20.0°C | 60.0% | - | `bulk` | 6 a 9 dias | [`64_melao_consumidor_ambiente_20c_60_hr.xlsx`](./64_melao_consumidor_ambiente_20c_60_hr.xlsx) |
 | 65 | Figo | Frigorifico Casa: 4C / 85% HR | 4.0°C | 85.0% | - | `bulk` | 3 a 5 dias | [`65_figo_frigorifico_casa_4c_85_hr.xlsx`](./65_figo_frigorifico_casa_4c_85_hr.xlsx) |
+| 66 | Kiwi - Gold | Frio: 1C / 95% HR | 1.0°C | 95.0% | - | `bulk` | 3 a 5 meses | [`66_kiwi_gold_frio_1c_95_hr.xlsx`](./66_kiwi_gold_frio_1c_95_hr.xlsx) |

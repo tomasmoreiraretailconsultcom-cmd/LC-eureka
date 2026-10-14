@@ -99,28 +99,30 @@ PACKAGING_FACTORS = {
 # Unified Physical Presets per Fruit
 PRESETS = {
     "kiwi_hayward": {
-        "label": "Kiwi (Hayward)", "Tref_C": 5.0, "Ea_J": 60000, "k_firm_ref": 0.025, "beta_RH": 1.15, "RH_ref": 90,
+        "label": "Kiwi (Hayward)", "Tref_C": 5.0, "Ea_J": 82000, "k_firm_ref": 0.024, "beta_RH": 1.15, "RH_ref": 90,
         "brix_min": 8.36, "brix_max": 15.08, "brix_g": 0.32, "brix_0_default": 11.0, "qual_brix_target": 15.0,
-        "firmness_min": 5.24, "firmness_0_default": 45.0, "qual_firmness_threshold": 8.0,
+        "firmness_min": 5.24, "firmness_0_default": 45.0, "qual_firmness_threshold": 10.0,
         "acidity_0_default": 1.5, "acidity_min": 0.31, "k_acidity_ref": 0.013, "Ea_acidity_J": 55000, "qual_acidity_target": 1.0,
-        "SL_ref": 80.0, "E0_int": 0.02, "Eref_prod": 0.12, "E_t0": 10, "E_g": 0.9, "E_auto": 0.35, "E_decay": 0.7, "Ea_E_J": 52000, "E_ext_shift": 2.0, "alpha_E": 1.8,
+        "SL_ref": 115.0, "Ea_SL_J": 45000.0, "E0_int": 0.02, "Eref_prod": 0.12, "E_t0": 10, "E_g": 0.9, "E_auto": 0.35, "E_decay": 0.7, "Ea_E_J": 52000, "E_ext_shift": 2.0, "alpha_E": 2.0,
         "RH_mold_thr": 95.0, "mold_rate_ref": 0.05, "mold_sens_RH": 9.0, "mold_max_penalty": 0.65, "Ea_mold_J": 43000.0,
-        "is_climacteric": True, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0
+        "is_climacteric": True, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0,
+        "senescent_firmness_collapse": 5.5
     },
     "kiwi_baby": {
-        "label": "Kiwi (Baby/Berry)", "Tref_C": 4.0, "Ea_J": 58000, "k_firm_ref": 0.14, "beta_RH": 2.0, "RH_ref": 95,
+        "label": "Kiwi (Baby/Berry)", "Tref_C": 4.0, "Ea_J": 60000, "k_firm_ref": 0.035, "beta_RH": 2.0, "RH_ref": 95,
         "brix_min": 8.0, "brix_max": 18.0, "brix_g": 0.5, "brix_0_default": 14.5, "qual_brix_target": 17.0,
-        "firmness_min": 2.0, "firmness_0_default": 28.0, "qual_firmness_threshold": 6.0,
+        "firmness_min": 2.0, "firmness_0_default": 28.0, "qual_firmness_threshold": 9.0,
         "acidity_0_default": 1.1, "acidity_min": 0.5, "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 1.0,
-        "SL_ref": 45.0, "E0_int": 0.03, "Eref_prod": 0.22, "E_t0": 5, "E_g": 1.2, "E_auto": 0.55, "E_decay": 0.75, "Ea_E_J": 52000, "E_ext_shift": 2.6, "alpha_E": 3.2,
-        "RH_mold_thr": 95.0, "mold_rate_ref": 0.07, "mold_sens_RH": 10.0, "mold_max_penalty": 0.75, "Ea_mold_J": 45000.0,
-        "is_climacteric": True, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0
+        "SL_ref": 26.0, "Ea_SL_J": 45000.0, "E0_int": 0.03, "Eref_prod": 0.22, "E_t0": 5, "E_g": 1.2, "E_auto": 0.55, "E_decay": 0.75, "Ea_E_J": 52000, "E_ext_shift": 2.6, "alpha_E": 3.2,
+        "RH_mold_thr": 96.0, "mold_rate_ref": 0.07, "mold_sens_RH": 10.0, "mold_max_penalty": 0.75, "Ea_mold_J": 45000.0,
+        "is_climacteric": True, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0,
+        "senescent_firmness_collapse": 5.0
     },
     "kiwi_gold": {
         "label": "Kiwi (Gold)",
         "Tref_C": 5.0,
-        "Ea_J": 58000,
-        "k_firm_ref": 0.030,
+        "Ea_J": 75000,
+        "k_firm_ref": 0.020,
         "beta_RH": 1.20,
         "RH_ref": 90,
         "brix_min": 10.0,
@@ -130,13 +132,14 @@ PRESETS = {
         "qual_brix_target": 16.0,
         "firmness_min": 4.5,
         "firmness_0_default": 40.0,
-        "qual_firmness_threshold": 7.5,
+        "qual_firmness_threshold": 8.0,
         "acidity_0_default": 0.95,
         "acidity_min": 0.35,
         "k_acidity_ref": 0.015,
         "Ea_acidity_J": 55000,
         "qual_acidity_target": 0.70,
-        "SL_ref": 65.0,
+        "SL_ref": 110.0,
+        "Ea_SL_J": 45000.0,
         "E0_int": 0.02,
         "Eref_prod": 0.15,
         "E_t0": 8,
@@ -159,6 +162,7 @@ PRESETS = {
         "CI_rate": 0.012,
         "CI_sl_stress": 1.5,
         "CI_max_penalty": 0.35,
+        "senescent_firmness_collapse": 5.0
     },
     "apple_gala": {
         "label": "Apple (Gala)", "Tref_C": 5.0, "Ea_J": 64000, "k_firm_ref": 0.0085, "beta_RH": 0.9, "RH_ref": 90,
@@ -244,7 +248,8 @@ PRESETS = {
         "acidity_0_default": 0.3, "acidity_min": 0.15, "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.4,
         "SL_ref": 180.0, "Ea_SL_J": 45000.0, "E0_int": 0.01, "Eref_prod": 0.22, "E_t0": 10, "E_g": 1.0, "E_auto": 0.6, "E_decay": 0.75, "Ea_E_J": 56000, "E_ext_shift": 2.3, "alpha_E": 1.6,
         "RH_mold_thr": 95.0, "mold_rate_ref": 0.07, "mold_sens_RH": 10.0, "mold_max_penalty": 0.75, "Ea_mold_J": 45000.0,
-        "is_climacteric": True, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0
+        "is_climacteric": True, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0,
+        "senescent_firmness_collapse": 8.5
     },
     "strawberry": {
         "label": "Strawberry", "Tref_C": 2.0, "Ea_J": 52000, "k_firm_ref": 0.12, "beta_RH": 2.4, "RH_ref": 95,
@@ -256,30 +261,30 @@ PRESETS = {
         "is_climacteric": False, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0
     },
     "raspberry": {
-        "label": "Raspberry", "Tref_C": 2.0, "Ea_J": 56000, "k_firm_ref": 0.06, "beta_RH": 2.2, "RH_ref": 95,
+        "label": "Raspberry", "Tref_C": 2.0, "Ea_J": 45000, "k_firm_ref": 0.10, "beta_RH": 2.2, "RH_ref": 95,
         "brix_min": 7.0, "brix_max": 12.0, "brix_g": 0.22, "brix_0_default": 9.5, "qual_brix_target": 10.0,
-        "firmness_min": 2.5, "firmness_0_default": 18.0, "qual_firmness_threshold": 6.0,
+        "firmness_min": 2.5, "firmness_0_default": 18.0, "qual_firmness_threshold": 11.0,
         "acidity_0_default": 1.2, "acidity_min": 0.28, "k_acidity_ref": 0.023, "Ea_acidity_J": 55000, "qual_acidity_target": 1.0,
-        "SL_ref": 12.0, "E0_int": 0.002, "Eref_prod": 0.01, "E_t0": 999, "E_g": 0.2, "E_auto": 0.0, "E_decay": 0.9, "Ea_E_J": 42000, "E_ext_shift": 0.4, "alpha_E": 0.12,
-        "RH_mold_thr": 93.0, "mold_rate_ref": 0.20, "mold_sens_RH": 16.0, "mold_max_penalty": 0.95, "Ea_mold_J": 52000.0,
+        "SL_ref": 7.0, "Ea_SL_J": 45000.0, "E0_int": 0.002, "Eref_prod": 0.01, "E_t0": 999, "E_g": 0.2, "E_auto": 0.0, "E_decay": 0.9, "Ea_E_J": 42000, "E_ext_shift": 0.4, "alpha_E": 0.12,
+        "RH_mold_thr": 96.0, "mold_rate_ref": 0.20, "mold_sens_RH": 16.0, "mold_max_penalty": 0.95, "Ea_mold_J": 52000.0,
         "is_climacteric": False, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0
     },
     "blueberry": {
-        "label": "Blueberry", "Tref_C": 2.0, "Ea_J": 52000, "k_firm_ref": 0.03, "beta_RH": 1.6, "RH_ref": 95,
+        "label": "Blueberry", "Tref_C": 2.0, "Ea_J": 45000, "k_firm_ref": 0.026, "beta_RH": 1.6, "RH_ref": 95,
         "brix_min": 10.0, "brix_max": 14.0, "brix_g": 0.2, "brix_0_default": 11.5, "qual_brix_target": 12.5,
-        "firmness_min": 6.0, "firmness_0_default": 30.0, "qual_firmness_threshold": 12.0,
+        "firmness_min": 6.0, "firmness_0_default": 30.0, "qual_firmness_threshold": 22.0,
         "acidity_0_default": 0.6, "acidity_min": 0.3, "k_acidity_ref": 0.002, "Ea_acidity_J": 55000, "qual_acidity_target": 0.7,
-        "SL_ref": 21.0, "E0_int": 0.002, "Eref_prod": 0.01, "E_t0": 999, "E_g": 0.2, "E_auto": 0.0, "E_decay": 0.9, "Ea_E_J": 42000, "E_ext_shift": 0.4, "alpha_E": 0.10,
-        "RH_mold_thr": 94.0, "mold_rate_ref": 0.12, "mold_sens_RH": 14.0, "mold_max_penalty": 0.90, "Ea_mold_J": 48000.0,
+        "SL_ref": 22.0, "Ea_SL_J": 35000.0, "E0_int": 0.002, "Eref_prod": 0.01, "E_t0": 999, "E_g": 0.2, "E_auto": 0.0, "E_decay": 0.9, "Ea_E_J": 42000, "E_ext_shift": 0.4, "alpha_E": 0.10,
+        "RH_mold_thr": 96.0, "mold_rate_ref": 0.12, "mold_sens_RH": 14.0, "mold_max_penalty": 0.90, "Ea_mold_J": 48000.0,
         "is_climacteric": False, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0
     },
     "cherry": {
         "label": "Cherry", "Tref_C": 2.0, "Ea_J": 48000, "k_firm_ref": 0.045, "beta_RH": 1.6, "RH_ref": 95,
         "brix_min": 14.0, "brix_max": 20.0, "brix_g": 0.08, "brix_0_default": 16.0, "qual_brix_target": 18.0,
-        "firmness_min": 4.0, "firmness_0_default": 28.0, "qual_firmness_threshold": 10.0,
+        "firmness_min": 4.0, "firmness_0_default": 28.0, "qual_firmness_threshold": 18.0,
         "acidity_0_default": 0.5, "acidity_min": 0.3, "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.6,
-        "SL_ref": 15.0, "E0_int": 0.002, "Eref_prod": 0.01, "E_t0": 999, "E_g": 0.2, "E_auto": 0.0, "E_decay": 0.9, "Ea_E_J": 42000, "E_ext_shift": 0.4, "alpha_E": 0.05,
-        "RH_mold_thr": 94.0, "mold_rate_ref": 0.10, "mold_sens_RH": 13.0, "mold_max_penalty": 0.85, "Ea_mold_J": 47000.0,
+        "SL_ref": 16.0, "Ea_SL_J": 42000.0, "E0_int": 0.002, "Eref_prod": 0.01, "E_t0": 999, "E_g": 0.2, "E_auto": 0.0, "E_decay": 0.9, "Ea_E_J": 42000, "E_ext_shift": 0.4, "alpha_E": 0.05,
+        "RH_mold_thr": 96.0, "mold_rate_ref": 0.10, "mold_sens_RH": 13.0, "mold_max_penalty": 0.85, "Ea_mold_J": 47000.0,
         "is_climacteric": False, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0
     },
     "banana": {
@@ -303,40 +308,41 @@ PRESETS = {
         "CI_thr": 7.0, "CI_rate": 0.035, "CI_sl_stress": 1.1, "CI_max_penalty": 0.65
     },
     "plum": {
-        "label": "Plum", "Tref_C": 2.0, "Ea_J": 52000, "k_firm_ref": 0.06, "beta_RH": 1.0, "RH_ref": 92,
+        "label": "Plum", "Tref_C": 2.0, "Ea_J": 52000, "k_firm_ref": 0.040, "beta_RH": 1.0, "RH_ref": 92,
         "brix_min": 11.0, "brix_max": 20.0, "brix_g": 0.3, "brix_0_default": 12.5, "qual_brix_target": 16.5,
-        "firmness_min": 3.0, "firmness_0_default": 40.0, "qual_firmness_threshold": 8.0,
+        "firmness_min": 3.0, "firmness_0_default": 40.0, "qual_firmness_threshold": 7.0,
         "acidity_0_default": 0.8, "acidity_min": 0.3, "k_acidity_ref": 0.016, "Ea_acidity_J": 55000, "qual_acidity_target": 0.8,
-        "SL_ref": 21.0, "E0_int": 0.01, "Eref_prod": 0.14, "E_t0": 8, "E_g": 0.8, "E_auto": 0.45, "E_decay": 0.7, "Ea_E_J": 54000, "E_ext_shift": 2.0, "alpha_E": 1.0,
+        "SL_ref": 28.0, "Ea_SL_J": 45000.0, "E0_int": 0.01, "Eref_prod": 0.14, "E_t0": 8, "E_g": 0.8, "E_auto": 0.45, "E_decay": 0.7, "Ea_E_J": 54000, "E_ext_shift": 2.0, "alpha_E": 1.0,
         "RH_mold_thr": 94.0, "mold_rate_ref": 0.09, "mold_sens_RH": 12.0, "mold_max_penalty": 0.82, "Ea_mold_J": 47000.0,
         "is_climacteric": True,
         "CI_type": "zone", "CI_zone_min": 2.0, "CI_zone_max": 7.0, "CI_zone_peak": 5.0,
-        "CI_thr": 7.0, "CI_rate": 0.022, "CI_sl_stress": 1.8, "CI_max_penalty": 0.60
+        "CI_thr": 7.0, "CI_rate": 0.022, "CI_sl_stress": 1.8, "CI_max_penalty": 0.60,
+        "senescent_firmness_collapse": 5.0
     },
     "fig": {
-        "label": "Fig", "Tref_C": 2.0, "Ea_J": 52000, "k_firm_ref": 0.11, "beta_RH": 1.8, "RH_ref": 95,
+        "label": "Fig", "Tref_C": 2.0, "Ea_J": 52000, "k_firm_ref": 0.08, "beta_RH": 1.8, "RH_ref": 95,
         "brix_min": 14.0, "brix_max": 26.0, "brix_g": 0.18, "brix_0_default": 16.0, "qual_brix_target": 20.0,
-        "firmness_min": 1.2, "firmness_0_default": 10.0, "qual_firmness_threshold": 3.5,
+        "firmness_min": 1.2, "firmness_0_default": 10.0, "qual_firmness_threshold": 5.0,
         "acidity_0_default": 0.3, "acidity_min": 0.15, "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.3,
-        "SL_ref": 7.0, "E0_int": 0.005, "Eref_prod": 0.05, "E_t0": 12, "E_g": 0.5, "E_auto": 0.15, "E_decay": 0.7, "Ea_E_J": 52000, "E_ext_shift": 1.0, "alpha_E": 0.2,
-        "RH_mold_thr": 93.0, "mold_rate_ref": 0.18, "mold_sens_RH": 14.0, "mold_max_penalty": 0.92, "Ea_mold_J": 50000.0,
+        "SL_ref": 8.0, "Ea_SL_J": 48000.0, "E0_int": 0.005, "Eref_prod": 0.05, "E_t0": 12, "E_g": 0.5, "E_auto": 0.15, "E_decay": 0.7, "Ea_E_J": 52000, "E_ext_shift": 1.0, "alpha_E": 0.2,
+        "RH_mold_thr": 96.0, "mold_rate_ref": 0.18, "mold_sens_RH": 14.0, "mold_max_penalty": 0.92, "Ea_mold_J": 50000.0,
         "is_climacteric": False, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0
     },
     "melon": {
         "label": "Melon", "Tref_C": 7.0, "Ea_J": 52000, "k_firm_ref": 0.06, "beta_RH": 0.9, "RH_ref": 90,
-        "brix_min": 9.0, "brix_max": 16.0, "brix_g": 0.22, "brix_0_default": 10.5, "qual_brix_target": 13.5,
+        "brix_min": 9.0, "brix_max": 16.0, "brix_g": 0.22, "brix_0_default": 10.5, "qual_brix_target": 11.5,
         "firmness_min": 2.0, "firmness_0_default": 25.0, "qual_firmness_threshold": 6.0,
         "acidity_0_default": 0.2, "acidity_min": 0.1, "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.2,
-        "SL_ref": 21.0, "E0_int": 0.01, "Eref_prod": 0.10, "E_t0": 10, "E_g": 0.7, "E_auto": 0.35, "E_decay": 0.7, "Ea_E_J": 52000, "E_ext_shift": 1.8, "alpha_E": 0.9,
+        "SL_ref": 24.0, "Ea_SL_J": 45000.0, "E0_int": 0.01, "Eref_prod": 0.10, "E_t0": 10, "E_g": 0.7, "E_auto": 0.35, "E_decay": 0.7, "Ea_E_J": 52000, "E_ext_shift": 1.8, "alpha_E": 0.9,
         "RH_mold_thr": 95.0, "mold_rate_ref": 0.08, "mold_sens_RH": 10.0, "mold_max_penalty": 0.78, "Ea_mold_J": 45000.0,
-        "is_climacteric": True, "CI_type": "threshold", "CI_thr": 5.0, "CI_thr_min": 2.0, "CI_thr_max": 5.0, "CI_rate": 0.015, "CI_sl_stress": 1.8, "CI_max_penalty": 0.50
+        "is_climacteric": True, "CI_type": "threshold", "CI_thr": 5.0, "CI_thr_min": 2.0, "CI_thr_max": 5.0, "CI_rate": 0.045, "CI_sl_stress": 1.8, "CI_max_penalty": 0.50
     },
     "grape": {
-        "label": "Grape", "Tref_C": 2.0, "Ea_J": 45000, "k_firm_ref": 0.02, "beta_RH": 1.8, "RH_ref": 92,
+        "label": "Grape", "Tref_C": 2.0, "Ea_J": 45000, "k_firm_ref": 0.030, "beta_RH": 1.8, "RH_ref": 92,
         "brix_min": 14.0, "brix_max": 22.0, "brix_g": 0.05, "brix_0_default": 16.0, "qual_brix_target": 18.0,
-        "firmness_min": 3.0, "firmness_0_default": 20.0, "qual_firmness_threshold": 7.0,
+        "firmness_min": 3.0, "firmness_0_default": 20.0, "qual_firmness_threshold": 12.0,
         "acidity_0_default": 0.6, "acidity_min": 0.3, "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.6,
-        "SL_ref": 37.0, "E0_int": 0.002, "Eref_prod": 0.01, "E_t0": 999, "E_g": 0.2, "E_auto": 0.0, "E_decay": 0.9, "Ea_E_J": 42000, "E_ext_shift": 0.4, "alpha_E": 0.05,
+        "SL_ref": 35.0, "Ea_SL_J": 42000.0, "E0_int": 0.002, "Eref_prod": 0.01, "E_t0": 999, "E_g": 0.2, "E_auto": 0.0, "E_decay": 0.9, "Ea_E_J": 42000, "E_ext_shift": 0.4, "alpha_E": 0.05,
         "RH_mold_thr": 95.0, "mold_rate_ref": 0.10, "mold_sens_RH": 14.0, "mold_max_penalty": 0.90, "Ea_mold_J": 46000.0,
         "is_climacteric": False, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0
     },
@@ -651,9 +657,9 @@ def run_simulation_prof_luis_paulo(fruit_key: str, T_c: list[float], E_ext_ppm: 
 
     # Point B: Biological Decay / Rotting (Senescência celular, bolor crítico ou colapso interno)
     bio_decay_factor = sanity_factor * cap_decay * ci_factor
-    if fruit_key == "pear":
-        # Pera Rocha: acastanhamento interno senescente quando a polpa atinge perda total de estrutura (<= 8.5 N)
-        below_zero = np.where((bio_decay_factor <= 0.01) | (firmness <= 8.5))[0]
+    senesc_f = float(p.get("senescent_firmness_collapse", 8.5 if fruit_key == "pear" else 0.0))
+    if senesc_f > 0.0:
+        below_zero = np.where((bio_decay_factor <= 0.01) | (firmness <= senesc_f))[0]
     else:
         below_zero = np.where(bio_decay_factor <= 0.01)[0]
     if len(below_zero) > 0:
@@ -897,9 +903,9 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
 
     # Point B: Biological Decay / Rotting (Senescência celular, bolor crítico ou colapso interno)
     bio_decay_factor = sanity_factor * cap_decay * ci_factor
-    if fruit_key == "pear":
-        # Pera Rocha: acastanhamento interno senescente quando a polpa atinge perda total de estrutura (<= 8.5 N)
-        below_zero = np.where((bio_decay_factor <= 0.01) | (firmness <= 8.5))[0]
+    senesc_f = float(p.get("senescent_firmness_collapse", 8.5 if fruit_key == "pear" else 0.0))
+    if senesc_f > 0.0:
+        below_zero = np.where((bio_decay_factor <= 0.01) | (firmness <= senesc_f))[0]
     else:
         below_zero = np.where(bio_decay_factor <= 0.01)[0]
     if len(below_zero) > 0:
