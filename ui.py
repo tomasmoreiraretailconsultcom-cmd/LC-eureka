@@ -411,7 +411,12 @@ with col_left:
                     st.error("Estrutura JSON não suportada.")
             else:
                 df_input = pd.read_excel(uploaded_file)
-                st.session_state["df_real"] = pd.DataFrame(columns=["Data Real", "Firmeza (N)", "Brix (°Bx)", "Acidez (%)"])
+                st.session_state["df_real"] = pd.DataFrame({
+                    "Data Real": pd.Series(dtype="datetime64[ns]"),
+                    "Firmeza (N)": pd.Series(dtype="float64"),
+                    "Brix (°Bx)": pd.Series(dtype="float64"),
+                    "Acidez (%)": pd.Series(dtype="float64")
+                })
                 
             st.session_state["df_loaded"] = df_input
         except Exception as e:
@@ -479,9 +484,19 @@ with col_left:
     st.markdown("<hr style='margin:0.8rem 0; border:none; border-top:1px solid #E2E8F0;'>", unsafe_allow_html=True)
     with st.expander("📍 **Medições Reais de Laboratório (Pontos nos Gráficos)**", expanded=True):
         if st.session_state.get("df_real") is None or not isinstance(st.session_state.get("df_real"), pd.DataFrame):
-            st.session_state["df_real"] = pd.DataFrame(columns=["Data Real", "Firmeza (N)", "Brix (°Bx)", "Acidez (%)"])
+            st.session_state["df_real"] = pd.DataFrame({
+                "Data Real": pd.Series(dtype="datetime64[ns]"),
+                "Firmeza (N)": pd.Series(dtype="float64"),
+                "Brix (°Bx)": pd.Series(dtype="float64"),
+                "Acidez (%)": pd.Series(dtype="float64")
+            })
         elif "Dia" in st.session_state["df_real"].columns:
             st.session_state["df_real"] = st.session_state["df_real"].drop(columns=["Dia"])
+
+        if "Data Real" in st.session_state["df_real"].columns:
+            st.session_state["df_real"]["Data Real"] = pd.to_datetime(
+                st.session_state["df_real"]["Data Real"], errors="coerce"
+            )
 
         df_real_edit = st.data_editor(
             st.session_state["df_real"],
