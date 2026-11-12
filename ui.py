@@ -219,6 +219,49 @@ st.markdown("""
 def get_fruit_keys():
     return list(PRESETS.keys())
 
+def parse_any_date(val):
+    """
+    Parses any date representation into a datetime.date object safely without month/day confusion.
+    Handles:
+    - datetime.date / datetime.datetime / pd.Timestamp
+    - ISO strings: 'YYYY-MM-DD', 'YYYY/MM/DD'
+    - European strings: 'DD/MM/YYYY', 'DD-MM-YYYY', 'DD.MM.YYYY'
+    - Strings with time: 'YYYY-MM-DD 00:00:00', 'YYYY-MM-DDTHH:MM:SS'
+    """
+    if val is None or pd.isna(val):
+        return None
+    if isinstance(val, (datetime.datetime, pd.Timestamp)):
+        return val.date()
+    if isinstance(val, datetime.date):
+        return val
+    
+    s = str(val).strip()
+    if not s or s.lower() in ("none", "nan", "nat", ""):
+        return None
+    
+    s_date = s.split("T")[0].split(" ")[0].strip()
+    for sep in ("-", "/", "."):
+        parts = s_date.split(sep)
+        if len(parts) == 3:
+            # ISO format: YYYY-MM-DD
+            if len(parts[0]) == 4 and parts[0].isdigit() and parts[1].isdigit() and parts[2].isdigit():
+                try:
+                    return datetime.date(int(parts[0]), int(parts[1]), int(parts[2]))
+                except ValueError:
+                    pass
+            # European format: DD/MM/YYYY
+            elif len(parts[2]) == 4 and parts[2].isdigit() and parts[1].isdigit() and parts[0].isdigit():
+                try:
+                    return datetime.date(int(parts[2]), int(parts[1]), int(parts[0]))
+                except ValueError:
+                    pass
+
+    try:
+        dt = pd.to_datetime(s_date)
+        return dt.date()
+    except Exception:
+        return None
+
 # =============================================================================
 # HEADER BRAND BANNER
 # =============================================================================
@@ -367,31 +410,8 @@ with col_left:
                 else:
                     st.error("Estrutura JSON não suportada.")
             else:
-                try:
-                    xl = pd.ExcelFile(uploaded_file)
-                    df_input = pd.read_excel(xl, sheet_name=0)
-                    sheet_real = next((s for s in xl.sheet_names if "real" in s.lower() or "reais" in s.lower()), None)
-                    if sheet_real:
-                        r_df = pd.read_excel(xl, sheet_name=sheet_real)
-                        f_col = next((c for c in r_df.columns if "firmeza_n" in c.lower() or "firmness_n" in c.lower()), None) or next((c for c in r_df.columns if "firmeza" in c.lower()), None)
-                        b_col = next((c for c in r_df.columns if "brix" in c.lower()), None)
-                        a_col = next((c for c in r_df.columns if "acid" in c.lower()), None)
-                        d_col = next((c for c in r_df.columns if "data" in c.lower() or "date" in c.lower()), None)
-                        f_vals = r_df[f_col] if f_col else None
-                        if f_vals is not None and f_col and ("kg" in f_col.lower() or f_vals.dropna().iloc[0] < 20.0):
-                            f_vals = f_vals * 9.80665
-                        st.session_state["df_real"] = pd.DataFrame({
-                            "Data Real": pd.to_datetime(r_df[d_col]).dt.date if d_col else None,
-                            "Firmeza (N)": f_vals.round(1) if f_vals is not None else None,
-                            "Brix (°Bx)": r_df[b_col].round(2) if b_col else None,
-                            "Acidez (%)": r_df[a_col].round(3) if a_col else None
-                        })
-                    else:
-                        st.session_state["df_real"] = None
-                except Exception:
-                    uploaded_file.seek(0)
-                    df_input = pd.read_excel(uploaded_file)
-                    st.session_state["df_real"] = None
+                df_input = pd.read_excel(uploaded_file)
+                st.session_state["df_real"] = pd.DataFrame(columns=["Data Real", "Firmeza (N)", "Brix (°Bx)", "Acidez (%)"])
                 
             st.session_state["df_loaded"] = df_input
         except Exception as e:
@@ -447,31 +467,22 @@ with col_left:
     st.markdown("<hr style='margin:1rem 0; border:none; border-top:1px solid #E2E8F0;'>", unsafe_allow_html=True)
     st.markdown("<div class='panel-header' style='font-size:0.95rem; margin-bottom:0.5rem;'>📏 Métricas Iniciais Pós-Colheita</div>", unsafe_allow_html=True)
     
-    default_f0 = float(preset_data.get("firmness_0_default", 50.0))
-    default_b0 = float(preset_data.get("brix_0_default", 12.0))
-    default_a0 = float(preset_data.get("acidity_0_default", 0.8))
-
-    df_real_saved = st.session_state.get("df_real")
-    if df_real_saved is not None and not df_real_saved.empty:
-        r0 = df_real_saved.iloc[0]
-        if pd.notnull(r0.get("Firmeza (N)")): default_f0 = float(r0["Firmeza (N)"])
-        if pd.notnull(r0.get("Brix (°Bx)")): default_b0 = float(r0["Brix (°Bx)"])
-        if pd.notnull(r0.get("Acidez (%)")): default_a0 = float(r0["Acidez (%)"])
-
     c_in1, c_in2, c_in3 = st.columns(3)
     with c_in1:
-        f0_val = st.number_input("Firmeza (N)", value=default_f0, step=1.0)
+        f0_val = st.number_input("Firmeza (N)", value=float(preset_data.get("firmness_0_default", 50.0)), step=1.0)
     with c_in2:
-        b0_val = st.number_input("Brix (°Bx)", value=default_b0, step=0.5)
+        b0_val = st.number_input("Brix (°Bx)", value=float(preset_data.get("brix_0_default", 12.0)), step=0.5)
     with c_in3:
-        a0_val = st.number_input("Acidez (%)", value=default_a0, step=0.1)
+        a0_val = st.number_input("Acidez (%)", value=float(preset_data.get("acidity_0_default", 0.8)), step=0.1)
 
     # Input dinâmico de medições reais de laboratório
     st.markdown("<hr style='margin:0.8rem 0; border:none; border-top:1px solid #E2E8F0;'>", unsafe_allow_html=True)
     with st.expander("📍 **Medições Reais de Laboratório (Pontos nos Gráficos)**", expanded=True):
-        if st.session_state.get("df_real") is None:
-            init_date = pd.to_datetime(df_input["Date"].min()).date() if (df_input is not None and "Date" in df_input) else datetime.date.today()
-            st.session_state["df_real"] = pd.DataFrame([{"Data Real": init_date, "Firmeza (N)": float(f0_val), "Brix (°Bx)": float(b0_val), "Acidez (%)": float(a0_val)}])
+        if st.session_state.get("df_real") is None or not isinstance(st.session_state.get("df_real"), pd.DataFrame):
+            st.session_state["df_real"] = pd.DataFrame(columns=["Data Real", "Firmeza (N)", "Brix (°Bx)", "Acidez (%)"])
+        elif "Dia" in st.session_state["df_real"].columns:
+            st.session_state["df_real"] = st.session_state["df_real"].drop(columns=["Dia"])
+
         df_real_edit = st.data_editor(
             st.session_state["df_real"],
             num_rows="dynamic",
@@ -511,8 +522,10 @@ with col_left:
                     df_calc["Day"] = range(1, len(df_calc) + 1)
 
                 if 'Date' in df_calc.columns:
-                    df_calc['Date'] = pd.to_datetime(df_calc['Date'])
-                    df_calc = df_calc.sort_values('Date')
+                    parsed_dates_series = df_calc['Date'].apply(parse_any_date)
+                    if parsed_dates_series.notnull().any():
+                        df_calc['Date'] = parsed_dates_series
+                        df_calc = df_calc.sort_values('Date')
 
                 df_calc['block'] = (df_calc['Segment_ID'] != df_calc['Segment_ID'].shift(1)).cumsum()
                 sensor_history = []
@@ -520,7 +533,8 @@ with col_left:
                 for (seg_id, _), group in df_calc.groupby(['Segment_ID', 'block']):
                     daily_readings = []
                     for _, row in group.iterrows():
-                        r_date = pd.to_datetime(row['Date']).date().isoformat() if pd.notnull(row.get('Date')) else datetime.date.today().isoformat()
+                        r_dt = parse_any_date(row.get('Date'))
+                        r_date = r_dt.isoformat() if r_dt else datetime.date.today().isoformat()
                         reading = {
                             "date": r_date,
                             "source": "SIMULATION_INPUT"
@@ -531,7 +545,8 @@ with col_left:
                         daily_readings.append(reading)
 
                     first_row = group.iloc[0]
-                    first_date = pd.to_datetime(first_row['Date']).date().isoformat() if pd.notnull(first_row.get('Date')) else datetime.date.today().isoformat()
+                    first_dt = parse_any_date(first_row.get('Date'))
+                    first_date = first_dt.isoformat() if first_dt else datetime.date.today().isoformat()
 
                     sensor_history.append({
                         "warehouse_id": int(seg_id),
@@ -825,12 +840,45 @@ with col_right:
         st.markdown("<div style='height: 5px;'></div>", unsafe_allow_html=True)
         
         df_real_plot = st.session_state.get("df_real")
-        start_date = None
-        if df_real_plot is not None and not df_real_plot.empty and len(df_real_plot.dropna(subset=["Data Real"])) > 0:
-            start_date = pd.to_datetime(df_real_plot["Data Real"].dropna().iloc[0]).date()
-        elif df_input is not None and "Date" in df_input:
-            start_date = pd.to_datetime(df_input["Date"].min()).date()
-        t_x = [start_date + datetime.timedelta(days=float(t)) for t in t_arr] if start_date else t_arr
+
+        def _get_scatter_coords(df_sub, val_col):
+            if df_sub is None or df_sub.empty or val_col not in df_sub.columns:
+                return [], []
+            valid_df = df_sub.dropna(subset=[val_col])
+            if valid_df.empty:
+                return [], []
+            
+            start_dt = None
+            if df_input is not None and "Date" in df_input.columns:
+                scen_dates = [parse_any_date(d) for d in df_input["Date"] if pd.notnull(d)]
+                scen_dates = [d for d in scen_dates if d is not None]
+                if scen_dates:
+                    start_dt = min(scen_dates)
+
+            if start_dt is None and "Data Real" in valid_df.columns:
+                valid_dates = [parse_any_date(d) for d in valid_df["Data Real"] if pd.notnull(d)]
+                valid_dates = [d for d in valid_dates if d is not None]
+                if valid_dates:
+                    start_dt = min(valid_dates)
+
+            xs, ys = [], []
+            for _, row in valid_df.iterrows():
+                y_val = row[val_col]
+                x_val = None
+                if "Dia" in row and pd.notnull(row["Dia"]):
+                    try:
+                        x_val = float(row["Dia"])
+                    except Exception:
+                        pass
+                if x_val is None and "Data Real" in row and pd.notnull(row["Data Real"]) and start_dt:
+                    d_val = parse_any_date(row["Data Real"])
+                    if d_val is not None:
+                        x_val = float((d_val - start_dt).days)
+
+                if x_val is not None and pd.notnull(y_val):
+                    xs.append(x_val)
+                    ys.append(float(y_val))
+            return xs, ys
 
         tab_firm, tab_chem, tab_env, tab_bio = st.tabs([
             "📉 Firmeza & Textura",
@@ -843,15 +891,15 @@ with col_right:
             if "firmness" in cdata:
                 fig_f = go.Figure()
                 fig_f.add_trace(go.Scatter(
-                    x=t_x, y=cdata["firmness"],
+                    x=t_arr, y=cdata["firmness"],
                     mode='lines', name='Firmeza Estimada (N)',
                     line=dict(color='#1E40AF', width=2.5),
                     fill='tozeroy', fillcolor='rgba(30, 64, 175, 0.04)'
                 ))
-                if df_real_plot is not None and not df_real_plot.empty:
-                    dff = df_real_plot.dropna(subset=["Firmeza (N)"])
+                rx, ry = _get_scatter_coords(df_real_plot, "Firmeza (N)")
+                if rx:
                     fig_f.add_trace(go.Scatter(
-                        x=dff["Data Real"], y=dff["Firmeza (N)"],
+                        x=rx, y=ry,
                         mode='markers', name='Firmeza Real (N)',
                         marker=dict(color='#DC2626', size=10, symbol='diamond')
                     ))
@@ -861,7 +909,7 @@ with col_right:
                     annotation_text="Limiar Mínimo Textura", annotation_position="bottom right"
                 )
                 fig_f.update_layout(
-                    height=300, xaxis_title="Data" if start_date else "Dias", yaxis_title="Firmeza (Newtons)",
+                    height=300, xaxis_title="Dias", yaxis_title="Firmeza (Newtons)",
                     plot_bgcolor="#FFFFFF", margin=dict(l=20, r=20, t=25, b=20),
                     yaxis=dict(rangemode="tozero")
                 )
@@ -871,32 +919,32 @@ with col_right:
             fig_chem = make_subplots(specs=[[{"secondary_y": True}]])
             if "brix" in cdata:
                 fig_chem.add_trace(go.Scatter(
-                    x=t_x, y=cdata["brix"],
+                    x=t_arr, y=cdata["brix"],
                     mode='lines', name='Açúcares Estimado (°Bx)',
                     line=dict(color='#D97706', width=2.5)
                 ), secondary_y=False)
-                if df_real_plot is not None and not df_real_plot.empty:
-                    dfb = df_real_plot.dropna(subset=["Brix (°Bx)"])
+                bx, by = _get_scatter_coords(df_real_plot, "Brix (°Bx)")
+                if bx:
                     fig_chem.add_trace(go.Scatter(
-                        x=dfb["Data Real"], y=dfb["Brix (°Bx)"],
+                        x=bx, y=by,
                         mode='markers', name='Brix Real',
                         marker=dict(color='#D97706', size=9, symbol='circle')
                     ), secondary_y=False)
             if "acidity" in cdata:
                 fig_chem.add_trace(go.Scatter(
-                    x=t_x, y=cdata["acidity"],
+                    x=t_arr, y=cdata["acidity"],
                     mode='lines', name='Acidez Estimada (%)',
                     line=dict(color='#DC2626', width=2.5, dash='dash')
                 ), secondary_y=True)
-                if df_real_plot is not None and not df_real_plot.empty:
-                    dfa = df_real_plot.dropna(subset=["Acidez (%)"])
+                ax, ay = _get_scatter_coords(df_real_plot, "Acidez (%)")
+                if ax:
                     fig_chem.add_trace(go.Scatter(
-                        x=dfa["Data Real"], y=dfa["Acidez (%)"],
+                        x=ax, y=ay,
                         mode='markers', name='Acidez Real',
                         marker=dict(color='#DC2626', size=9, symbol='square')
                     ), secondary_y=True)
             fig_chem.update_layout(
-                height=300, xaxis_title="Data" if start_date else "Dias", plot_bgcolor="#FFFFFF",
+                height=300, xaxis_title="Dias", plot_bgcolor="#FFFFFF",
                 margin=dict(l=20, r=20, t=25, b=20),
                 legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
             )
