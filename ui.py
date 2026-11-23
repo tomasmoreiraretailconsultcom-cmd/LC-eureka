@@ -705,12 +705,12 @@ with col_right:
                 <div class="kpi-subtext">{'Aprovado' if final_q >= min_qual else 'Fora de Padrão'}</div>
             </div>
             <div class="kpi-tile" style="border-left: 3px solid #059669;">
-                <div class="kpi-tile-header">🟢 Vida Comercial</div>
+                <div class="kpi-tile-header">Vida Comercial</div>
                 <div class="kpi-tile-number theme-emerald">+{int(round(comm_life))}<span class="kpi-unit">dias</span></div>
                 <div class="kpi-subtext">Ponto A: Dia {int(round(pt_a))}</div>
             </div>
             <div class="kpi-tile" style="border-left: 3px solid #D97706;">
-                <div class="kpi-tile-header">🔴 Vida Biológica</div>
+                <div class="kpi-tile-header">Vida Biológica</div>
                 <div class="kpi-tile-number theme-amber">+{int(round(bio_life))}<span class="kpi-unit">dias</span></div>
                 <div class="kpi-subtext">Ponto B: Dia {int(round(pt_b))}</div>
             </div>
@@ -792,12 +792,12 @@ with col_right:
                     x=[pt_a],
                     y=[q_arr[idx_a]],
                     mode='markers+text',
-                    name=f'🟢 Ponto A: Fim Vida Comercial (Dia {int(round(pt_a))})',
-                    text=[f"🟢 Ponto A (Dia {int(round(pt_a))})"],
+                    name=f'Ponto A: Fim Vida Comercial (Dia {int(round(pt_a))})',
+                    text=[f"Ponto A (Dia {int(round(pt_a))})"],
                     textposition="top center",
                     textfont=dict(family="Plus Jakarta Sans", size=11, color="#065F46"),
                     marker=dict(color='#059669', size=14, symbol='circle', line=dict(color='#FFFFFF', width=2.5)),
-                    hovertemplate=f"<b>🟢 Ponto A: Fim Vida Comercial</b><br>Dia: <b>{pt_a:.1f}</b> (Dia {int(round(pt_a))})<br>Qualidade: <b>%{{y:.1f}}%</b><extra></extra>"
+                    hovertemplate=f"<b>Ponto A: Fim Vida Comercial</b><br>Dia: <b>{pt_a:.1f}</b> (Dia {int(round(pt_a))})<br>Qualidade: <b>%{{y:.1f}}%</b><extra></extra>"
                 ))
 
             # Marker Point B (Biological Decay / 0%)
@@ -806,12 +806,12 @@ with col_right:
                     x=[pt_b],
                     y=[0],
                     mode='markers+text',
-                    name=f'🔴 Ponto B: Fim Biológico (Dia {int(round(pt_b))})',
-                    text=[f"🔴 Ponto B (Dia {int(round(pt_b))})"],
+                    name=f'Ponto B: Fim Biológico (Dia {int(round(pt_b))})',
+                    text=[f"Ponto B (Dia {int(round(pt_b))})"],
                     textposition="bottom center",
                     textfont=dict(family="Plus Jakarta Sans", size=11, color="#991B1B"),
                     marker=dict(color='#DC2626', size=14, symbol='diamond', line=dict(color='#FFFFFF', width=2.5)),
-                    hovertemplate=f"<b>🔴 Ponto B: Fim Biológico</b><br>Dia: <b>{pt_b:.1f}</b> (Dia {int(round(pt_b))})<br>Qualidade: <b>0.0%</b><extra></extra>"
+                    hovertemplate=f"<b>Ponto B: Fim Biológico</b><br>Dia: <b>{pt_b:.1f}</b> (Dia {int(round(pt_b))})<br>Qualidade: <b>0.0%</b><extra></extra>"
                 ))
 
             fig_q.update_layout(
