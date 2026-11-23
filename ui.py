@@ -582,6 +582,8 @@ with col_right:
         final_b = result.get("brix", 0.0)
         pt_a = result.get("point_a_day", 0.0)
         pt_b = result.get("point_b_day", 0.0)
+        # Estado comercial atual segundo o Ponto A (qualidade + bolor + shelf-life física)
+        is_marketable = pt_a > 0 and total_days <= pt_a
 
         ci_arr = cdata.get("cold_injury", [])
         ci_max = max(ci_arr) if ci_arr else 0.0
@@ -612,8 +614,8 @@ with col_right:
             </div>
             <div class="kpi-tile">
                 <div class="kpi-tile-header">Qualidade Atual</div>
-                <div class="kpi-tile-number {'theme-emerald' if final_q >= min_qual else 'theme-rose'}">{final_q:.1f}<span class="kpi-unit">%</span></div>
-                <div class="kpi-subtext">{'Aprovado' if final_q >= min_qual else 'Fora de Padrão'}</div>
+                <div class="kpi-tile-number {'theme-emerald' if is_marketable else 'theme-rose'}">{final_q:.1f}<span class="kpi-unit">%</span></div>
+                <div class="kpi-subtext">{'Aprovado' if is_marketable else 'Fora de Padrão'}</div>
             </div>
             <div class="kpi-tile" style="border-left: 3px solid #059669;">
                 <div class="kpi-tile-header">Vida Comercial</div>
@@ -647,23 +649,6 @@ with col_right:
 
             fig_q = go.Figure()
 
-            # Shaded Background Zones for Visual Wow Factor
-            fig_q.add_hrect(
-                y0=min_qual, y1=105,
-                fillcolor="rgba(16, 185, 129, 0.05)",
-                layer="below", line_width=0,
-            )
-            fig_q.add_hrect(
-                y0=30, y1=min_qual,
-                fillcolor="rgba(245, 158, 11, 0.04)",
-                layer="below", line_width=0,
-            )
-            fig_q.add_hrect(
-                y0=-2, y1=30,
-                fillcolor="rgba(239, 68, 68, 0.04)",
-                layer="below", line_width=0,
-            )
-
             # Continuous Smooth Quality Curve
             fig_q.add_trace(go.Scatter(
                 x=t_arr,
@@ -673,17 +658,6 @@ with col_right:
                 line=dict(color='#2563EB', width=3.5),
                 hovertemplate="<b>Dia %{x:.0f}</b><br>Qualidade: <b>%{y:.1f}%</b><extra></extra>"
             ))
-
-            # Stakeholder Threshold Dashed Line
-            fig_q.add_hline(
-                y=min_qual,
-                line_dash="dash",
-                line_color="#059669",
-                line_width=1.8,
-                annotation_text=f"Limiar Mínimo {selected_stakeholder} ({min_qual:.0f}%)",
-                annotation_position="top right",
-                annotation_font=dict(color="#059669", size=11, family="Plus Jakarta Sans")
-            )
 
             # Today Vertical Marker
             fig_q.add_vline(
