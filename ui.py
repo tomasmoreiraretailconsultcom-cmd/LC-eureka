@@ -297,8 +297,8 @@ with st.container():
     with c_cfg3:
         st.markdown("<div style='height: 28px;'></div>", unsafe_allow_html=True)
         # Template download dropdown or popover
-        if os.path.exists("example_files/example_inputs.xlsx"):
-            with open("example_files/example_inputs.xlsx", "rb") as f_ex:
+        if os.path.exists("templates/template_lifecycle.xlsx"):
+            with open("templates/template_lifecycle.xlsx", "rb") as f_ex:
                 st.download_button(
                     "📥 Descarregar Template",
                     f_ex.read(),
