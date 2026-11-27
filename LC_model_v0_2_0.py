@@ -106,7 +106,8 @@ PRESETS = {
         "SL_ref": 115.0, "Ea_SL_J": 45000.0, "E0_int": 0.02, "Eref_prod": 0.12, "E_t0": 10, "E_g": 0.9, "E_auto": 0.35, "E_decay": 0.7, "Ea_E_J": 52000, "E_ext_shift": 2.0, "alpha_E": 2.0,
         "RH_mold_thr": 95.0, "mold_rate_ref": 0.05, "mold_sens_RH": 9.0, "mold_max_penalty": 0.65, "Ea_mold_J": 43000.0,
         "is_climacteric": True, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0,
-        "senescent_firmness_collapse": 5.5
+        "senescent_firmness_collapse": 5.5,
+        "thermal_inertia_h": 8.0, "dew_drying_h": 6.0, "mold_lag_days": 2.5, "Ea_lag_J": 65000.0
     },
     "kiwi_baby": {
         "label": "Kiwi (Baby/Berry)", "Tref_C": 4.0, "Ea_J": 60000, "k_firm_ref": 0.035, "beta_RH": 2.0, "RH_ref": 95,
@@ -116,7 +117,8 @@ PRESETS = {
         "SL_ref": 26.0, "Ea_SL_J": 45000.0, "E0_int": 0.03, "Eref_prod": 0.22, "E_t0": 5, "E_g": 1.2, "E_auto": 0.55, "E_decay": 0.75, "Ea_E_J": 52000, "E_ext_shift": 2.6, "alpha_E": 3.2,
         "RH_mold_thr": 96.0, "mold_rate_ref": 0.07, "mold_sens_RH": 10.0, "mold_max_penalty": 0.75, "Ea_mold_J": 45000.0,
         "is_climacteric": True, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0,
-        "senescent_firmness_collapse": 5.0
+        "senescent_firmness_collapse": 5.0,
+        "thermal_inertia_h": 2.0, "dew_drying_h": 3.0, "mold_lag_days": 1.5, "Ea_lag_J": 68000.0
     },
     "kiwi_gold": {
         "label": "Kiwi (Gold)",
@@ -162,7 +164,11 @@ PRESETS = {
         "CI_rate": 0.012,
         "CI_sl_stress": 1.5,
         "CI_max_penalty": 0.35,
-        "senescent_firmness_collapse": 5.0
+        "senescent_firmness_collapse": 5.0,
+        "thermal_inertia_h": 7.5,
+        "dew_drying_h": 3.5,
+        "mold_lag_days": 2.2,
+        "Ea_lag_J": 65000.0
     },
     "apple_gala": {
         "label": "Apple (Gala)", "Tref_C": 5.0, "Ea_J": 64000, "k_firm_ref": 0.0085, "beta_RH": 0.9, "RH_ref": 90,
@@ -171,7 +177,8 @@ PRESETS = {
         "acidity_0_default": 0.4, "acidity_min": 0.2, "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.5,
         "SL_ref": 75.0, "Ea_SL_J": 42000.0, "E0_int": 0.015, "Eref_prod": 0.18, "E_t0": 10, "E_g": 0.9, "E_auto": 0.5, "E_decay": 0.65, "Ea_E_J": 52000, "E_ext_shift": 2.2, "alpha_E": 1.3,
         "RH_mold_thr": 95.0, "mold_rate_ref": 0.05, "mold_sens_RH": 9.0, "mold_max_penalty": 0.65, "Ea_mold_J": 43000.0,
-        "is_climacteric": True, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0
+        "is_climacteric": True, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0,
+        "thermal_inertia_h": 9.0, "dew_drying_h": 2.5, "mold_lag_days": 2.8, "Ea_lag_J": 65000.0
     },
     "apple_golden": {
         "label": "Apple (Golden)", "Tref_C": 5.0, "Ea_J": 75000, "k_firm_ref": 0.012, "beta_RH": 0.8, "RH_ref": 90,
@@ -180,7 +187,8 @@ PRESETS = {
         "acidity_0_default": 0.5, "acidity_min": 0.25, "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.6,
         "SL_ref": 120.0, "Ea_SL_J": 45000.0, "E0_int": 0.01, "Eref_prod": 0.10, "E_t0": 18, "E_g": 0.6, "E_auto": 0.35, "E_decay": 0.55, "Ea_E_J": 52000, "E_ext_shift": 1.8, "alpha_E": 0.8,
         "RH_mold_thr": 95.0, "mold_rate_ref": 0.04, "mold_sens_RH": 8.0, "mold_max_penalty": 0.60, "Ea_mold_J": 42000.0,
-        "is_climacteric": True, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0
+        "is_climacteric": True, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0,
+        "thermal_inertia_h": 10.0, "dew_drying_h": 2.5, "mold_lag_days": 3.0, "Ea_lag_J": 65000.0
     },
     "apple_fuji": {
         "label": "Apple (Fuji)", "Tref_C": 5.0, "Ea_J": 85000, "k_firm_ref": 0.008, "beta_RH": 0.7, "RH_ref": 90,
@@ -189,7 +197,8 @@ PRESETS = {
         "acidity_0_default": 0.4, "acidity_min": 0.2, "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.5,
         "SL_ref": 180.0, "Ea_SL_J": 60000.0, "E0_int": 0.008, "Eref_prod": 0.06, "E_t0": 25, "E_g": 0.5, "E_auto": 0.25, "E_decay": 0.45, "Ea_E_J": 52000, "E_ext_shift": 1.4, "alpha_E": 0.6,
         "RH_mold_thr": 95.0, "mold_rate_ref": 0.035, "mold_sens_RH": 8.0, "mold_max_penalty": 0.55, "Ea_mold_J": 42000.0,
-        "is_climacteric": True, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0
+        "is_climacteric": True, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0,
+        "thermal_inertia_h": 11.0, "dew_drying_h": 2.0, "mold_lag_days": 3.2, "Ea_lag_J": 65000.0
     },
     "apple_reineta": {
         "label": "Apple (Reineta)", "Tref_C": 5.0, "Ea_J": 80000, "k_firm_ref": 0.018, "beta_RH": 1.0, "RH_ref": 90,
@@ -198,7 +207,8 @@ PRESETS = {
         "acidity_0_default": 0.8, "acidity_min": 0.3, "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.7,
         "SL_ref": 90.0, "E0_int": 0.01, "Eref_prod": 0.13, "E_t0": 14, "E_g": 0.7, "E_auto": 0.4, "E_decay": 0.6, "Ea_E_J": 52000, "E_ext_shift": 2.0, "alpha_E": 1.1,
         "RH_mold_thr": 95.0, "mold_rate_ref": 0.05, "mold_sens_RH": 9.0, "mold_max_penalty": 0.65, "Ea_mold_J": 43000.0,
-        "is_climacteric": True, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0
+        "is_climacteric": True, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0,
+        "thermal_inertia_h": 10.0, "dew_drying_h": 4.0, "mold_lag_days": 2.5, "Ea_lag_J": 65000.0
     },
     "apple_red_delicious": {
         "label": "Apple (Red Delicious)",
@@ -240,6 +250,10 @@ PRESETS = {
         "CI_rate": 0.0,
         "CI_sl_stress": 1.0,
         "CI_max_penalty": 0.0,
+        "thermal_inertia_h": 10.5,
+        "dew_drying_h": 2.5,
+        "mold_lag_days": 2.8,
+        "Ea_lag_J": 65000.0,
     },
     "pear": {
         "label": "Pear (Rocha)", "Tref_C": 0.0, "Ea_J": 80000, "k_firm_ref": 0.0080, "beta_RH": 1.2, "RH_ref": 92,
@@ -249,7 +263,8 @@ PRESETS = {
         "SL_ref": 180.0, "Ea_SL_J": 45000.0, "E0_int": 0.01, "Eref_prod": 0.22, "E_t0": 10, "E_g": 1.0, "E_auto": 0.6, "E_decay": 0.75, "Ea_E_J": 56000, "E_ext_shift": 2.3, "alpha_E": 1.6,
         "RH_mold_thr": 95.0, "mold_rate_ref": 0.07, "mold_sens_RH": 10.0, "mold_max_penalty": 0.75, "Ea_mold_J": 45000.0,
         "is_climacteric": True, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0,
-        "senescent_firmness_collapse": 8.5
+        "senescent_firmness_collapse": 8.5,
+        "thermal_inertia_h": 8.5, "dew_drying_h": 3.0, "mold_lag_days": 2.5, "Ea_lag_J": 65000.0
     },
     "strawberry": {
         "label": "Strawberry", "Tref_C": 2.0, "Ea_J": 52000, "k_firm_ref": 0.12, "beta_RH": 2.4, "RH_ref": 95,
@@ -258,7 +273,8 @@ PRESETS = {
         "acidity_0_default": 0.8, "acidity_min": 0.25, "k_acidity_ref": 0.025, "Ea_acidity_J": 55000, "qual_acidity_target": 0.8,
         "SL_ref": 7.0, "E0_int": 0.002, "Eref_prod": 0.01, "E_t0": 999, "E_g": 0.2, "E_auto": 0.0, "E_decay": 0.9, "Ea_E_J": 42000, "E_ext_shift": 0.4, "alpha_E": 0.05,
         "RH_mold_thr": 95.0, "mold_rate_ref": 0.22, "mold_sens_RH": 16.0, "mold_max_penalty": 0.95, "Ea_mold_J": 52000.0,
-        "is_climacteric": False, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0
+        "is_climacteric": False, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0,
+        "thermal_inertia_h": 1.5, "dew_drying_h": 4.0, "mold_lag_days": 0.8, "Ea_lag_J": 70000.0
     },
     "raspberry": {
         "label": "Raspberry", "Tref_C": 2.0, "Ea_J": 45000, "k_firm_ref": 0.10, "beta_RH": 2.2, "RH_ref": 95,
@@ -267,7 +283,8 @@ PRESETS = {
         "acidity_0_default": 1.2, "acidity_min": 0.28, "k_acidity_ref": 0.023, "Ea_acidity_J": 55000, "qual_acidity_target": 1.0,
         "SL_ref": 7.0, "Ea_SL_J": 45000.0, "E0_int": 0.002, "Eref_prod": 0.01, "E_t0": 999, "E_g": 0.2, "E_auto": 0.0, "E_decay": 0.9, "Ea_E_J": 42000, "E_ext_shift": 0.4, "alpha_E": 0.12,
         "RH_mold_thr": 96.0, "mold_rate_ref": 0.20, "mold_sens_RH": 16.0, "mold_max_penalty": 0.95, "Ea_mold_J": 52000.0,
-        "is_climacteric": False, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0
+        "is_climacteric": False, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0,
+        "thermal_inertia_h": 1.0, "dew_drying_h": 5.0, "mold_lag_days": 0.6, "Ea_lag_J": 72000.0
     },
     "blueberry": {
         "label": "Blueberry", "Tref_C": 2.0, "Ea_J": 45000, "k_firm_ref": 0.026, "beta_RH": 1.6, "RH_ref": 95,
@@ -276,7 +293,8 @@ PRESETS = {
         "acidity_0_default": 0.6, "acidity_min": 0.3, "k_acidity_ref": 0.002, "Ea_acidity_J": 55000, "qual_acidity_target": 0.7,
         "SL_ref": 22.0, "Ea_SL_J": 35000.0, "E0_int": 0.002, "Eref_prod": 0.01, "E_t0": 999, "E_g": 0.2, "E_auto": 0.0, "E_decay": 0.9, "Ea_E_J": 42000, "E_ext_shift": 0.4, "alpha_E": 0.10,
         "RH_mold_thr": 96.0, "mold_rate_ref": 0.12, "mold_sens_RH": 14.0, "mold_max_penalty": 0.90, "Ea_mold_J": 48000.0,
-        "is_climacteric": False, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0
+        "is_climacteric": False, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0,
+        "thermal_inertia_h": 1.2, "dew_drying_h": 2.5, "mold_lag_days": 1.8, "Ea_lag_J": 65000.0
     },
     "cherry": {
         "label": "Cherry", "Tref_C": 2.0, "Ea_J": 48000, "k_firm_ref": 0.045, "beta_RH": 1.6, "RH_ref": 95,
@@ -285,7 +303,8 @@ PRESETS = {
         "acidity_0_default": 0.5, "acidity_min": 0.3, "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.6,
         "SL_ref": 16.0, "Ea_SL_J": 42000.0, "E0_int": 0.002, "Eref_prod": 0.01, "E_t0": 999, "E_g": 0.2, "E_auto": 0.0, "E_decay": 0.9, "Ea_E_J": 42000, "E_ext_shift": 0.4, "alpha_E": 0.05,
         "RH_mold_thr": 96.0, "mold_rate_ref": 0.10, "mold_sens_RH": 13.0, "mold_max_penalty": 0.85, "Ea_mold_J": 47000.0,
-        "is_climacteric": False, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0
+        "is_climacteric": False, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0,
+        "thermal_inertia_h": 1.5, "dew_drying_h": 2.0, "mold_lag_days": 1.5, "Ea_lag_J": 65000.0
     },
     "banana": {
         "label": "Banana", "Tref_C": 14.0, "Ea_J": 65000, "k_firm_ref": 0.09, "beta_RH": 1.0, "RH_ref": 90,
@@ -294,7 +313,8 @@ PRESETS = {
         "acidity_0_default": 0.4, "acidity_min": 0.2, "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.4,
         "SL_ref": 10.0, "E0_int": 0.02, "Eref_prod": 0.35, "E_t0": 4, "E_g": 1.4, "E_auto": 0.7, "E_decay": 0.9, "Ea_E_J": 60000, "E_ext_shift": 3.0, "alpha_E": 2.2,
         "RH_mold_thr": 95.0, "mold_rate_ref": 0.06, "mold_sens_RH": 10.0, "mold_max_penalty": 0.80, "Ea_mold_J": 45000.0,
-        "is_climacteric": True, "CI_type": "threshold", "CI_thr": 13.0, "CI_thr_min": 11.5, "CI_thr_max": 13.0, "CI_rate": 0.04, "CI_sl_stress": 3.5, "CI_max_penalty": 0.95
+        "is_climacteric": True, "CI_type": "threshold", "CI_thr": 13.0, "CI_thr_min": 11.5, "CI_thr_max": 13.0, "CI_rate": 0.04, "CI_sl_stress": 3.5, "CI_max_penalty": 0.95,
+        "thermal_inertia_h": 8.0, "dew_drying_h": 3.0, "mold_lag_days": 2.5, "Ea_lag_J": 65000.0
     },
     "peach": {
         "label": "Peach", "Tref_C": 2.0, "Ea_J": 56000, "k_firm_ref": 0.08, "beta_RH": 1.1, "RH_ref": 92,
@@ -305,7 +325,8 @@ PRESETS = {
         "RH_mold_thr": 94.0, "mold_rate_ref": 0.10, "mold_sens_RH": 12.0, "mold_max_penalty": 0.85, "Ea_mold_J": 48000.0,
         "is_climacteric": True,
         "CI_type": "zone", "CI_zone_min": 2.0, "CI_zone_max": 7.0, "CI_zone_peak": 5.0,
-        "CI_thr": 7.0, "CI_rate": 0.035, "CI_sl_stress": 1.1, "CI_max_penalty": 0.65
+        "CI_thr": 7.0, "CI_rate": 0.035, "CI_sl_stress": 1.1, "CI_max_penalty": 0.65,
+        "thermal_inertia_h": 8.0, "dew_drying_h": 5.5, "mold_lag_days": 1.4, "Ea_lag_J": 68000.0
     },
     "plum": {
         "label": "Plum", "Tref_C": 2.0, "Ea_J": 52000, "k_firm_ref": 0.040, "beta_RH": 1.0, "RH_ref": 92,
@@ -317,7 +338,8 @@ PRESETS = {
         "is_climacteric": True,
         "CI_type": "zone", "CI_zone_min": 2.0, "CI_zone_max": 7.0, "CI_zone_peak": 5.0,
         "CI_thr": 7.0, "CI_rate": 0.022, "CI_sl_stress": 1.8, "CI_max_penalty": 0.60,
-        "senescent_firmness_collapse": 5.0
+        "senescent_firmness_collapse": 5.0,
+        "thermal_inertia_h": 4.5, "dew_drying_h": 2.5, "mold_lag_days": 2.0, "Ea_lag_J": 65000.0
     },
     "fig": {
         "label": "Fig", "Tref_C": 2.0, "Ea_J": 52000, "k_firm_ref": 0.08, "beta_RH": 1.8, "RH_ref": 95,
@@ -326,7 +348,8 @@ PRESETS = {
         "acidity_0_default": 0.3, "acidity_min": 0.15, "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.3,
         "SL_ref": 8.0, "Ea_SL_J": 48000.0, "E0_int": 0.005, "Eref_prod": 0.05, "E_t0": 12, "E_g": 0.5, "E_auto": 0.15, "E_decay": 0.7, "Ea_E_J": 52000, "E_ext_shift": 1.0, "alpha_E": 0.2,
         "RH_mold_thr": 96.0, "mold_rate_ref": 0.18, "mold_sens_RH": 14.0, "mold_max_penalty": 0.92, "Ea_mold_J": 50000.0,
-        "is_climacteric": False, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0
+        "is_climacteric": False, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0,
+        "thermal_inertia_h": 3.0, "dew_drying_h": 4.0, "mold_lag_days": 1.2, "Ea_lag_J": 68000.0
     },
     "melon": {
         "label": "Melon", "Tref_C": 7.0, "Ea_J": 52000, "k_firm_ref": 0.06, "beta_RH": 0.9, "RH_ref": 90,
@@ -335,7 +358,8 @@ PRESETS = {
         "acidity_0_default": 0.2, "acidity_min": 0.1, "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.2,
         "SL_ref": 24.0, "Ea_SL_J": 45000.0, "E0_int": 0.01, "Eref_prod": 0.10, "E_t0": 10, "E_g": 0.7, "E_auto": 0.35, "E_decay": 0.7, "Ea_E_J": 52000, "E_ext_shift": 1.8, "alpha_E": 0.9,
         "RH_mold_thr": 95.0, "mold_rate_ref": 0.08, "mold_sens_RH": 10.0, "mold_max_penalty": 0.78, "Ea_mold_J": 45000.0,
-        "is_climacteric": True, "CI_type": "threshold", "CI_thr": 5.0, "CI_thr_min": 2.0, "CI_thr_max": 5.0, "CI_rate": 0.045, "CI_sl_stress": 1.8, "CI_max_penalty": 0.50
+        "is_climacteric": True, "CI_type": "threshold", "CI_thr": 5.0, "CI_thr_min": 2.0, "CI_thr_max": 5.0, "CI_rate": 0.045, "CI_sl_stress": 1.8, "CI_max_penalty": 0.50,
+        "thermal_inertia_h": 24.0, "dew_drying_h": 4.0, "mold_lag_days": 3.5, "Ea_lag_J": 62000.0
     },
     "grape": {
         "label": "Grape", "Tref_C": 2.0, "Ea_J": 45000, "k_firm_ref": 0.030, "beta_RH": 1.8, "RH_ref": 92,
@@ -344,7 +368,8 @@ PRESETS = {
         "acidity_0_default": 0.6, "acidity_min": 0.3, "k_acidity_ref": 0.02, "Ea_acidity_J": 55000, "qual_acidity_target": 0.6,
         "SL_ref": 35.0, "Ea_SL_J": 42000.0, "E0_int": 0.002, "Eref_prod": 0.01, "E_t0": 999, "E_g": 0.2, "E_auto": 0.0, "E_decay": 0.9, "Ea_E_J": 42000, "E_ext_shift": 0.4, "alpha_E": 0.05,
         "RH_mold_thr": 95.0, "mold_rate_ref": 0.10, "mold_sens_RH": 14.0, "mold_max_penalty": 0.90, "Ea_mold_J": 46000.0,
-        "is_climacteric": False, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0
+        "is_climacteric": False, "CI_thr": 0.0, "CI_rate": 0.0, "CI_sl_stress": 1.0, "CI_max_penalty": 0.0,
+        "thermal_inertia_h": 3.0, "dew_drying_h": 3.5, "mold_lag_days": 1.2, "Ea_lag_J": 70000.0
     },
     "orange": {
         "label": "Orange", "Tref_C": 5.0, "Ea_J": 40000, "k_firm_ref": 0.012, "beta_RH": 1.0, "RH_ref": 90,
@@ -353,7 +378,8 @@ PRESETS = {
         "acidity_0_default": 1.0, "acidity_min": 0.3, "k_acidity_ref": 0.005, "Ea_acidity_J": 55000, "qual_acidity_target": 1.0,
         "SL_ref": 120.0, "Ea_SL_J": 42000.0, "E0_int": 0.002, "Eref_prod": 0.01, "E_t0": 999, "E_g": 0.2, "E_auto": 0.0, "E_decay": 0.8, "Ea_E_J": 40000, "E_ext_shift": 0.5, "alpha_E": 0.15,
         "RH_mold_thr": 96.0, "mold_rate_ref": 0.03, "mold_sens_RH": 8.0, "mold_max_penalty": 0.50, "Ea_mold_J": 42000.0,
-        "is_climacteric": False, "CI_type": "threshold", "CI_thr": 3.0, "CI_rate": 0.012, "CI_sl_stress": 1.5, "CI_max_penalty": 0.40
+        "is_climacteric": False, "CI_type": "threshold", "CI_thr": 3.0, "CI_rate": 0.012, "CI_sl_stress": 1.5, "CI_max_penalty": 0.40,
+        "thermal_inertia_h": 11.0, "dew_drying_h": 3.0, "mold_lag_days": 3.5, "Ea_lag_J": 62000.0
     }
 }
 
@@ -447,6 +473,86 @@ def fill_nulls_with_warehouse_sim(temp_array, rh_array, region_codes, alphas, st
     res_temp = [T_int_series[i] if t is None else t for i, t in enumerate(temp_array)]
     res_rh = [HR_int_series[i] if r is None else r for i, r in enumerate(rh_array)]
     return res_temp, res_rh
+
+# =============================================================================
+# 2B. MOLD KINETICS: THERMAL INERTIA, DEW POINT CONDENSATION & SPORE LATENCY
+# =============================================================================
+
+def simulate_mold_with_condensation_and_latency(
+    t: np.ndarray,
+    T_c_ext: np.ndarray,
+    RH_pct_ext: np.ndarray,
+    p: dict,
+    dt: float,
+):
+    """Simulate mold growth with fruit thermal inertia, surface condensation, and spore lag phase."""
+    R = 8.314
+    Tref_K = float(p["Tref_C"]) + 273.15
+    RH_mold_thr = float(p["RH_mold_thr"])
+    mold_rate_ref = float(p["mold_rate_ref"])
+    mold_sens_RH = float(p["mold_sens_RH"])
+    Ea_mold_J = float(p["Ea_mold_J"])
+
+    tau_therm = float(p.get("thermal_inertia_h", 8.0)) / 24.0
+    tau_dry = float(p.get("dew_drying_h", 3.0)) / 24.0
+    lag_ref = float(p.get("mold_lag_days", 2.5))
+    Ea_lag = float(p.get("Ea_lag_J", 65000.0))
+
+    T_fruto = np.zeros_like(t)
+    T_fruto[0] = float(T_c_ext[0])
+    mold = np.zeros_like(t)
+    water_film_arr = np.zeros_like(t)
+    lag_progress_arr = np.zeros_like(t)
+
+    water_film = 0.0
+    lag_progress = 0.0
+
+    for i in range(1, len(t)):
+        T_ar = float(T_c_ext[i - 1])
+        RH_ar = float(RH_pct_ext[i - 1])
+
+        # 1. Inércia Térmica do Fruto (solução exponencial exata da Lei de Newton)
+        T_fruto[i] = T_ar - (T_ar - T_fruto[i - 1]) * math.exp(-dt / max(1e-4, tau_therm))
+
+        # 2. Ponto de Orvalho (Magnus-Tetens)
+        gamma = (17.27 * T_ar) / (237.3 + T_ar) + math.log(max(1e-4, RH_ar / 100.0))
+        T_dew = (237.3 * gamma) / (17.27 - gamma)
+
+        # 3. Deteção de Condensação na Casca
+        if T_fruto[i - 1] <= T_dew:
+            water_film = 1.0
+            RH_eff = 100.0
+        elif water_film > 0.0:
+            water_film = max(0.0, water_film - (dt / max(1e-4, tau_dry)))
+            RH_eff = 100.0 if water_film > 0.0 else RH_ar
+        else:
+            RH_eff = RH_ar
+
+        # 4. Relógio de Latência do Esporo (à temperatura real da casca/fruto)
+        T_K_fruto = T_fruto[i - 1] + 273.15
+        k_lag_T = math.exp((-Ea_lag / R) * (1.0 / T_K_fruto - 1.0 / (20.0 + 273.15)))
+        if RH_eff >= RH_mold_thr or water_film > 0.0:
+            water_boost = 2.0 if water_film > 0.0 else 1.0
+            d_lag = (1.0 / max(0.1, lag_ref)) * k_lag_T * water_boost * dt
+            lag_progress = min(100.0, lag_progress + d_lag)
+
+        lag_p4 = lag_progress ** 4
+        fator_latencia = lag_p4 / (1.0 + lag_p4)
+
+        # 5. Taxa de Bolor Ativa (Arrhenius à temperatura do fruto, humidade efetiva e latência)
+        mold_T_f = math.exp((-Ea_mold_J / R) * (1.0 / T_K_fruto - 1.0 / Tref_K))
+        RH_excess = max(0.0, (RH_eff - RH_mold_thr) / 100.0)
+        RH_factor = 1.0 - math.exp(-mold_sens_RH * RH_excess)
+        cold_mold_inhibition = min(1.0, max(0.05, (T_fruto[i - 1] - (-1.0)) / 10.0))
+
+        rate = mold_rate_ref * mold_T_f * RH_factor * cold_mold_inhibition * fator_latencia
+        dm = (rate * (1.0 - mold[i - 1])) * dt
+        mold[i] = min(1.0, max(0.0, mold[i - 1] + dm))
+
+        water_film_arr[i] = water_film
+        lag_progress_arr[i] = lag_progress
+
+    return mold, T_fruto, water_film_arr, lag_progress_arr
 
 # =============================================================================
 # 3. MODEL 1: WITH ETHYLENE (Prof. Luís Paulo - 2D Stakeholder Quality)
@@ -575,17 +681,11 @@ def run_simulation_prof_luis_paulo(fruit_key: str, T_c: list[float], E_ext_ppm: 
             brix[i] = max(brix_min, brix[i-1] + db)
 
     # 4. Mold Development, Cold Injury & Physical Shelf Life Cap
-    RH_mold_thr = float(p["RH_mold_thr"])
-    mold_rate_ref = float(p["mold_rate_ref"])
-    mold_sens_RH = float(p["mold_sens_RH"])
-    mold_max_penalty = float(p["mold_max_penalty"])
-    Ea_mold_J = float(p["Ea_mold_J"])
-    mold_T = k_temp_scaling(Ea_mold_J, T_K, Tref_K)
+    mold, _, _, _ = simulate_mold_with_condensation_and_latency(t, T_c_ext, RH_pct_ext, p, dt)
 
     SL_ref = float(p.get("SL_ref", 60.0))
     consumed_SL = np.zeros_like(t)
 
-    mold = np.zeros_like(t)
     cold_injury = np.zeros_like(t)
     for i in range(1, len(t)):
         # Acumulação de Dano por Frio (Cold Injury)
@@ -603,13 +703,6 @@ def run_simulation_prof_luis_paulo(fruit_key: str, T_c: list[float], E_ext_ppm: 
             delta_T_cold = max(0.0, CI_thr - T_c_ext[i-1])
         dCI = CI_rate * delta_T_cold * dt
         cold_injury[i] = min(1.0, cold_injury[i-1] + dCI)
-
-        RH_excess = max(0.0, (RH_pct_ext[i-1] - RH_mold_thr) / 100.0)
-        RH_factor = 1.0 - np.exp(-mold_sens_RH * RH_excess)
-        cold_mold_inhibition = np.clip((T_c_ext[i-1] - (-1.0)) / 10.0, 0.05, 1.0)
-        rate = mold_rate_ref * mold_T[i-1] * RH_factor * cold_mold_inhibition
-        dm = (rate * (1.0 - mold[i-1])) * dt
-        mold[i] = min(1.0, max(0.0, mold[i-1] + dm))
 
         pkg_method = pkg_ext[i-1]
         fator_embalagem = PACKAGING_FACTORS.get(pkg_method, 1.0)
@@ -842,25 +935,9 @@ def run_simulation_sofia_machado(fruit_key: str, T_c: list[float], RH_pct: list[
 
     remaining_SL_fisica_cap = np.maximum(0, SL_ref - consumed_SL)
 
-    # 4. Mold Development (via VPD Deficit)
-    RH_mold_thr = float(p["RH_mold_thr"])
-    mold_rate_ref = float(p["mold_rate_ref"])
-    mold_sens_RH = float(p["mold_sens_RH"])
-    mold_max_penalty = float(p["mold_max_penalty"])
-    Ea_mold_J = float(p["Ea_mold_J"])
-    mold_T = k_temp_scaling(Ea_mold_J, T_K, Tref_K)
-
-    mold = np.zeros_like(t)
-    for i in range(1, len(t)):
-        VPD_thr = calc_vpd(T_c_ext[i-1], RH_mold_thr)
-        VPD_deficit = max(VPD_thr - VPD[i-1], 0)
-        VPD_factor = 1.0 - np.exp(-mold_sens_RH * VPD_deficit * 5.0)
-        cold_mold_inhibition = np.clip((T_c_ext[i-1] - (-1.0)) / 10.0, 0.05, 1.0)
-        rate = mold_rate_ref * mold_T[i-1] * VPD_factor * cold_mold_inhibition
-        dm = (rate * (1.0 - mold[i-1])) * dt
-        mold[i] = min(1.0, max(0.0, mold[i-1] + dm))
-
-    mold_penalty = mold_max_penalty * mold
+    # 4. Mold Development (Thermal Inertia, Dew Point Condensation & Spore Latency)
+    mold, _, _, _ = simulate_mold_with_condensation_and_latency(t, T_c_ext, RH_pct_ext, p, dt)
+    mold_penalty = float(p["mold_max_penalty"]) * mold
 
     # 5. Continuous Smooth Quality (0-100) & Biological Sanity Synchronization
     firm_score = 1.0 / (1.0 + np.exp(-0.35 * (firmness - float(p["qual_firmness_threshold"]))))
