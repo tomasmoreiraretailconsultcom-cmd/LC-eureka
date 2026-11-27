@@ -387,12 +387,45 @@ def build_quality_figure(t_arr, q_arr, min_qual, stakeholder, total_days, pt_a, 
     return fig_q
 
 
-def build_firmness_figure(t_arr, cdata, fx, fy, threshold):
+def _slice_to_x_max(t_arr, y_arr, x_max):
+    """Corta as séries estimadas exatamente no último ponto real (x_max)."""
+    if x_max is None or not t_arr:
+        return t_arr, y_arr
+    cut_idx = max(1, min(len(t_arr), day_to_idx(x_max, len(t_arr)) + 1))
+    return t_arr[:cut_idx], y_arr[:cut_idx]
+
+
+def _add_mae_annotation(fig, mae, unit=""):
+    """Adiciona uma observação com o Erro (MAE) no topo esquerdo do gráfico."""
+    if mae is None:
+        return
+    label = f"<b>Erro (MAE): {mae:.2f} {unit}</b>" if unit else f"<b>Erro (MAE): {mae:.2f}</b>"
+    fig.add_annotation(
+        text=label,
+        xref="paper",
+        yref="paper",
+        x=0.0,
+        y=1.02,
+        xanchor="left",
+        yanchor="bottom",
+        showarrow=False,
+        font=dict(size=11, color="#0F172A"),
+        bgcolor="#F8FAFC",
+        bordercolor="#CBD5E1",
+        borderwidth=1,
+        borderpad=4,
+    )
+
+
+def build_firmness_figure(t_arr, cdata, fx, fy, threshold, x_max=None, mae=None):
+    x_end = x_max if x_max is not None else (max(fx) if fx else float(t_arr[-1]))
+    t_plot, f_plot = _slice_to_x_max(t_arr, cdata["firmness"], x_end)
+
     fig_f = go.Figure()
     fig_f.add_trace(
         go.Scatter(
-            x=t_arr,
-            y=cdata["firmness"],
+            x=t_plot,
+            y=f_plot,
             mode="lines",
             name="Firmeza Estimada (N)",
             line=dict(color="#1E40AF", width=2.5),
@@ -408,6 +441,7 @@ def build_firmness_figure(t_arr, cdata, fx, fy, threshold):
                 mode="markers",
                 name="Firmeza Real (N)",
                 marker=dict(color="#DC2626", size=10, symbol="diamond"),
+                cliponaxis=False,
             )
         )
     fig_f.add_hline(
@@ -417,29 +451,34 @@ def build_firmness_figure(t_arr, cdata, fx, fy, threshold):
         annotation_text="Limiar Mínimo Textura",
         annotation_position="bottom right",
     )
+    _add_mae_annotation(fig_f, mae, unit="N")
     fig_f.update_layout(
         showlegend=False,
         xaxis_title="Dias",
         yaxis_title="Firmeza (Newtons)",
         plot_bgcolor="#FFFFFF",
         paper_bgcolor="#FFFFFF",
-        margin=dict(l=55, r=25, t=15, b=45),
+        margin=dict(l=55, r=30, t=38, b=45),
         yaxis=dict(rangemode="tozero", gridcolor="#E2E8F0"),
-        xaxis=dict(gridcolor="#E2E8F0"),
+        xaxis=dict(range=[0, max(float(x_end), 1.0)], rangemode="tozero", gridcolor="#E2E8F0"),
     )
     return fig_f
 
 
-def build_chem_figure(t_arr, cdata, bx, by, ax, ay, active="brix"):
+def build_chem_figure(t_arr, cdata, bx, by, ax, ay, active="brix", x_max=None, mae=None):
     brix_vis = True if active == "brix" else "legendonly"
     acid_vis = True if active == "acidity" else "legendonly"
 
+    active_x = bx if active == "brix" else ax
+    x_end = x_max if x_max is not None else (max(active_x) if active_x else float(t_arr[-1]))
+
     fig_chem = make_subplots(specs=[[{"secondary_y": True}]])
     if "brix" in cdata:
+        t_plot_b, b_plot = _slice_to_x_max(t_arr, cdata["brix"], x_end)
         fig_chem.add_trace(
             go.Scatter(
-                x=t_arr,
-                y=cdata["brix"],
+                x=t_plot_b,
+                y=b_plot,
                 mode="lines",
                 name="Açúcares Estimado (°Bx)",
                 line=dict(color="#D97706", width=2.5),
@@ -456,14 +495,16 @@ def build_chem_figure(t_arr, cdata, bx, by, ax, ay, active="brix"):
                     name="Brix Real",
                     marker=dict(color="#D97706", size=9, symbol="circle"),
                     visible=brix_vis,
+                    cliponaxis=False,
                 ),
                 secondary_y=False,
             )
     if "acidity" in cdata:
+        t_plot_a, a_plot = _slice_to_x_max(t_arr, cdata["acidity"], x_end)
         fig_chem.add_trace(
             go.Scatter(
-                x=t_arr,
-                y=cdata["acidity"],
+                x=t_plot_a,
+                y=a_plot,
                 mode="lines",
                 name="Acidez Estimada (%)",
                 line=dict(color="#DC2626", width=2.5, dash="dash"),
@@ -480,16 +521,19 @@ def build_chem_figure(t_arr, cdata, bx, by, ax, ay, active="brix"):
                     name="Acidez Real",
                     marker=dict(color="#DC2626", size=9, symbol="square"),
                     visible=acid_vis,
+                    cliponaxis=False,
                 ),
                 secondary_y=True,
             )
+    unit = "°Bx" if active == "brix" else "%"
+    _add_mae_annotation(fig_chem, mae, unit=unit)
     fig_chem.update_layout(
         xaxis_title="Dias",
         plot_bgcolor="#FFFFFF",
         paper_bgcolor="#FFFFFF",
-        margin=dict(l=55, r=55, t=35, b=45),
+        margin=dict(l=55, r=55, t=42, b=45),
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-        xaxis=dict(gridcolor="#E2E8F0"),
+        xaxis=dict(range=[0, max(float(x_end), 1.0)], rangemode="tozero", gridcolor="#E2E8F0"),
     )
     fig_chem.update_yaxes(title_text="Açúcares (°Bx)", secondary_y=False, rangemode="tozero", gridcolor="#E2E8F0")
     fig_chem.update_yaxes(title_text="Acidez (%)", secondary_y=True, rangemode="tozero", showgrid=False)
@@ -579,33 +623,45 @@ def evaluate_and_save_case(
         )
         renderer.save_png(fig_q, os.path.join(out_dir, "qualidade.png"), width=1050, height=480)
 
+    fx, fy = _xy("firmness")
+    bx, by = _xy("brix")
+    ax, ay = _xy("acidity")
+
+    abs_f = _abs_errors("firmness")
+    abs_b = _abs_errors("brix")
+    abs_a = _abs_errors("acidity")
+    mae_f = calc_mae(abs_f)
+    mae_b = calc_mae(abs_b)
+    mae_a = calc_mae(abs_a)
+
     if "firmness" in cdata:
-        fx, fy = _xy("firmness")
         fig_f = build_firmness_figure(
             t_arr,
             cdata,
             fx,
             fy,
             float(preset.get("qual_firmness_threshold", 8.0)),
+            x_max=max(fx) if fx else None,
+            mae=mae_f,
         )
         renderer.save_png(fig_f, os.path.join(out_dir, "firmeza.png"))
 
     if "brix" in cdata:
-        bx, by = _xy("brix")
-        ax, ay = _xy("acidity")
-        fig_brix = build_chem_figure(t_arr, cdata, bx, by, ax, ay, active="brix")
+        fig_brix = build_chem_figure(
+            t_arr, cdata, bx, by, ax, ay, active="brix",
+            x_max=max(bx) if bx else None,
+            mae=mae_b,
+        )
         renderer.save_png(fig_brix, os.path.join(out_dir, "brix.png"))
 
     if "acidity" in cdata:
-        bx, by = _xy("brix")
-        ax, ay = _xy("acidity")
         if ax:
-            fig_acid = build_chem_figure(t_arr, cdata, bx, by, ax, ay, active="acidity")
+            fig_acid = build_chem_figure(
+                t_arr, cdata, bx, by, ax, ay, active="acidity",
+                x_max=max(ax),
+                mae=mae_a,
+            )
             renderer.save_png(fig_acid, os.path.join(out_dir, "acidez.png"))
-
-    abs_f = _abs_errors("firmness")
-    abs_b = _abs_errors("brix")
-    abs_a = _abs_errors("acidity")
 
     return {
         "grupo": grupo,
@@ -614,11 +670,11 @@ def evaluate_and_save_case(
         "fruit_key": fruit_key,
         "stakeholder": stakeholder,
         "n_firmness": len(abs_f),
-        "mae_firmness": calc_mae(abs_f),
+        "mae_firmness": mae_f,
         "n_brix": len(abs_b),
-        "mae_brix": calc_mae(abs_b),
+        "mae_brix": mae_b,
         "n_acidity": len(abs_a),
-        "mae_acidity": calc_mae(abs_a),
+        "mae_acidity": mae_a,
         "_abs_firmness": abs_f,
         "_abs_brix": abs_b,
         "_abs_acidity": abs_a,
@@ -746,9 +802,29 @@ def process_ensaio_20c(renderer, out_root, stakeholder):
     return rows
 
 
+def _read_section_rows(ws, title_prefix):
+    """Lê dinamicamente as linhas de dados de uma secção de Valores_Reais até à primeira linha em branco."""
+    rows = []
+    for r in range(1, ws.max_row + 1):
+        val = str(ws.cell(r, 1).value or "").strip()
+        if val.startswith(title_prefix):
+            curr = r + 2  # Salta título da secção e cabeçalho da tabela
+            while curr <= ws.max_row:
+                label = ws.cell(curr, 1).value
+                if label is None or str(label).strip() == "":
+                    break
+                rows.append(curr)
+                curr += 1
+            break
+    return rows
+
+
 def process_amostra_camaras(renderer, out_root, stakeholder, apenas_medias=False):
     base = os.path.join(CENARIOS_REAIS_DIR, "amostra_camaras_macas")
-    lote_dirs = sorted(glob.glob(os.path.join(base, "lote_*")))
+    lote_dirs = sorted(
+        d for d in glob.glob(os.path.join(base, "cenario_*")) + glob.glob(os.path.join(base, "lote_*"))
+        if os.path.isdir(d)
+    )
     rows = []
 
     for ldir in lote_dirs:
@@ -766,8 +842,9 @@ def process_amostra_camaras(renderer, out_root, stakeholder, apenas_medias=False
         wb = openpyxl.load_workbook(vr_files[0], data_only=True)
         ws = wb["Valores_Reais"]
 
+        sintese_rows = _read_section_rows(ws, "1. Síntese")
         pts_media = []
-        for r_idx in (7, 8):
+        for r_idx in sintese_rows:
             dt = parse_any_date(ws.cell(r_idx, 2).value)
             if dt is None:
                 continue
@@ -788,32 +865,35 @@ def process_amostra_camaras(renderer, out_root, stakeholder, apenas_medias=False
         if apenas_medias:
             continue
 
-        dt_t0 = parse_any_date(ws.cell(13, 2).value)
-        dt_end = parse_any_date(ws.cell(14, 2).value)
+        firmeza_rows = _read_section_rows(ws, "2. Firmeza")
+        brix_rows = _read_section_rows(ws, "3. Teor")
         ac_t0 = pts_media[0]["acidity"] if pts_media else None
         brix_t0_media = pts_media[0]["brix"] if pts_media else None
 
+        n_pts = max(len(firmeza_rows), len(brix_rows))
         for f_idx in range(1, 11):
             col = 2 + f_idx
-            f_t0_kg = to_float(ws.cell(13, col).value)
-            f_end_kg = to_float(ws.cell(14, col).value)
-            b_t0 = to_float(ws.cell(19, col).value)
-            b_end = to_float(ws.cell(20, col).value)
-
             pts_fruto = []
-            if dt_t0 is not None:
+            for p_i in range(n_pts):
+                r_f = firmeza_rows[p_i] if p_i < len(firmeza_rows) else None
+                r_b = brix_rows[p_i] if p_i < len(brix_rows) else None
+
+                dt_f = parse_any_date(ws.cell(r_f, 2).value) if r_f else None
+                dt_b = parse_any_date(ws.cell(r_b, 2).value) if r_b else None
+                dt = dt_f or dt_b
+                if dt is None:
+                    continue
+
+                f_kg = to_float(ws.cell(r_f, col).value) if r_f else None
+                b_val = to_float(ws.cell(r_b, col).value) if r_b else None
+                if p_i == 0 and b_val is None:
+                    b_val = brix_t0_media
+
                 pts_fruto.append({
-                    "date": dt_t0,
-                    "firmness": f_t0_kg * KG_TO_N if f_t0_kg is not None else None,
-                    "brix": b_t0 if b_t0 is not None else brix_t0_media,
-                    "acidity": ac_t0,
-                })
-            if dt_end is not None:
-                pts_fruto.append({
-                    "date": dt_end,
-                    "firmness": f_end_kg * KG_TO_N if f_end_kg is not None else None,
-                    "brix": b_end,
-                    "acidity": None,
+                    "date": dt,
+                    "firmness": f_kg * KG_TO_N if f_kg is not None else None,
+                    "brix": b_val,
+                    "acidity": ac_t0 if p_i == 0 else None,
                 })
 
             caso = f"fruto_{f_idx:02d}"

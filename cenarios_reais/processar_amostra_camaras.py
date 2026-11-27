@@ -2,14 +2,16 @@
 """
 processar_amostra_camaras.py
 
-Processa os 63 lotes com histórico de frio da folha '2025 2026' do ficheiro:
-'CATF.IP23-Controlo Qualidade Embalamento v1.4-18-2-2025 GALA+GOLDEN vf.xlsx'
+Processa os 63 registos com histórico de frio da folha 'dados por ordem' do ficheiro:
+'CATF.IP23-Controlo Qualidade Embalamento v1.4-18-2-2025 GALA+GOLDEN vf 1.xlsx'
 
-Gera para cada lote uma pasta individual dentro de 'cenarios_prof/amostra_camaras/':
-  - cenario_lote_XX_...xlsx : Cenário diário compatível com a app (folha única 'Cenario')
-  - valores_reais_lote_XX_...xlsx : 11 valores reais (10 maçãs + média) para Firmeza e Brix
-    (Valores iniciais T0 importados de 'Base de dados Maçã (Retaill) experiencias ESS_UTP.xlsx'
-     e valores finais medidos no embalamento da câmara)
+Agrupa estritamente por (Produtor, Data Entrada Frio, Variedade, Tipo de Câmara),
+calcula a média diária quando existem múltiplas linhas na mesma data de saída e
+constrói segmentos temporais contínuos quando existem múltiplas datas de saída.
+
+Gera para cada lote agrupado uma pasta individual dentro de 'cenarios_reais/amostra_camaras_macas/':
+  - cenario_lote_XX_...xlsx : Cenário diário por segmentos compatível com a app (folha única 'Cenario')
+  - valores_reais_lote_XX_...xlsx : Valores reais (T0 + 1 ou mais pontos de saída) para Firmeza e Brix
 
 Gera ainda um ficheiro de índice geral:
   - resumo_todos_lotes_amostra_camaras.xlsx
@@ -18,8 +20,10 @@ Gera ainda um ficheiro de índice geral:
 import os
 import sys
 import glob
+import shutil
 import datetime
 from datetime import timedelta
+from collections import defaultdict
 
 # Forçar stdout em utf-8 no Windows se necessário
 if sys.stdout.encoding and sys.stdout.encoding.lower() != 'utf-8':
@@ -48,8 +52,8 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 # Aceita letras de colunas ('A', 'B', ...) ou números inteiros (1, 2, ...).
 # ==============================================================================
 # Ficheiros e Folhas
-FICHEIRO_CAMARAS = "CATF.IP23-Controlo Qualidade Embalamento v1.4-18-2-2025 GALA+GOLDEN vf.xlsx"
-FOLHA_CAMARAS = "2025 2026"
+FICHEIRO_CAMARAS = "CATF.IP23-Controlo Qualidade Embalamento v1.4-18-2-2025 GALA+GOLDEN vf 1.xlsx"
+FOLHA_CAMARAS = "dados por ordem"
 LINHA_INICIO_DADOS_CAMARAS = 5
 
 FICHEIRO_ESS_UTP = "Base de dados Maçã (Retaill) experiencias ESS_UTP.xlsx"
@@ -378,6 +382,7 @@ def extrair_lotes_camaras():
                     b_med = sum(valid_b) / len(valid_b)
                     
             lotes.append({
+                "lote_num": len(lotes) + 1,
                 "row_idx": r,
                 "produtor": produtor,
                 "variedade": variedade,
@@ -402,21 +407,107 @@ def extrair_lotes_camaras():
             
     return lotes
 
-def criar_excel_cenario(lote, filepath):
+def _mean_or_none(vals):
+    valid = [v for v in vals if v is not None]
+    return (sum(valid) / len(valid)) if valid else None
+
+
+def agrupar_lotes_camaras(lotes_raw):
+    """
+    Agrupa registos estritamente por (produtor, data_entrada_frio, variedade, camara).
+    Dentro de cada grupo, agrega registos com a mesma data de saída numa única
+    média diária e ordena os pontos de saída cronologicamente.
+    """
+    grupos_map = {}
+    for lote in lotes_raw:
+        key = (
+            lote["produtor"],
+            lote["dt_frio"].date(),
+            lote["variedade"],
+            lote["camara"],
+        )
+        if key not in grupos_map:
+            grupos_map[key] = []
+        grupos_map[key].append(lote)
+
+    grupos = []
+    for (produtor, dt_in_date, variedade, camara), items in grupos_map.items():
+        by_exit = defaultdict(list)
+        for it in items:
+            by_exit[it["dt_emb"].date()].append(it)
+
+        pontos_saida = []
+        for exit_date in sorted(by_exit.keys()):
+            day_rows = by_exit[exit_date]
+            f_med_kg = _mean_or_none([r["f_med_kg"] for r in day_rows])
+            f_med_n = f_med_kg * KG_TO_N if f_med_kg is not None else None
+            b_med = _mean_or_none([r["b_med"] for r in day_rows])
+            f_vals = [_mean_or_none([r["f_vals"][i] for r in day_rows]) for i in range(10)]
+            b_vals = [_mean_or_none([r["b_vals"][i] for r in day_rows]) for i in range(10)]
+
+            calibres_dia = []
+            for r in day_rows:
+                c_str = str(r["calibre"]).strip() if r["calibre"] is not None else ""
+                if c_str and c_str not in calibres_dia:
+                    calibres_dia.append(c_str)
+
+            pontos_saida.append({
+                "dt_emb": datetime.datetime.combine(exit_date, datetime.time(0, 0)),
+                "dias_frio": (exit_date - dt_in_date).days,
+                "temp_c": _mean_or_none([r["temp_c"] for r in day_rows]),
+                "hum_p": _mean_or_none([r["hum_p"] for r in day_rows]),
+                "tempo_semanas": _mean_or_none([r["tempo_semanas"] for r in day_rows]),
+                "f_med_kg": f_med_kg,
+                "f_med_n": f_med_n,
+                "b_med": b_med,
+                "f_vals": f_vals,
+                "b_vals": b_vals,
+                "row_idxs": [r["row_idx"] for r in day_rows],
+                "lote_nums": [r["lote_num"] for r in day_rows],
+                "calibres": calibres_dia,
+                "n_linhas": len(day_rows),
+            })
+
+        all_calibres = []
+        for p in pontos_saida:
+            for c_str in p["calibres"]:
+                if c_str not in all_calibres:
+                    all_calibres.append(c_str)
+
+        grupos.append({
+            "produtor": produtor,
+            "variedade": variedade,
+            "camara": camara,
+            "dt_frio": datetime.datetime.combine(dt_in_date, datetime.time(0, 0)),
+            "pontos_saida": pontos_saida,
+            "row_idxs": [r["row_idx"] for r in items],
+            "lote_nums": sorted(r["lote_num"] for r in items),
+            "n_lotes": len(items),
+            "calibres": all_calibres,
+            "dias_frio_max": pontos_saida[-1]["dias_frio"],
+        })
+
+    return grupos
+
+
+def criar_excel_cenario(grupo, filepath):
     """
     Cria o ficheiro de cenário climático (.xlsx) com a folha única 'Cenario'.
     Segment_ID, Date, Day, Temperature_C, Humidity_Percent, Region, Packaging
+
+    Quando existem múltiplos pontos de saída cronológicos, cria segmentos
+    contínuos: [entrada..saída_1] -> Seg 1, [saída_1+1..saída_2] -> Seg 2, etc.
     """
     wb = openpyxl.Workbook()
     ws = wb.active
     ws.title = "Cenario"
     ws.views.sheetView[0].showGridLines = True
-    
+
     headers = [
         "Segment_ID", "Date", "Day", "Temperature_C", "Humidity_Percent", "Region", "Packaging"
     ]
     ws.append(headers)
-    
+
     # Formatar cabeçalho
     for col_idx in range(1, len(headers) + 1):
         cell = ws.cell(row=1, column=col_idx)
@@ -425,89 +516,104 @@ def criar_excel_cenario(lote, filepath):
         cell.alignment = ALIGN_CENTER
         cell.border = BORDER_THIN
     ws.row_dimensions[1].height = 26
-    
-    start_date = lote["dt_frio"].date()
-    end_date = lote["dt_emb"].date()
-    total_days = (end_date - start_date).days + 1  # inclusivo
-    
-    for day_num in range(1, total_days + 1):
-        curr_date = start_date + timedelta(days=day_num - 1)
-        row_vals = [
-            1,                                      # Segment_ID
-            curr_date.strftime("%Y-%m-%d"),         # Date
-            day_num,                                # Day
-            round(lote["temp_c"], 2),               # Temperature_C
-            round(lote["hum_p"], 2),                # Humidity_Percent
-            "PT-LVT",                               # Region
-            "bulk"                                  # Packaging
-        ]
-        ws.append(row_vals)
-        
-        row_idx = day_num + 1
-        ws.row_dimensions[row_idx].height = 20
-        for col_idx in range(1, len(row_vals) + 1):
-            cell = ws.cell(row=row_idx, column=col_idx)
-            cell.font = REGULAR_FONT
-            cell.border = BORDER_THIN
-            if col_idx in [1, 2, 3]:
-                cell.alignment = ALIGN_CENTER
-            elif col_idx in [4, 5]:
-                cell.alignment = ALIGN_RIGHT
-                cell.number_format = "0.00"
-            else:
-                cell.alignment = ALIGN_CENTER
-                
+
+    start_date = grupo["dt_frio"].date()
+    pontos = grupo["pontos_saida"]
+    day_num = 1
+
+    for seg_idx, p in enumerate(pontos, 1):
+        seg_start = start_date if seg_idx == 1 else pontos[seg_idx - 2]["dt_emb"].date() + timedelta(days=1)
+        seg_end = p["dt_emb"].date()
+        n_seg_days = (seg_end - seg_start).days + 1  # inclusivo
+
+        for offset in range(n_seg_days):
+            curr_date = seg_start + timedelta(days=offset)
+            row_vals = [
+                seg_idx,                                # Segment_ID
+                curr_date.strftime("%Y-%m-%d"),         # Date
+                day_num,                                # Day
+                round(p["temp_c"], 2),                  # Temperature_C
+                round(p["hum_p"], 2),                   # Humidity_Percent
+                "PT-LVT",                               # Region
+                "bulk"                                  # Packaging
+            ]
+            ws.append(row_vals)
+
+            row_idx = day_num + 1
+            ws.row_dimensions[row_idx].height = 20
+            for col_idx in range(1, len(row_vals) + 1):
+                cell = ws.cell(row=row_idx, column=col_idx)
+                cell.font = REGULAR_FONT
+                cell.border = BORDER_THIN
+                if col_idx in [1, 2, 3]:
+                    cell.alignment = ALIGN_CENTER
+                elif col_idx in [4, 5]:
+                    cell.alignment = ALIGN_RIGHT
+                    cell.number_format = "0.00"
+                else:
+                    cell.alignment = ALIGN_CENTER
+
+            day_num += 1
+
     # Auto-ajuste de largura de colunas
     for col in ws.columns:
         col_letter = get_column_letter(col[0].column)
         max_len = max(len(str(cell.value or "")) for cell in col)
         ws.column_dimensions[col_letter].width = max(max_len + 4, 12)
-        
+
     wb.save(filepath)
 
-def criar_excel_valores_reais(lote, t0_info, filepath):
+
+def criar_excel_valores_reais(grupo, t0_info, filepath):
     """
     Cria o ficheiro de valores reais de referência com 10 maçãs + média
-    para Firmeza e Brix, em T0 (início) e no Embalamento (saída).
+    para Firmeza e Brix, em T0 (entrada) e em 1 ou mais pontos de saída (embalamento).
     """
     wb = openpyxl.Workbook()
     ws = wb.active
     ws.title = "Valores_Reais"
     ws.views.sheetView[0].showGridLines = True
-    
-    # 1. TÍTULO E METADADOS DO LOTE
-    ws.cell(1, 1, f"Amostra Câmaras — Lote {lote['id_str']}")
+
+    pontos = grupo["pontos_saida"]
+    calibres_str = ", ".join(grupo["calibres"]) if grupo["calibres"] else "-"
+    linhas_str = ", ".join(str(r) for r in grupo["row_idxs"])
+    lotes_str = ", ".join(str(n) for n in grupo["lote_nums"])
+    saidas_str = " ; ".join(
+        f"{p['dt_emb'].strftime('%Y-%m-%d')} ({p['dias_frio']}d, {p['temp_c']:.1f} ºC, {p['hum_p']:.0f}% HR)"
+        for p in pontos
+    )
+
+    # 1. TÍTULO E METADADOS DO CENÁRIO
+    lote_word = "lote" if grupo["n_lotes"] == 1 else "lotes"
+    ws.cell(1, 1, f"Amostra Câmaras — {grupo['id_str']} ({grupo['n_lotes']} {lote_word}: {lotes_str})")
     ws.cell(1, 1).font = TITLE_FONT
     ws.merge_cells("A1:K1")
     ws.row_dimensions[1].height = 28
-    
+
     ws.cell(2, 1, (
-        f"Espécie: Maçã {lote['variedade']} | Produtor: {lote['produtor']} | "
-        f"Câmara: {lote['camara']} | Calibre: {lote['calibre']} | Linha Excel Original: {lote['row_idx']}"
+        f"Espécie: Maçã {grupo['variedade']} | Produtor: {grupo['produtor']} | "
+        f"Câmara: {grupo['camara']} | Calibres: {calibres_str} | "
+        f"Lotes Originais: {lotes_str} | Linhas Excel Originais: {linhas_str}"
     ))
     ws.cell(2, 1).font = SUBTITLE_FONT
     ws.merge_cells("A2:K2")
     ws.row_dimensions[2].height = 18
-    
-    ws.cell(3, 1, (
-        f"Período em Frio: {lote['dt_frio'].strftime('%Y-%m-%d')} a {lote['dt_emb'].strftime('%Y-%m-%d')} "
-        f"({lote['dias_frio']} dias / {lote['tempo_semanas']} semanas) | "
-        f"Condições Câmara: {lote['temp_c']} ºC, {lote['hum_p']:.0f}% HR"
-    ))
+
+    ws.cell(3, 1, f"Entrada Frio: {grupo['dt_frio'].strftime('%Y-%m-%d')} | Saídas: {saidas_str}")
     ws.cell(3, 1).font = SUBTITLE_FONT
     ws.merge_cells("A3:K3")
     ws.row_dimensions[3].height = 18
-    
+
     curr_row = 5
-    
+
     # 2. TABELA 1: SÍNTESE DOS VALORES REAIS (MÉDIAS)
     ws.cell(curr_row, 1, "1. Síntese dos Valores Médios Reais")
     ws.cell(curr_row, 1).font = DARK_BOLD_FONT
     curr_row += 1
-    
+
     headers_sintese = [
-        "Momento", "Data Real", "Dia Cenário", 
-        "Firmeza Média (kg/cm²)", "Firmeza Média (N)", 
+        "Momento", "Data Real", "Dia Cenário",
+        "Firmeza Média (kg/cm²)", "Firmeza Média (N)",
         "Brix Médio (ºBx)", "Acidez Média (%)", "Origem dos Dados"
     ]
     ws.row_dimensions[curr_row].height = 24
@@ -518,31 +624,38 @@ def criar_excel_valores_reais(lote, t0_info, filepath):
         cell.alignment = ALIGN_CENTER
         cell.border = BORDER_THIN
     curr_row += 1
-    
-    # Linha T0
-    row_t0 = [
-        "T0 (Entrada Frio)",
-        lote["dt_frio"].strftime("%Y-%m-%d"),
-        1,
-        round(t0_info["f_med_kg"], 2),
-        round(t0_info["f_med_n"], 1),
-        round(t0_info["b_med"], 2),
-        f"{t0_info['acidez']:.3f} %" if t0_info["acidez"] else "-",
-        f"Referência ESS_UTP ({t0_info['fonte']})"
+
+    rows_sintese = [
+        [
+            "T0 (Entrada Frio)",
+            grupo["dt_frio"].strftime("%Y-%m-%d"),
+            1,
+            round(t0_info["f_med_kg"], 2),
+            round(t0_info["f_med_n"], 1),
+            round(t0_info["b_med"], 2),
+            f"{t0_info['acidez']:.3f} %" if t0_info["acidez"] else "-",
+            f"Referência ESS_UTP ({t0_info['fonte']})"
+        ]
     ]
-    # Linha Embalamento
-    row_emb = [
-        "Embalamento (Saída Frio)",
-        lote["dt_emb"].strftime("%Y-%m-%d"),
-        lote["dias_frio"] + 1,
-        round(lote["f_med_kg"], 2) if lote["f_med_kg"] else "-",
-        round(lote["f_med_n"], 1) if lote["f_med_n"] else "-",
-        round(lote["b_med"], 2) if lote["b_med"] else "-",
-        "-",
-        f"Medição Câmara (Linha {lote['row_idx']})"
-    ]
-    
-    for r_vals in [row_t0, row_emb]:
+    for p_idx, p in enumerate(pontos, 1):
+        label = "Embalamento (Saída Frio)" if len(pontos) == 1 else f"Embalamento {p_idx} (Saída Frio)"
+        origem = (
+            f"Medição Câmara (Linha {p['row_idxs'][0]})"
+            if p["n_linhas"] == 1
+            else f"Média Câmara ({p['n_linhas']} linhas: {','.join(str(r) for r in p['row_idxs'])})"
+        )
+        rows_sintese.append([
+            label,
+            p["dt_emb"].strftime("%Y-%m-%d"),
+            p["dias_frio"] + 1,
+            round(p["f_med_kg"], 2) if p["f_med_kg"] is not None else "-",
+            round(p["f_med_n"], 1) if p["f_med_n"] is not None else "-",
+            round(p["b_med"], 2) if p["b_med"] is not None else "-",
+            "-",
+            origem,
+        ])
+
+    for r_vals in rows_sintese:
         ws.row_dimensions[curr_row].height = 20
         for c_idx, val in enumerate(r_vals, 1):
             cell = ws.cell(curr_row, c_idx, val)
@@ -555,14 +668,14 @@ def criar_excel_valores_reais(lote, t0_info, filepath):
             else:
                 cell.alignment = ALIGN_RIGHT
         curr_row += 1
-        
+
     curr_row += 2
-    
+
     # 3. TABELA 2: DETALHE FRUTO A FRUTO — FIRMEZA (kg/cm² e N)
     ws.cell(curr_row, 1, "2. Firmeza Fruto a Fruto — 10 Frutos e Média (kg/cm² e Newtons)")
     ws.cell(curr_row, 1).font = DARK_BOLD_FONT
     curr_row += 1
-    
+
     headers_f = ["Momento", "Data Real"] + [f"Fruto {i}" for i in range(1, 11)] + ["Média (kg/cm²)", "Média (N)"]
     ws.row_dimensions[curr_row].height = 24
     for c_idx, h in enumerate(headers_f, 1):
@@ -572,22 +685,24 @@ def criar_excel_valores_reais(lote, t0_info, filepath):
         cell.alignment = ALIGN_CENTER
         cell.border = BORDER_THIN
     curr_row += 1
-    
-    # Firmeza T0
-    f_row_t0 = ["T0 (Entrada Frio)", lote["dt_frio"].strftime("%Y-%m-%d")]
+
+    f_row_t0 = ["T0 (Entrada Frio)", grupo["dt_frio"].strftime("%Y-%m-%d")]
     for val in t0_info["f_vals"]:
         f_row_t0.append(round(val, 2) if val is not None else "-")
     f_row_t0.append(round(t0_info["f_med_kg"], 2))
     f_row_t0.append(round(t0_info["f_med_n"], 1))
-    
-    # Firmeza Embalamento
-    f_row_emb = ["Embalamento (Saída Frio)", lote["dt_emb"].strftime("%Y-%m-%d")]
-    for val in lote["f_vals"]:
-        f_row_emb.append(round(val, 2) if val is not None else "-")
-    f_row_emb.append(round(lote["f_med_kg"], 2) if lote["f_med_kg"] else "-")
-    f_row_emb.append(round(lote["f_med_n"], 1) if lote["f_med_n"] else "-")
-    
-    for r_vals in [f_row_t0, f_row_emb]:
+
+    rows_f = [f_row_t0]
+    for p_idx, p in enumerate(pontos, 1):
+        label = "Embalamento (Saída Frio)" if len(pontos) == 1 else f"Embalamento {p_idx} (Saída Frio)"
+        f_row = [label, p["dt_emb"].strftime("%Y-%m-%d")]
+        for val in p["f_vals"]:
+            f_row.append(round(val, 2) if val is not None else "-")
+        f_row.append(round(p["f_med_kg"], 2) if p["f_med_kg"] is not None else "-")
+        f_row.append(round(p["f_med_n"], 1) if p["f_med_n"] is not None else "-")
+        rows_f.append(f_row)
+
+    for r_vals in rows_f:
         ws.row_dimensions[curr_row].height = 20
         for c_idx, val in enumerate(r_vals, 1):
             cell = ws.cell(curr_row, c_idx, val)
@@ -603,14 +718,14 @@ def criar_excel_valores_reais(lote, t0_info, filepath):
             else:
                 cell.alignment = ALIGN_RIGHT
         curr_row += 1
-        
+
     curr_row += 2
-    
+
     # 4. TABELA 3: DETALHE FRUTO A FRUTO — BRIX (ºBx)
     ws.cell(curr_row, 1, "3. Teor de Sólidos Solúveis (ºBrix) — 10 Frutos e Média")
     ws.cell(curr_row, 1).font = DARK_BOLD_FONT
     curr_row += 1
-    
+
     headers_b = ["Momento", "Data Real"] + [f"Fruto {i}" for i in range(1, 11)] + ["Média (ºBx)"]
     ws.row_dimensions[curr_row].height = 24
     for c_idx, h in enumerate(headers_b, 1):
@@ -620,20 +735,22 @@ def criar_excel_valores_reais(lote, t0_info, filepath):
         cell.alignment = ALIGN_CENTER
         cell.border = BORDER_THIN
     curr_row += 1
-    
-    # Brix T0
-    b_row_t0 = ["T0 (Entrada Frio)", lote["dt_frio"].strftime("%Y-%m-%d")]
+
+    b_row_t0 = ["T0 (Entrada Frio)", grupo["dt_frio"].strftime("%Y-%m-%d")]
     for val in t0_info["b_vals"]:
         b_row_t0.append(round(val, 2) if val is not None else "-")
     b_row_t0.append(round(t0_info["b_med"], 2))
-    
-    # Brix Embalamento
-    b_row_emb = ["Embalamento (Saída Frio)", lote["dt_emb"].strftime("%Y-%m-%d")]
-    for val in lote["b_vals"]:
-        b_row_emb.append(round(val, 2) if val is not None else "-")
-    b_row_emb.append(round(lote["b_med"], 2) if lote["b_med"] else "-")
-    
-    for r_vals in [b_row_t0, b_row_emb]:
+
+    rows_b = [b_row_t0]
+    for p_idx, p in enumerate(pontos, 1):
+        label = "Embalamento (Saída Frio)" if len(pontos) == 1 else f"Embalamento {p_idx} (Saída Frio)"
+        b_row = [label, p["dt_emb"].strftime("%Y-%m-%d")]
+        for val in p["b_vals"]:
+            b_row.append(round(val, 2) if val is not None else "-")
+        b_row.append(round(p["b_med"], 2) if p["b_med"] is not None else "-")
+        rows_b.append(b_row)
+
+    for r_vals in rows_b:
         ws.row_dimensions[curr_row].height = 20
         for c_idx, val in enumerate(r_vals, 1):
             cell = ws.cell(curr_row, c_idx, val)
@@ -661,27 +778,29 @@ def criar_excel_valores_reais(lote, t0_info, filepath):
             if len(v) > max_len:
                 max_len = len(v)
         ws.column_dimensions[col_letter].width = max(max_len + 3, 11)
-        
+
     wb.save(filepath)
 
-def criar_resumo_todos_lotes(lotes, filepath):
+
+def criar_resumo_todos_lotes(grupos, filepath):
     """
-    Cria uma tabela mestre de índice geral com todos os 63 lotes processados.
+    Cria uma tabela mestre de índice geral com todos os lotes agrupados e os seus pontos de saída.
     """
     wb = openpyxl.Workbook()
     ws = wb.active
     ws.title = "Resumo_Lotes_Camaras"
     ws.views.sheetView[0].showGridLines = True
-    
+
     headers = [
-        "Lote", "Linha Original", "Espécie", "Produtor", "Câmara", "Calibre",
+        "Cenário", "N Lotes Cenário", "Lotes Originais", "Ponto Saída", "N Lotes Ponto", "Linhas Excel",
+        "Espécie", "Produtor", "Câmara", "Calibres",
         "Data Entrada Frio", "Data Embalamento", "Dias Frio", "Semanas",
         "Temp (ºC)", "Humidade (%)",
         "Firmeza T0 (kg/cm²)", "Firmeza T0 (N)", "Firmeza Emb (kg/cm²)", "Firmeza Emb (N)", "Delta Firmeza (N)",
         "Brix T0 (ºBx)", "Brix Emb (ºBx)", "Delta Brix (ºBx)",
-        "Pasta do Lote"
+        "Pasta do Cenário"
     ]
-    
+
     ws.append(headers)
     for c_idx in range(1, len(headers) + 1):
         cell = ws.cell(1, c_idx)
@@ -690,66 +809,74 @@ def criar_resumo_todos_lotes(lotes, filepath):
         cell.alignment = ALIGN_CENTER
         cell.border = BORDER_THIN
     ws.row_dimensions[1].height = 26
-    
-    for idx, lote in enumerate(lotes, 1):
-        f_t0_n = lote["t0_info"]["f_med_n"]
-        f_emb_n = lote["f_med_n"]
-        delta_f_n = (f_emb_n - f_t0_n) if (f_emb_n and f_t0_n) else None
-        
-        b_t0 = lote["t0_info"]["b_med"]
-        b_emb = lote["b_med"]
-        delta_b = (b_emb - b_t0) if (b_emb and b_t0) else None
-        
-        row_vals = [
-            lote["id_str"],
-            lote["row_idx"],
-            lote["variedade"],
-            lote["produtor"],
-            lote["camara"],
-            str(lote["calibre"]),
-            lote["dt_frio"].strftime("%Y-%m-%d"),
-            lote["dt_emb"].strftime("%Y-%m-%d"),
-            lote["dias_frio"],
-            lote["tempo_semanas"],
-            round(lote["temp_c"], 2),
-            round(lote["hum_p"], 1),
-            round(lote["t0_info"]["f_med_kg"], 2),
-            round(f_t0_n, 1),
-            round(lote["f_med_kg"], 2) if lote["f_med_kg"] else "-",
-            round(f_emb_n, 1) if f_emb_n else "-",
-            round(delta_f_n, 1) if delta_f_n is not None else "-",
-            round(b_t0, 2),
-            round(b_emb, 2) if b_emb else "-",
-            round(delta_b, 2) if delta_b is not None else "-",
-            lote["folder_name"]
-        ]
-        ws.append(row_vals)
-        r_idx = idx + 1
-        ws.row_dimensions[r_idx].height = 20
-        
-        for c_idx, val in enumerate(row_vals, 1):
-            cell = ws.cell(r_idx, c_idx)
-            cell.font = REGULAR_FONT
-            cell.border = BORDER_THIN
-            if c_idx in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]:
-                cell.alignment = ALIGN_CENTER
-            elif c_idx == len(row_vals):
-                cell.alignment = ALIGN_LEFT
-            else:
-                cell.alignment = ALIGN_RIGHT
-                
+
+    r_idx = 1
+    for grupo in grupos:
+        f_t0_n = grupo["t0_info"]["f_med_n"]
+        b_t0 = grupo["t0_info"]["b_med"]
+
+        for p_idx, p in enumerate(grupo["pontos_saida"], 1):
+            f_emb_n = p["f_med_n"]
+            delta_f_n = (f_emb_n - f_t0_n) if (f_emb_n is not None and f_t0_n is not None) else None
+
+            b_emb = p["b_med"]
+            delta_b = (b_emb - b_t0) if (b_emb is not None and b_t0 is not None) else None
+
+            row_vals = [
+                grupo["id_str"],
+                grupo["n_lotes"],
+                ",".join(str(n) for n in p["lote_nums"]),
+                f"{p_idx}/{len(grupo['pontos_saida'])}",
+                p["n_linhas"],
+                ",".join(str(r) for r in p["row_idxs"]),
+                grupo["variedade"],
+                grupo["produtor"],
+                grupo["camara"],
+                ", ".join(p["calibres"]) if p["calibres"] else "-",
+                grupo["dt_frio"].strftime("%Y-%m-%d"),
+                p["dt_emb"].strftime("%Y-%m-%d"),
+                p["dias_frio"],
+                round(p["tempo_semanas"], 2) if p["tempo_semanas"] is not None else "-",
+                round(p["temp_c"], 2) if p["temp_c"] is not None else "-",
+                round(p["hum_p"], 1) if p["hum_p"] is not None else "-",
+                round(grupo["t0_info"]["f_med_kg"], 2),
+                round(f_t0_n, 1),
+                round(p["f_med_kg"], 2) if p["f_med_kg"] is not None else "-",
+                round(f_emb_n, 1) if f_emb_n is not None else "-",
+                round(delta_f_n, 1) if delta_f_n is not None else "-",
+                round(b_t0, 2),
+                round(b_emb, 2) if b_emb is not None else "-",
+                round(delta_b, 2) if delta_b is not None else "-",
+                grupo["folder_name"]
+            ]
+            ws.append(row_vals)
+            r_idx += 1
+            ws.row_dimensions[r_idx].height = 20
+
+            for c_idx, val in enumerate(row_vals, 1):
+                cell = ws.cell(r_idx, c_idx)
+                cell.font = REGULAR_FONT
+                cell.border = BORDER_THIN
+                if c_idx in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]:
+                    cell.alignment = ALIGN_CENTER
+                elif c_idx == len(row_vals):
+                    cell.alignment = ALIGN_LEFT
+                else:
+                    cell.alignment = ALIGN_RIGHT
+
     for col in ws.columns:
         col_letter = get_column_letter(col[0].column)
         max_len = max(len(str(cell.value or "")) for cell in col)
         ws.column_dimensions[col_letter].width = max(max_len + 3, 11)
-        
+
     wb.save(filepath)
+
 
 def main():
     print("=" * 70)
     print("PROCESSAMENTO DOS CENÁRIOS E VALORES REAIS - AMOSTRA CÂMARAS")
     print("=" * 70)
-    
+
     # 1. Carregar valores T0 da ESS_UTP
     print("\n[1/4] A extrair valores de referência T0 de 'Base de dados Maçã (Retaill) experiencias ESS_UTP.xlsx'...")
     t0_data = extrair_t0_ess()
@@ -761,65 +888,78 @@ def main():
         t0_data["Golden"]["AMPS"]["f_med_kg"], t0_data["Golden"]["AMPS"]["f_med_n"], t0_data["Golden"]["AMPS"]["b_med"]))
     print("  [OK] Golden Geral T0: Firmeza = {:.2f} kg/cm2 ({:.1f} N) | Brix = {:.2f} degBx".format(
         t0_data["Golden"]["Geral"]["f_med_kg"], t0_data["Golden"]["Geral"]["f_med_n"], t0_data["Golden"]["Geral"]["b_med"]))
-    
-    # 2. Carregar os 63 lotes do ficheiro de câmaras
-    print("\n[2/4] A ler lotes com câmara de frio...")
-    lotes = extrair_lotes_camaras()
-    print(f"  [OK] Total de lotes identificados: {len(lotes)}")
-    
-    # 3. Associar T0 a cada lote e gerar ficheiros individuais
+
+    # 2. Carregar os 63 registos e agrupar estritamente por (Produtor, Entrada, Variedade, Câmara)
+    print(f"\n[2/4] A ler registos da folha '{FOLHA_CAMARAS}' e a agrupar...")
+    lotes_raw = extrair_lotes_camaras()
+    grupos = agrupar_lotes_camaras(lotes_raw)
+    n_multi_pts = sum(1 for g in grupos if len(g["pontos_saida"]) > 1)
+    n_multi_rows = sum(1 for g in grupos if len(g["row_idxs"]) > 1)
+    print(f"  [OK] Registos individuais lidos: {len(lotes_raw)}")
+    print(f"  [OK] Lotes agrupados resultantes: {len(grupos)} ({n_multi_pts} com múltiplas datas de saída, {n_multi_rows} com múltiplas linhas)")
+
+    # Limpar pastas antigas lote_* e cenario_* antes de gerar novas
+    for pat in ("lote_*", "cenario_*"):
+        for old_dir in glob.glob(os.path.join(OUTPUT_DIR, pat)):
+            if os.path.isdir(old_dir):
+                shutil.rmtree(old_dir)
+
+    # 3. Associar T0 a cada lote agrupado e gerar ficheiros individuais
     print("\n[3/4] A gerar pastas, cenários e valores reais individuais em 'cenarios_reais/amostra_camaras_macas/'...")
-    
-    for idx, lote in enumerate(lotes, 1):
-        lote["id_num"] = idx
-        lote["id_str"] = f"Lote_{idx:02d}"
-        
-        var = lote["variedade"]
-        prod = lote["produtor"]
-        
+
+    for idx, grupo in enumerate(grupos, 1):
+        grupo["id_num"] = idx
+        grupo["id_str"] = f"Cenario_{idx:02d}"
+
+        var = grupo["variedade"]
+        prod = grupo["produtor"]
+
         if prod in t0_data[var]:
             t0_ref = dict(t0_data[var][prod])
             t0_ref["fonte"] = f"{var} {prod}"
         else:
             t0_ref = dict(t0_data[var]["Geral"])
             t0_ref["fonte"] = f"{var} Geral"
-            
-        lote["t0_info"] = t0_ref
-        
-        # Nome da pasta do lote
+
+        grupo["t0_info"] = t0_ref
+
+        n_lotes = grupo["n_lotes"]
+        dt_in_str = grupo["dt_frio"].strftime("%Y%m%d")
+        dias_tag = "_".join(f"{p['dias_frio']}d" for p in grupo["pontos_saida"])
+        pts_tag = f"_{len(grupo['pontos_saida'])}pts" if len(grupo["pontos_saida"]) > 1 else ""
+        lotes_tag = "_".join(str(n) for n in grupo["lote_nums"])
         folder_name = (
-            f"lote_{idx:02d}_{var.lower()}_{prod.lower()}_{lote['camara']}_"
-            f"{lote['calibre_str']}_{lote['dias_frio']}d_r{lote['row_idx']}"
+            f"cenario_{n_lotes}_{var.lower()}_{prod.lower()}_{grupo['camara']}_"
+            f"{dt_in_str}_{dias_tag}{pts_tag}_lote_{lotes_tag}"
         )
-        lote["folder_name"] = folder_name
-        
+        grupo["folder_name"] = folder_name
+
         lot_dir = os.path.join(OUTPUT_DIR, folder_name)
         os.makedirs(lot_dir, exist_ok=True)
-        
-        # Ficheiros dentro da pasta
-        cenario_filename = f"cenario_{folder_name}.xlsx"
+
+        cenario_filename = f"{folder_name}.xlsx"
         valores_reais_filename = f"valores_reais_{folder_name}.xlsx"
-        
+
         cenario_path = os.path.join(lot_dir, cenario_filename)
         valores_reais_path = os.path.join(lot_dir, valores_reais_filename)
-        
-        # Gerar os dois Excels
-        criar_excel_cenario(lote, cenario_path)
-        criar_excel_valores_reais(lote, t0_ref, valores_reais_path)
-        
-        if idx % 10 == 0 or idx == len(lotes):
-            print(f"  -> Processados {idx}/{len(lotes)} lotes...")
-            
+
+        criar_excel_cenario(grupo, cenario_path)
+        criar_excel_valores_reais(grupo, t0_ref, valores_reais_path)
+
+        if idx % 10 == 0 or idx == len(grupos):
+            print(f"  -> Processados {idx}/{len(grupos)} lotes agrupados...")
+
     # 4. Gerar ficheiro resumo geral
     print("\n[4/4] A criar ficheiro de índice geral 'resumo_todos_lotes_amostra_camaras.xlsx'...")
     resumo_path = os.path.join(OUTPUT_DIR, "resumo_todos_lotes_amostra_camaras.xlsx")
-    criar_resumo_todos_lotes(lotes, resumo_path)
+    criar_resumo_todos_lotes(grupos, resumo_path)
     print(f"  [OK] Índice geral guardado em: {resumo_path}")
-    
+
     print("\n" + "=" * 70)
-    print(f"CONCLUÍDO COM SUCESSO! {len(lotes)} lotes gerados na pasta:")
+    print(f"CONCLUÍDO COM SUCESSO! {len(grupos)} lotes agrupados gerados na pasta:")
     print(f"  {OUTPUT_DIR}")
     print("=" * 70)
+
 
 if __name__ == "__main__":
     main()
